@@ -1,0 +1,1058 @@
+﻿@page "/Website/ClientDetails"
+@layout WebsiteAdminLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IWebHostEnvironment env
+@using System.IO
+@using System.Net.Http.Headers;
+@inject IJSRuntime JSRuntime
+
+
+@*<style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /*body {
+            font-family: "Open Sans";
+            background: #2c3e50;
+            color: #ecf0f1;
+            line-height: 1.618em;
+        }*/
+
+       /* .wrapper {
+            max-width: 50rem;
+            width: 100%;
+            margin: 0 auto;
+        }*/
+
+        .tabs {
+            position: relative;
+            margin: 3rem 0;
+            /*background: #1abc9c;*/
+            height: 14.75rem;
+        }
+
+            .tabs::before,
+            .tabs::after {
+                content: "";
+                display: table;
+            }
+
+            .tabs::after {
+                clear: both;
+            }
+
+        .tab {
+            float: left;
+        }
+
+        .tab-switch {
+            display: none;
+        }
+
+        .tab-label {
+            position: relative;
+            display: block;
+            line-height: 2.75em;
+            height: 3em;
+            padding: 0 1.618em;
+            /*background: #1abc9c;*/
+            background: #fff;
+            /*border-right: 0.125rem solid #16a085;*/
+            color: #2c3e50;
+            cursor: pointer;
+            top: 0;
+            transition: all 0.25s;
+        }
+
+            .tab-label:hover {
+                top: -0.25rem;
+                transition: top 0.25s;
+            }
+
+        .tab-content {
+            /*height: 12rem;*/
+            position: absolute;
+            z-index: 1;
+            top: 2.75em;
+            left: 0;
+            padding: 1.618rem;
+            background: #fff;
+            /*background: #1abc9c;*/
+            color: #2c3e50;
+            width:100%;
+            opacity: 0;
+            transition: all 0.35s;
+        }
+
+        .tab-switch:checked + .tab-label {
+            /*background: #fff;*/
+            background: #1abc9c;
+            color: #2c3e50;
+            border-bottom: 0;
+            border-right: 0.125rem solid #fff;
+            transition: all 0.35s;
+            z-index: 1;
+            top: -0.0625rem;
+            /*background:transparent;
+            color: black;
+            border: 2px groove blue;*/
+        }
+
+        .tab-switch:checked + label + .tab-content {
+            z-index: 2;
+            opacity: 1;
+            transition: all 0.35s;
+        }
+    </style>*@
+<style>
+    .mytabs {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 100%;
+        margin: 10px auto;
+        padding: 25px;
+    }
+
+        .mytabs input[type="radio"] {
+            display: none;
+        }
+
+        .mytabs label {
+            padding: 25px;
+            /*background: #e2e2e2;*/
+            font-weight: bold;
+        }
+
+        .mytabs .tab {
+            width: 100%;
+            padding: 10px;
+            background: #fff;
+            order: 1;
+            display: none;
+        }
+
+            .mytabs .tab h2 {
+                font-size: 3em;
+            }
+
+        .mytabs input[type='radio']:checked + label + .tab {
+            display: block;
+        }
+
+        .mytabs input[type="radio"]:checked + label {
+            background: #fff;
+            border: 2px groove blue
+        }
+
+    .container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        position: relative;
+        height: 120px;
+        margin-top: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+        .container .image {
+            height: 100px;
+            width: 100px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+            .container .image img {
+                height: 100%;
+                width: 100%;
+            }
+
+            .container .image span {
+                position: absolute;
+                top: -4px;
+                left: 125px;
+                cursor: pointer;
+                font-size: 30px;
+                color: red;
+            }
+
+                .container .image span:hover {
+                    opacity: 0.8;
+                }
+</style>
+
+<div class="card">
+    <div class="card-header"><h3>Our Client</h3></div>
+    <div class="card-body">
+        <div class="mytabs">
+            <input type="radio" id="tabfree" name="mytabs" checked="checked">
+            <label for="tabfree">Client Details</label>
+            <div class="tab">
+                <EditForm Model="@clientDetails">
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Banner Image</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectBannerImage" multiple />
+
+                            <table class="table" style="width:60%">
+                                    <tbody style="border:none">
+                                        @foreach (var itmImage in itemimageUrls)
+                                        {
+
+                                            <tr class="image">
+                                                <td style="width: 90%"><img src="@itmImage" alt="image" /></td>
+                                                <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => CancelBannerImage(itmImage))></i></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            @*@foreach (var itmImage in itemimageUrls)
+                            {
+                                <div class="container">
+                                    <div class="image">
+                                        <img src="@itmImage" alt="image" />
+                                        <span>&times; X</span>
+                                    </div>
+                                </div>
+                            }*@
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Banner Title</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@clientDetails.BANNER_TITLE" type="text" class="form-control" placeholder="project location" />
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Client Name</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@clientDetails.CLIENT_NAME" type="text" class="form-control" placeholder="project location" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Client Sector Type</label>
+                        <div class="col-sm-10">
+                            <InputSelect @bind-Value="@clientDetails.CLIENT_WORKING_SECTOR_ID" class="form-control">
+                                <option>--Project type--</option>
+                                @foreach (var item in clientProjuctSectorTypeList)
+                                {
+                                    <option value="@item.CLIENT_WORKING_SECTOR_ID">@item.CLIENT_WORKING_SECTOR_NAME</option>
+                                }
+
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Client Logo</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@ClientLogo" multiple />
+                            @foreach (var itmImage in clientLogoUrls)
+                            {
+                                <img src="@itmImage" />
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Client Details</label>
+                        <div class="col-sm-10">
+                            <BlazoredTextEditor @ref="@clientDetailsInfo">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+
+
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+                            <button class="btn btn-success" style="width:100px" @onclick="SaveClientDetails">Save</button>
+                        </div>
+                    </div>
+
+                </EditForm>
+            </div>
+
+            <input type="radio" id="tabsilver" name="mytabs">
+            <label for="tabsilver">Project Details</label>
+            <div class="tab">
+                <EditForm Model="@clientDetails">
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Client</label>
+                        <div class="col-sm-10">
+                            <InputSelect @bind-Value="@clientDetails.CLIENT_WORKING_SECTOR_ID" class="form-control">
+                                <option>--Project type--</option>
+                                @foreach (var item in clientProjuctSectorTypeList)
+                                {
+                                    <option value="@item.CLIENT_WORKING_SECTOR_ID">@item.CLIENT_WORKING_SECTOR_NAME</option>
+                                }
+
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Project Name</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@clientDetails.CLIENT_NAME" type="text" class="form-control" placeholder="project location" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Project Image</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectProjectImage" multiple />
+                            @foreach (var itmImage in projectimageUrls)
+                            {
+                                <img src="@itmImage" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Project Details</label>
+                        <div class="col-sm-10">
+                            <BlazoredTextEditor @ref="@projectDetailsInfo">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+
+
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Used Products</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@clientDetails.CLIENT_NAME" type="text" class="form-control" placeholder="project location" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Face Problems</label>
+                        <div class="col-sm-10">
+                            <BlazoredTextEditor @ref="@faceProblemDetails">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+
+
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+
+                    <hr />
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+                            <button class="btn btn-success" style="width:100px" @onclick="SaveProjectDetails">Save</button>
+                        </div>
+                    </div>
+
+                </EditForm>
+            </div>
+
+            <input type="radio" id="tabgold" name="mytabs">
+            <label for="tabgold">Project Solution</label>
+            <div class="tab">
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Solution Image</label>
+                    <div class="col-sm-10">
+                        <InputFile OnChange="@TocomaSolution_Image" multiple />
+                        @foreach (var itmImage in tocomaSolutionImageUrls)
+                        {
+                            <img src="@itmImage" />
+                        }
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Tocoma Solutions</label>
+                    <div class="col-sm-10">
+                        <BlazoredTextEditor @ref="@tocomaSolutionsDetails">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+
+
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+                        <button class="btn btn-success" style="width:100px" @onclick="SaveTocomaSolution">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<br />
+
+
+
+
+
+
+
+@code {
+    List<clsClientProjectSectorType> clientProjuctSectorTypeList = new List<clsClientProjectSectorType>();
+    clsClientDetails clientDetails = new clsClientDetails();
+    //---------
+    BlazoredTextEditor shortDescription;
+    BlazoredTextEditor longDescription;
+    BlazoredTextEditor clientDetailsInfo;
+    BlazoredTextEditor projectDetailsInfo;
+    BlazoredTextEditor faceProblemDetails;
+    BlazoredTextEditor tocomaSolutionsDetails;
+    string itemname = "";
+    List<string> itemimageUrls = new List<string>();
+    List<string> clientLogoUrls = new List<string>();
+    List<string> projectimageUrls = new List<string>();
+    List<string> tocomaSolutionImageUrls = new List<string>();
+    List<string> itemtdsUrls = new List<string>();
+    List<string> itemimage = new List<string>();
+    List<string> itemTDS = new List<string>();
+    List<string> itemSDS = new List<string>();
+    List<string> itemFlyer = new List<string>();
+    List<string> itemCertificate = new List<string>();
+    List<string> ApplicationimageUrls = new List<string>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    List<ItemCategory> categoryList = new List<ItemCategory>();
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    IReadOnlyList<IBrowserFile> selectedBannerImage;
+    IReadOnlyList<IBrowserFile> selectedClientLogo;
+    IReadOnlyList<IBrowserFile> selectedprojectImage;
+    IReadOnlyList<IBrowserFile> selectedsolutionImage;
+    IReadOnlyList<IBrowserFile> selectedTDS;
+    IReadOnlyList<IBrowserFile> selectedSDS;
+    IReadOnlyList<IBrowserFile> selectedFlayer;
+    IReadOnlyList<IBrowserFile> selectedCertificate;
+    ReferenceProjectTypeModel item = new ReferenceProjectTypeModel();
+    ItemEntity relatedItem = new ItemEntity();
+
+    List<ReferenceProjectTypeModel> itemList = new List<ReferenceProjectTypeModel>();
+
+
+    List<ImageFile> filesBase64 = new List<ImageFile>();
+    string categoryName;
+    string code;
+    string path_withfile = "";
+    string saveimageurl = "";
+    string savelogourl = "";
+
+    private List<IBrowserFile> loadedFiles = new();
+    private long maxFileSize = 1024 * 5000;
+    private int maxAllowedFiles = 3;
+    private bool isLoading;
+    // ImageFile.cs
+
+
+    Stream fileStream = null;
+    ElementReference elementReference;
+    string fileName = string.Empty;
+    string size = string.Empty;
+    string type = string.Empty;
+    string submit = "Save";
+
+    public class ImageFile
+    {
+        public string base64data { get; set; }
+        public string contentType { get; set; }
+        public string fileName { get; set; }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClientSector();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+    }
+    private async Task GetClientSector()
+    {
+        clientProjuctSectorTypeList = await Http.GetJsonAsync<List<clsClientProjectSectorType>>(Utility.BaseUrl + "api/OurClient/GetClientProjectSectorType");
+    }
+
+    private async Task SelectBannerImage(InputFileChangeEventArgs e)
+    {
+        selectedBannerImage = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedBannerImage)
+        {
+            //var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var resizedImage = await imageFile.RequestImageFileAsync(imageFile.ContentType, 10000, 10000);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            //var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            itemimageUrls.Add(imgData);
+
+            //
+
+            //string base64String = "";
+            //await using MemoryStream fs = new MemoryStream();
+            //await imageFile.OpenReadStream(maxAllowedSize: 104857645125).CopyToAsync(fs);
+            //byte[] somBytes = GetBytes(fs);
+            //base64String = Convert.ToBase64String(somBytes, 0, somBytes.Length);
+            //System.Diagnostics.Debug.Print("Imatge 64: " + base64String + Environment.NewLine);
+            //itemimageUrls.Add(base64String);
+        }
+
+        this.StateHasChanged();
+    }
+    private void CancelBannerImage(string file)
+    {
+        int index = itemimageUrls.IndexOf(file);
+        itemimageUrls.RemoveAt(index);
+    }
+    private async Task ClientLogo(InputFileChangeEventArgs e)
+    {
+        selectedClientLogo = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedClientLogo)
+        {
+            //var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var resizedImage = await imageFile.RequestImageFileAsync(imageFile.ContentType, 10000, 10000);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            //var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            clientLogoUrls.Add(imgData);
+
+        }
+
+        this.StateHasChanged();
+    }
+    private async Task SelectProjectImage(InputFileChangeEventArgs e)
+    {
+        selectedprojectImage = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedprojectImage)
+        {
+            //var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var resizedImage = await imageFile.RequestImageFileAsync(imageFile.ContentType, 10000, 10000);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            //var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            projectimageUrls.Add(imgData);
+
+            //
+
+            //string base64String = "";
+            //await using MemoryStream fs = new MemoryStream();
+            //await imageFile.OpenReadStream(maxAllowedSize: 104857645125).CopyToAsync(fs);
+            //byte[] somBytes = GetBytes(fs);
+            //base64String = Convert.ToBase64String(somBytes, 0, somBytes.Length);
+            //System.Diagnostics.Debug.Print("Imatge 64: " + base64String + Environment.NewLine);
+            //itemimageUrls.Add(base64String);
+        }
+
+        this.StateHasChanged();
+    }
+    private async Task TocomaSolution_Image(InputFileChangeEventArgs e)
+    {
+        selectedsolutionImage = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedsolutionImage)
+        {
+            //var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var resizedImage = await imageFile.RequestImageFileAsync(imageFile.ContentType, 10000, 10000);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            //var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            tocomaSolutionImageUrls.Add(imgData);
+
+            //
+
+            //string base64String = "";
+            //await using MemoryStream fs = new MemoryStream();
+            //await imageFile.OpenReadStream(maxAllowedSize: 104857645125).CopyToAsync(fs);
+            //byte[] somBytes = GetBytes(fs);
+            //base64String = Convert.ToBase64String(somBytes, 0, somBytes.Length);
+            //System.Diagnostics.Debug.Print("Imatge 64: " + base64String + Environment.NewLine);
+            //itemimageUrls.Add(base64String);
+        }
+
+        this.StateHasChanged();
+    }
+
+
+    private async Task SelectApplicationImage(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedFiles)
+        {
+            var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            ApplicationimageUrls.Add(imgData);
+
+        }
+        this.StateHasChanged();
+    }
+    public static byte[] GetBytes(Stream stream)
+    {
+        var bytes = new byte[stream.Length];
+        stream.Seek(0, SeekOrigin.Begin);
+        stream.ReadAsync(bytes, 0, bytes.Length);
+        stream.Dispose();
+        return bytes;
+    }
+    public async Task SaveClientDetails()
+    {
+        //string url = "https://localhost:44381/";
+        //EmployeeModel empModel = new EmployeeModel();
+        //empModel.EMPLOYEE_NAME = itemimageUrls.FirstOrDefault();
+        ///var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+        //var response = await Http.PostJsonAsync<EmployeeModel>($"{url}/Partners/SaveImage", empModel);
+        if (IsValidation() != true)
+        {
+
+            //bool IsExistProduct = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/ReferenceProjectType/GetIsItemExist/" + item.REF_PROJECT_TYPE_NAME);
+            //if (IsExistProduct != true)
+            //{
+            try
+            {
+                if (selectedBannerImage != null)
+                {
+                    foreach (var file in selectedBannerImage)
+                    {
+                        string code = GetCode();
+                        string p = "";
+                        path_withfile = $"{env.WebRootPath}\\images\\OurClient\\{code + "_" + file.Name}";
+                        p = env.WebRootPath;
+                        saveimageurl = path_withfile.Replace(p, "");
+                        var path2 = $"{env.WebRootPath}\\images\\OurClient\\{code + "_" + file.Name}";
+                        await using FileStream fs = new(path2, FileMode.Create);
+                        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                        fs.Close();
+                    }
+                }
+                if (selectedClientLogo != null)
+                {
+                    foreach (var file in selectedClientLogo)
+                    {
+                        string code = GetCode();
+                        string p = "";
+                        path_withfile = $"{env.WebRootPath}\\images\\OurClient\\{code + "_" + file.Name}";
+                        p = env.WebRootPath;
+                        savelogourl = path_withfile.Replace(p, "");
+                        var path2 = $"{env.WebRootPath}\\images\\OurClient\\{code + "_" + file.Name}";
+                        await using FileStream fs = new(path2, FileMode.Create);
+                        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                        fs.Close();
+                    }
+                }
+                clientDetails.BANNER_IMAGE_LINK = saveimageurl;
+                clientDetails.CLIENT_LOGO = savelogourl;
+                if (clientDetailsInfo != null)
+                { clientDetails.DESCRIPTION = await this.clientDetailsInfo.GetHTML(); }
+                clientDetails.OPERATION_TYPE = "1";
+
+
+                var data = await Http.PostJsonAsync<clsClientDetails>(Utility.BaseUrl + "api/OurClient/AddClientDetails", clientDetails);
+
+
+                toastService.ShowSuccess(" Save Successfully!!!");
+                ClearData();
+                //await GetBrand();
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowError(ex.Message);
+            }
+            //}
+        }
+    }
+    public string GetCode()
+    {
+        string code = "";
+        Random random = new Random();
+        int num = random.Next(1000);
+        int minut = System.DateTime.Now.Minute;
+        int second = System.DateTime.Now.Second;
+        code = Convert.ToString(num + minut + second);
+        return code;
+    }
+    public async Task SaveProjectDetails()
+    {
+        //string url = "https://localhost:44381/";
+        //EmployeeModel empModel = new EmployeeModel();
+        //empModel.EMPLOYEE_NAME = itemimageUrls.FirstOrDefault();
+        ///var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+        //var response = await Http.PostJsonAsync<EmployeeModel>($"{url}/Partners/SaveImage", empModel);
+        if (IsValidation() != true)
+        {
+
+            bool IsExistProduct = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/ReferenceProjectType/GetIsItemExist/" + item.REF_PROJECT_TYPE_NAME);
+            if (IsExistProduct != true)
+            {
+                try
+                {
+
+                    if (selectedprojectImage != null)
+                    {
+                        foreach (var file in selectedprojectImage)
+                        {
+                            string p = "";
+                            path_withfile = $"{env.WebRootPath}\\images\\WebsiteImage\\ProjectType\\{code + "_" + file.Name}";
+                            p = env.WebRootPath;
+                            saveimageurl = path_withfile.Replace(p, "");
+                            var path2 = $"{env.WebRootPath}\\images\\WebsiteImage\\ProjectType\\{code + "_" + file.Name}";
+                            await using FileStream fs = new(path2, FileMode.Create);
+                            await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+                        }
+                    }
+                    item.REF_PROJECT_TYPE_IMAGE = saveimageurl;
+                    item.OPERATION_TYPE = 1;
+
+
+                    var data = await Http.PostJsonAsync<ReferenceProjectTypeModel>(Utility.BaseUrl + "api/ReferenceProjectType", item);
+
+
+                    toastService.ShowSuccess(" Save Successfully!!!");
+                    ClearData();
+                    //await GetBrand();
+                }
+                catch (Exception ex)
+                {
+                    toastService.ShowError(ex.Message);
+                }
+            }
+        }
+    }
+
+    public async Task SaveTocomaSolution()
+    {
+        //string url = "https://localhost:44381/";
+        //EmployeeModel empModel = new EmployeeModel();
+        //empModel.EMPLOYEE_NAME = itemimageUrls.FirstOrDefault();
+        ///var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+        //var response = await Http.PostJsonAsync<EmployeeModel>($"{url}/Partners/SaveImage", empModel);
+        if (IsValidation() != true)
+        {
+
+            bool IsExistProduct = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/ReferenceProjectType/GetIsItemExist/" + item.REF_PROJECT_TYPE_NAME);
+            if (IsExistProduct != true)
+            {
+                try
+                {
+
+                    if (selectedsolutionImage != null)
+                    {
+                        foreach (var file in selectedsolutionImage)
+                        {
+                            string p = "";
+                            path_withfile = $"{env.WebRootPath}\\images\\WebsiteImage\\ProjectType\\{code + "_" + file.Name}";
+                            p = env.WebRootPath;
+                            saveimageurl = path_withfile.Replace(p, "");
+                            var path2 = $"{env.WebRootPath}\\images\\WebsiteImage\\ProjectType\\{code + "_" + file.Name}";
+                            await using FileStream fs = new(path2, FileMode.Create);
+                            await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+                        }
+                    }
+                    item.REF_PROJECT_TYPE_IMAGE = saveimageurl;
+                    item.OPERATION_TYPE = 1;
+
+
+                    var data = await Http.PostJsonAsync<ReferenceProjectTypeModel>(Utility.BaseUrl + "api/ReferenceProjectType", item);
+
+
+                    toastService.ShowSuccess(" Save Successfully!!!");
+                    ClearData();
+                    //await GetBrand();
+                }
+                catch (Exception ex)
+                {
+                    toastService.ShowError(ex.Message);
+                }
+            }
+        }
+    }
+
+
+
+    //async Task Upload1()
+    //{
+    //    //var url = "http://localhost/api/v1/yourendpointhere";
+    //    var filePath = @"C:\inetpub\wwwroot\tocoma_erp_system\wwwroot\images\Products\0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg";
+    //    var url = "http://demo.tocoma.co/webroot/Content/images/aboutus";
+    //    foreach (var file in selectedItemImage)
+    //    {
+    //        //string path = Path.Combine(file.Name);
+    //        //var filePath = Path.Combine(file.Name);
+    //        //var filePath = Path.GetFullPath("wwwroot\\Images\\") + file.FileInfo.Name;
+    //        //var filePath = $"{env.WebRootPath}\\{file.Name}";
+    //        HttpClient httpClient = new HttpClient();
+    //        MultipartFormDataContent form = new MultipartFormDataContent();
+
+    //        FileStream fs = File.OpenRead(filePath);
+    //        var streamContent = new StreamContent(fs);
+
+    //        var imageContent = new ByteArrayContent(streamContent.ReadAsByteArrayAsync().Result);
+    //        imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+
+    //        form.Add(imageContent, "image", Path.GetFileName(filePath));
+    //        var response = httpClient.PostAsync(url, form).Result;
+
+
+    //        var content = new MultipartFormDataContent();
+
+    //        form.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
+    //        form.Add(new StreamContent(fileStream, (int)fileStream.Length), "image", file.Name);
+    //        //var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+    //        var response1 = await Http.PostAsync($"{url}", form);
+    //    }
+
+
+    //}
+
+
+    //async Task UploadFileAsync()
+    //{
+
+    //    string url = "http://demo.tocoma.co";
+    //    foreach (var file in selectedItemImage)
+    //    {
+
+    //        var root = "\\demo.tocoma.co";
+    //        var folder = @"\webroot\Content\images\aboutus";
+
+    //        string path = Path.Combine(root, folder, file.Name);
+
+
+    //        await using FileStream fs = new(path, FileMode.Create); //This line throws the error
+    //        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+
+
+    //        //var path2 = $"{url}\\webroot\\Content\\images\\aboutus\\{code + "_" + file.Name}";
+    //        var path2 = $"{url}/webroot/Content/images/aboutus/{code + "_" + file.Name}";
+    //        await using FileStream fs1 = new(path2, FileMode.Create);
+    //        await file.OpenReadStream(maxFileSize).CopyToAsync(fs1);
+    //        // await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+    //        fs1.Close();
+    //    }
+
+
+
+
+    //    var content = new MultipartFormDataContent();
+
+    //    content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
+    //    content.Add(new StreamContent(fileStream, (int)fileStream.Length), "image", fileName);
+    //    //var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+    //    var response = await Http.PostAsync($"{url}/webroot/Content/images/aboutus", content);
+    //}
+
+
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (clientDetails.CLIENT_NAME == "" || clientDetails.CLIENT_NAME == string.Empty || clientDetails.CLIENT_NAME == null)
+        {
+            toastService.ShowWarning("Client Name cannot be empty!");
+            flag = true;
+        }
+
+
+        return flag;
+    }
+    private void ClearData()
+    {
+        item.REF_PROJECT_TYPE_NAME = "";
+        itemimageUrls = new List<string>();
+        item = new ReferenceProjectTypeModel();
+
+        StateHasChanged();
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        //selectedFiles = e.GetMultipleFiles();
+        isLoading = true;
+        loadedFiles.Clear();
+        foreach (var file in e.GetMultipleFiles())
+        {
+            try
+            {
+                loadedFiles.Add(file);
+                selectedFiles = e.GetMultipleFiles();
+
+                var trustedFileNameForFileStorage = Path.GetRandomFileName();
+
+                //var path = Path.Combine(env.ContentRootPath,env.EnvironmentName);
+
+                var path = Path.Combine(env.ContentRootPath + "\\wwwroot\\images\\File\\TDS", file.Name);
+
+                //var path = $"{env.WebRootPath}\\File\\TDS\\{file.Name}";
+                //var path = @"C:\Users\Administrator\Downloads\"+file.Name;
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                itemTDS.Add(file.Name);
+                selectedTDS = selectedFiles;
+                selectedFiles = null;
+            }
+            catch (Exception ex)
+            {
+                //Logger.LogError("File: {Filename} Error: {Error}",
+                //    file.Name, ex.Message);
+            }
+        }
+
+        isLoading = false;
+    }
+    private async Task Delete(int Id)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/ReferenceProjectType/DeleteRefProjectType/" + Id);
+        //await GetBrand();
+    }
+    private async Task EditBrand(int Id)
+    {
+        submit = "Update";
+        item = new ReferenceProjectTypeModel();
+        item.REF_PROJECT_TYPE_NAME = itemList.Find(x => x.REF_PROJECT_TYPE_ID == Id).REF_PROJECT_TYPE_NAME;
+        item.REF_PROJECT_TYPE_ID = Id;
+        item.OPERATION_TYPE = 2;
+    }
+
+}

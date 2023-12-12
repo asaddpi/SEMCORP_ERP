@@ -1,0 +1,152 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Purchase\PurchaseList.razor" />
+    <Content Remove="PlanningAndOperation\AssignWork.razor" />
+    <Content Remove="PlanningAndOperation\EditAssignWork.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.ReportViewer" Version="3.0.0.200103" />
+    <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.2.0" />
+    <PackageReference Include="Blazored.Toast" Version="3.2.2" />
+    <PackageReference Include="Excubo.Blazor.TreeViews" Version="3.2.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Radzen.Blazor" Version="4.14.4" />
+    <PackageReference Include="ReportViewerCore.NETCore" Version="15.1.17" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AspNetCore.Reporting">
+      <HintPath>bin\Debug\net5.0\AspNetCore.Reporting.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNetCore.ReportingServices">
+      <HintPath>bin\Debug\net5.0\AspNetCore.ReportingServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Blazored.Typeahead">
+      <HintPath>bin\Debug\net5.0\Blazored.Typeahead.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Blazor.HttpClient">
+      <HintPath>bin\Debug\net5.0\Microsoft.AspNetCore.Blazor.HttpClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.ProtectedBrowserStorage">
+      <HintPath>bin\Debug\net5.0\Microsoft.AspNetCore.ProtectedBrowserStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>bin\Debug\net5.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson">
+      <HintPath>bin\Debug\net5.0\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>bin\Debug\net5.0\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="TOCOMA_ERP_ClassLibrary">
+      <HintPath>..\TOCOMA_ERP_ClassLibrary\bin\Debug\net5.0\TOCOMA_ERP_ClassLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Accounce\Master\" />
+    <Folder Include="Pages\Accounce\Transection\" />
+    <Folder Include="Pages\Stock\" />
+    <Folder Include="wwwroot\images\File\FLAYER\" />
+    <Folder Include="wwwroot\images\File\ITEM_DOCUMENTS\" />
+    <Folder Include="wwwroot\images\File\Certificate\" />
+    <Folder Include="wwwroot\images\File\SDS\" />
+    <Folder Include="wwwroot\images\ManualImage\" />
+    <Folder Include="wwwroot\images\AboutTocoma\" />
+    <Folder Include="wwwroot\images\OurClient\" />
+    <Folder Include="wwwroot\images\ReferenceProject\" />
+    <Folder Include="wwwroot\images\WebsiteImage\ProjectType\" />
+    <Folder Include="wwwroot\Video\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Data\dsCustomerInvoice.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsCustomerInvoice.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsCustomerProfile.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsCustomerProfile.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsPurchaseInvoiceInt.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsPurchaseInvoiceInt.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsPurchaseInvoiceL.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsPurchaseInvoiceL.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsPurchaseOrder.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsPurchaseOrder.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsSalesInvoice.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsSalesInvoice.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsTermsAndConditions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsTermsAndConditions.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Data\dsVoucher.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsVoucher.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\dsCustomerInvoice.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsCustomerInvoice.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsCustomerProfile.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsCustomerProfile.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsPurchaseInvoiceInt.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPurchaseInvoiceInt.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsPurchaseInvoiceL.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPurchaseInvoiceL.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsPurchaseOrder.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPurchaseOrder.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsSalesInvoice.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsSalesInvoice.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsTermsAndConditions.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsTermsAndConditions.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Data\dsVoucher.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsVoucher.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,270 @@
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.Development.json
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.json
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.exe
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.deps.json
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.json
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.dev.json
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\ref\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Dapper.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Identity.Client.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.OpenApi.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Newtonsoft.Json.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Runtime.Caching.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.ApplicationBlocks.Data.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.AssemblyReference.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.GeneratedMSBuildEditorConfig.editorconfig
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfoInputs.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfo.cs
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CoreCompileInputs.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cs
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.Manifest.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.xml
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\scopedcss\bundle\TOCOMA_API_Service.styles.css
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.RazorTargetAssemblyInfo.cache
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\ref\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.pdb
+F:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.genruntimeconfig.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.Development.json
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.json
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.exe
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.deps.json
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.json
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.dev.json
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\ref\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Dapper.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Identity.Client.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.OpenApi.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Newtonsoft.Json.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Runtime.Caching.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.ApplicationBlocks.Data.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.AssemblyReference.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.GeneratedMSBuildEditorConfig.editorconfig
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfoInputs.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfo.cs
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CoreCompileInputs.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cs
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.Manifest.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.xml
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\scopedcss\bundle\TOCOMA_API_Service.styles.css
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.RazorTargetAssemblyInfo.cache
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\ref\TOCOMA_API_Service.dll
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.pdb
+F:\Project\Company All Project\APIService\Project\Only Account\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.genruntimeconfig.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.Development.json
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.json
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.exe
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.deps.json
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.json
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.dev.json
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\ref\TOCOMA_API_Service.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Dapper.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.ApplicationBlocks.Data.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.AssemblyReference.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfoInputs.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfo.cs
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CoreCompileInputs.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cs
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.Manifest.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.xml
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\scopedcss\bundle\TOCOMA_API_Service.styles.css
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.RazorTargetAssemblyInfo.cache
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CopyComplete
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\ref\TOCOMA_API_Service.dll
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.pdb
+D:\Project\Company All Project\APIService\Project\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.genruntimeconfig.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.Development.json
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\appsettings.json
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.exe
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.deps.json
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.json
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.runtimeconfig.dev.json
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\ref\TOCOMA_API_Service.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_API_Service.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Dapper.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\Microsoft.ApplicationBlocks.Data.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.AssemblyReference.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfoInputs.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.AssemblyInfo.cs
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CoreCompileInputs.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cs
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.MvcApplicationPartsAssemblyInfo.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.Manifest.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\staticwebassets\TOCOMA_API_Service.StaticWebAssets.xml
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\scopedcss\bundle\TOCOMA_API_Service.styles.css
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.RazorTargetAssemblyInfo.cache
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.csproj.CopyComplete
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\ref\TOCOMA_API_Service.dll
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.pdb
+D:\Project\Company All Project\SEMCORP\Api Project\TOCOMA_API_Service\TOCOMA_API_Service\TOCOMA_API_Service\obj\Release\net5.0\TOCOMA_API_Service.genruntimeconfig.cache

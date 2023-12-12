@@ -1,0 +1,129 @@
+﻿@page "/CostCategories"
+@layout CustomLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<div class="card">
+    <div class="card-header">
+        Cost Categories List /
+        <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target=".bd-example-modal-lg">New Cost Categories</a>
+    </div>
+    <table class="table" width="100%">
+        <thead>
+            <tr>
+                <th style="width:6%">ID</th>
+                <th>Branch Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Inactive</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @if (branchList != null)
+            {
+                foreach (var item in branchList)
+                {
+                    <tr>
+                        <td>@item.BRANCH_ID</td>
+                        <td>@item.BRANCH_NAME</td>
+                        <td>@item.BRANCH_ADD1</td>
+                        <td>@item.BRANCH_PHONE</td>
+                        <td>@item.BRANCH_EMAIL</td>
+                        <td style="width:6%">@item.BRANCH_ACTIVE</td>
+                        <td style="text-align:center;width:6%"><a data-toggle="modal" href="" data-target=".bd-example-modal-lg" @onclick=@(() => EditClick(item.BRANCH_ID))><span class="oi oi-pencil"></span></a></td>
+                        <td style="text-align:center;width:6%"><a @onclick=@(() => DeleteBranch(item.BRANCH_ID))><span class="oi oi-trash"></span></a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@*----Group Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@branch">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">Cost Categories</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" style="width:100px;margin-right:20px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveGroups())>@btnLabel</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+@code {
+    BranchModel branch = new BranchModel();
+    List<BranchModel> branchList = new List<BranchModel>();
+    string btnLabel;
+    protected override async Task OnInitializedAsync()
+    {
+        btnLabel = "Save";
+
+    }
+    public async Task SaveGroups()
+    {
+        if (IsValidation() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<BranchModel>(Utility.BaseUrl + "api/Setup/AddBranch", branch);
+                toastService.ShowSuccess("Item Added Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (branch.BRANCH_NAME == "" || branch.BRANCH_NAME == string.Empty || branch.BRANCH_NAME == null)
+        {
+            toastService.ShowWarning("Branch Name cannot be empty!");
+            flag = true;
+        }
+        else if (branch.BRANCH_COUNTRY == "")
+        {
+            toastService.ShowError("Please Select Country!");
+            flag = true;
+        }
+        return flag;
+    }
+    private void EditClick(string branchCode)
+    {
+        btnLabel = "Update";
+        branch = branchList.FirstOrDefault(x => x.BRANCH_ID == branchCode);
+    }
+    private async Task DeleteBranch(string Code)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteBranchById/" + Code);
+
+    }
+}

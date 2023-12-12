@@ -1,0 +1,151 @@
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.exe
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\bootstrap\bootstrap.min.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\bootstrap\bootstrap.min.css.map
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\dashboard.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\dashboard.scss
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\form.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\login.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\FONT-LICENSE
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.eot
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.otf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.svg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.ttf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.woff
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\ICON-LICENSE
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\README.md
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\toast.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\1.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\1200px-PDF_file_icon.svg.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Account-User-PNG-HD.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\additem.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\adminicon.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\chart-line.svg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\chart-vector-113750.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\CI-1608005.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\CI-1608015.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\dashboard-icon.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\deliverynotePrint.JPG
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\dot_menu.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\excel_ms-5bfc379146e0fb00511cdefe.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fileicon.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fileicon.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\FLAYER\400application.docx
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\FLAYER\updatedSDS Pure Epoxy - FX-E400.EP5_2021.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\SDS\0047_updatedSDS Pure Epoxy - FX-E400.EP5_2021.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0035_ETA_ 18-0074_EN_2018-03-19 (FASTFIX).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0043_Estoflex GP - Data Sheet - 121004.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0045_Jointflex-Brochure-060519.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_Estop-PP-Fibre---190_702 (1).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_Estop-PP-Fibre---190_703.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_J-Seal PU1 - Brochure.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0061_FX-E360.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0070_Estopatch ST - Data Sheet - 160706.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0072_Estop Water Plug - Data Sheet - 050304.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0074_Superswell 47B - Brochure (25mm x 19mm).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0075_Superswell 47B - Brochure (25mm x 19mm).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0077_Pure Epoxy FX-E400.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0079_Jointflex-Backer-Rod-Brochure-010618.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0080_Estop-PP-Fibre---190_702 (1).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---190_702.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---190_703.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---200_703 - Copy.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\ETA_ 18-0074_EN_2018-03-19 (FASTFIX).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\TDS-CN-RED-F3320 (02_18).pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\TDS_E400_20220811.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\folder.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fountain-pen.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\gmail.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\google.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-01.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-02.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-03.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-04.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-05.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\login-icon.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\logo.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\logotocoma.JPG
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\newreq.JPG
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\notification.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\pdf.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\photos.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\plusicon.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0036_WhatsApp Image 2022-07-20 at 2.39.12 AM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0038_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0039_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0040_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0044_jointflex3-500x500.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0045_jointflex2-500x500.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0047_jSeal.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0062_818550_Lg.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0063_818550_Lg.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0064_818550_Lg.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0065_818550_Lg.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0067_819813_K_Lg (1).jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0068_corkjoint-00269-300x300.jpeg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0080_backerroad.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\BONDING & ANCHORING ADHESIVE\0006738773_w_MainProductImage_BUS_Lg.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\BONDING & ANCHORING ADHESIVE\00071623570248.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Connecting & Jointing System\0016_HTB1oqCRKVXXXXXAapXXq6xXFXXXs.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Connecting & Jointing System\0017_HTB1oqCRKVXXXXXAapXXq6xXFXXXs.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Flooring System\0002GetPurchaseOrderInvoiceLocal.pdf
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\_1617855940_homecleaning.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\shoppingbag.png
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\taka.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\user.jpg
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\Blazored-BlazorQuill.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\BlazorQuill.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\chart.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\interop.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\jquery-ui.min.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\jquery.min.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\main_chart.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\quill-blot-formatter.min.js
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\BalanceSheet.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PaymentVoucher.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\ProfitAndLoss.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceIN.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceInt.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceL.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceLocal.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesDeliveryNote.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesInvoice.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesQuotation.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\TrialBalance.rdlc
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\Video\0047_Waterproofing.mp4
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\appsettings.json
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.deps.json
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.runtimeconfig.json
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.pdb
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.SessionStorage.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.Toast.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Authorization.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.Forms.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.Web.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Metadata.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.JSInterop.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.IO.Pipelines.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\AspNetCore.Reporting.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\AspNetCore.ReportingServices.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.Typeahead.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Blazor.HttpClient.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.ProtectedBrowserStorage.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.Bson.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.CodeDom.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.Data.SqlClient.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_ClassLibrary.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_ClassLibrary.pdb
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\TOCOMA_ERP_System.styles.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\_content\Blazored.Toast\blazored-toast.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\_content\Blazored.Toast\blazored-toast.min.css
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.Views.dll
+F:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.Views.pdb

@@ -1,0 +1,151 @@
+﻿@page "/ProjectWiseStock"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+
+
+<style>
+    table, tr, td {
+        border: none;
+        text-align: center;
+    }
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+        <div class="col-md-4"><h5>Project Wise Stock</h5></div>
+
+        <div class="" style="display:flex;gap:10px;align-items:center">
+            <a>
+                <button @onclick="GetStockSummery" class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px"><i class='bi bi-print' style="font-size:30px" /> Print</button>
+            </a>
+
+
+
+        </div>
+    </div>
+
+
+    <hr />
+
+    <table id="#example" width="100%">
+        <thead>
+            <tr>
+                <td>SL</td>
+                <td>Customer</td>
+                <td>Project</td>
+                <td>Item Code</td>
+                <td>Item</td>
+                <td>Receipt Qty.</td>
+                <td>Used Qty.</td>
+                <td>Damaged Qty.</td>
+                <td>Return Qty.</td>
+                <td>Balance</td>
+                <td>Unit</td>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @if (StockList != null)
+            {
+                int i = 0;
+                foreach (var item in StockList)
+                {
+                    int u = i + 1;
+                    <tr>
+                        @*<td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.BRAND_ID))><span class="oi oi-trash"></span></a></td>
+                            <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => EditBrand(item.BRAND_ID))><span class="oi oi-pencil"></span></a></td>*@
+                        <td>@u</td>
+                        <td>@item.CUSTOMER_NAME</td>
+                        <td>@item.SHIPPING_PROJECT_NAME</td>
+                        <td>@item.ITEM_CODE</td>
+                        <td>@item.ITEM_NAME</td>
+                        <td>@item.STOCK_QUANTITY</td>
+                        <td>@item.USED_QUANTITY</td>
+                        <td>@item.DAMAGED_QUANTITY</td>
+                        <td>@item.RETURN_QUANTITY</td>
+                        <td>@item.RETURN_QUANTITY</td>
+                        <td>@item.UNIT</td>
+
+                    </tr>
+                    i++;
+                }
+            }
+
+
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+    List<ProjectWiseStockModel> StockList = new List<ProjectWiseStockModel>();
+    List<RStockInformation> stockStatementList = new List<RStockInformation>();
+    List<LedgerGroupModel> ledgerGroupList = new List<LedgerGroupModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        //await GetBrand();
+        StockList = await Http.GetJsonAsync<List<ProjectWiseStockModel>>(Utility.BaseUrl + "api/Stock/GetProjectwiseStock");
+        await GetLedgerGroup();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+
+
+        //ledgerGroupList = await Http.GetJsonAsync<List<LedgerGroupModel>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+
+
+
+        //await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    public async Task GetLedgerGroup()
+    {
+        ledgerGroupList = await Http.GetJsonAsync<List<LedgerGroupModel>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+        //primaryList = await Http.GetJsonAsync<List<PrimaryModel>>(Utility.BaseUrl + "api/Setup/GetPrimaryList");
+
+    }
+    private async Task GetBrand()
+    {
+        //StockList = await Http.GetJsonAsync<List<StockSummeryReportModel>>(Utility.BaseUrl + "api/Stock/GetStockSummryForProject");
+        //StockList = await Http.GetJsonAsync<List<StockSummeryReportModel>>(Utility.BaseUrl + "api/Stock/SGetStockSummery");
+        stockStatementList = new List<RStockInformation>();
+        stockStatementList = await Http.GetJsonAsync<List<RStockInformation>>(Utility.BaseUrl + "api/Purchase/GetStockSummery");
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetStockSummery()
+    {
+        //stockStatementList = new List<RStockInformation>();
+        //stockStatementList = await Http.GetJsonAsync<List<RStockInformation>>(Utility.BaseUrl + "api/Purchase/GetStockSummery");
+        //SessionData.From_date = fromdate;
+        //SessionData.To_date = todate;
+        SessionData.stockStatementListReport = stockStatementList;
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetstockStatement", "_blank");
+    }
+}

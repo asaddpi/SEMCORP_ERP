@@ -1,0 +1,230 @@
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.exe
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\bootstrap\bootstrap.min.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\bootstrap\bootstrap.min.css.map
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\dashboard.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\dashboard.scss
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\form.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\login.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\FONT-LICENSE
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.eot
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.otf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.svg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.ttf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\font\fonts\open-iconic.woff
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\ICON-LICENSE
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\open-iconic\README.md
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\tab.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\css\toast.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\1.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\1200px-PDF_file_icon.svg.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\AboutTocoma\banner_about.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\AboutTocoma\dhaka-bangladesh-area-capital-87039501.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\AboutTocoma\Header Image.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Account-User-PNG-HD.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\additem.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\adminicon.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\chart-line.svg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\chart-vector-113750.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\CI-1608005.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\CI-1608015.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\dashboard-icon.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\deliverynotePrint.JPG
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\dot_menu.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\excel_ms-5bfc379146e0fb00511cdefe.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fileicon.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fileicon.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\FLAYER\400application.docx
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\FLAYER\updatedSDS Pure Epoxy - FX-E400.EP5_2021.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\SDS\0047_updatedSDS Pure Epoxy - FX-E400.EP5_2021.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0035_ETA_ 18-0074_EN_2018-03-19 (FASTFIX).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0043_Estoflex GP - Data Sheet - 121004.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0045_Jointflex-Brochure-060519.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_Estop-PP-Fibre---190_702 (1).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_Estop-PP-Fibre---190_703.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0047_J-Seal PU1 - Brochure.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0061_FX-E360.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0070_Estopatch ST - Data Sheet - 160706.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0072_Estop Water Plug - Data Sheet - 050304.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0074_Superswell 47B - Brochure (25mm x 19mm).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0075_Superswell 47B - Brochure (25mm x 19mm).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0077_Pure Epoxy FX-E400.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0079_Jointflex-Backer-Rod-Brochure-010618.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\0080_Estop-PP-Fibre---190_702 (1).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---190_702.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---190_703.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\Estop-PP-Fibre---200_703 - Copy.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\ETA_ 18-0074_EN_2018-03-19 (FASTFIX).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\TDS-CN-RED-F3320 (02_18).pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\File\TDS\TDS_E400_20220811.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\folder.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\fountain-pen.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\gmail.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\google.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-01.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-02.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-03.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-04.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\icon-05.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\login-icon.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\logo.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\logotocoma.JPG
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\ManualImage\categoryImage.PNG
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\ManualImage\requisition_approval.PNG
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\newreq.JPG
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\notification.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\pdf.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\photos.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\plusicon.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0036_WhatsApp Image 2022-07-20 at 2.39.12 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0038_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0039_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0040_0034_WhatsApp Image 2022-03-07 at 2.03.17 PM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0044_jointflex3-500x500.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0045_jointflex2-500x500.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0047_jSeal.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0062_818550_Lg.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0063_818550_Lg.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0064_818550_Lg.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0065_818550_Lg.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0067_819813_K_Lg (1).jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0068_corkjoint-00269-300x300.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0080_backerroad.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0122_cpanelhosting.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0123_cpanelhosting.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0124_819813_K_Lg (1).jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0125_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0126_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0127_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0128_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0129_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0130_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0131_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0132_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0134_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0135_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\0136_0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\181.webp
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\BONDING & ANCHORING ADHESIVE\0006738773_w_MainProductImage_BUS_Lg.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\BONDING & ANCHORING ADHESIVE\00071623570248.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Connecting & Jointing System\0016_HTB1oqCRKVXXXXXAapXXq6xXFXXXs.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Connecting & Jointing System\0017_HTB1oqCRKVXXXXXAapXXq6xXFXXXs.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\Flooring System\0002GetPurchaseOrderInvoiceLocal.pdf
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\Products\_1617855940_homecleaning.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\ReferenceProject\_banner_about.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\shoppingbag.png
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\taka.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\user.jpg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\images\WebsiteImage\ProjectType\_metro-rail-3.jpeg
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\Blazored-BlazorQuill.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\BlazorQuill.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\chart.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\interop.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\jquery-ui.min.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\jquery.min.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\main_chart.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\js\quill-blot-formatter.min.js
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\ACCTrialBalance.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\BalanceSheet.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\billreqReport.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\CustomerAccount.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\GeneralLedger.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PaymentVoucher.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\ProfitAndLoss.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceIN.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceInt.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceL.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\PurchaseInvoiceLocal.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesDeliveryNote.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesInvoice.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\SalesQuotation.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\StockStatement.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\RDLC\TrialBalance.rdlc
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\Video\0047_Waterproofing.mp4
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\appsettings.json
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.deps.json
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.runtimeconfig.json
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.pdb
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\AspNetCore.Reporting.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\AspNetCore.ReportingServices.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\AspNetCore.ReportViewer.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.LocalStorage.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.SessionStorage.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.Toast.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Authorization.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.Forms.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Components.Web.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Metadata.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalysis.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.JSInterop.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.Bson.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.ReportViewer.Common.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.ReportViewer.DataVisualization.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.ReportViewer.NETCore.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.ReportViewer.ProcessingObjectModel.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.CodeDom.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.IO.Packaging.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.IO.Pipelines.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.Resources.Extensions.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.Runtime.CompilerServices.Unsafe.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.ServiceModel.Http.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.ServiceModel.Primitives.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.ServiceModel.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.ServiceModel.Security.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\System.Text.Encoding.CodePages.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\cs\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\de\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\es\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\fr\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\it\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ja\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ko\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\pl\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\pt-BR\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ru\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\tr\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\cs\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\de\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\es\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\fr\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\it\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ja\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ko\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\pl\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\pt-BR\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\ru\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\tr\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\zh-Hans\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\zh-Hant\Microsoft.CodeAnalysis.VisualBasic.resources.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\win-x64\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\win-x86\native\sni.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\unix\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\runtimes\win\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Blazored.Typeahead.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Blazor.HttpClient.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.ProtectedBrowserStorage.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_ClassLibrary.pdb
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\TOCOMA_ERP_System.styles.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\_content\Blazored.Toast\blazored-toast.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\wwwroot\_content\Blazored.Toast\blazored-toast.min.css
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.Views.dll
+D:\Project\Company All Project\SEMCORP\Solution\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Release\net5.0\PubTmp\Out\TOCOMA_ERP_System.Views.pdb

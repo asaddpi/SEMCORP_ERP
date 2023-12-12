@@ -1,0 +1,498 @@
+﻿@page "/DailyPurchaseForProject/{voucherNo}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+
+<style>
+    .date_select {
+        width: 42%;
+        /*display: inline-flex;*/
+        padding: 10px;
+        /*justify-content: center;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .date_select span {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .date_select button {
+            width: 8%;
+            padding: 10px;
+            background: #2196F3;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+    .top_button {
+        height: 34px;
+        width: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .display_total {
+        text-align: right;
+        margin-right: 43px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    .table_width {
+        width: 139px;
+        text-align: left;
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    table tbody tr {
+        height: 35px;
+        font-size: 13px;        
+    }
+        table tbody tr td {
+            padding-left: 5px;
+        }
+</style>
+<div class="card">
+    <div class="card-header">
+        <h3>Purchase Details</h3>
+    </div>
+    <br />
+    <!--<div class="date_select">
+        <span>
+            From-->
+            @*<input type="date" id="today" value="@from_date" format-value="dd-MM-yyyy" style="width:200px" @onchange="GetDate">*@
+            <!--<input type="text" id="date_2" @bind-value="@from_date" autocomplete="off" style="width:200px" placeholder="dd/mm/yy" />
+        </span>
+        <span>
+            To-->
+            @*<input type="date" id="today" value="@currentDate" format-value="dd-MM-yyyy" style="width:200px" @onchange="GetDate">*@
+            <!--<input type="text" id="date_3" @bind-value="@to_date" autocomplete="off" style="width:200px" placeholder="dd/mm/yy" />
+        </span>
+        <button type="submit" @onclick="GetPurchaseByDate" class="top_button"><i class="fa fa-search"></i></button>
+        <button type="submit" class="top_button"><i class="fa fa-print" @onclick="GetReport"></i></button>
+    </div>-->
+
+
+    <div class="testbox">
+        <div class="tablearea">
+            <div style="float: left; width: 140px" class="d-flex flex-row">
+                <label style="margin-top:5px">show</label>
+                <input type="number" min="1" value="@display_row_no" @oninput="GetPagination" style="margin-left:5px;margin-right:5px;align-content:center" />
+                <label style="margin-top:5px">entries</label>
+            </div>
+            <div style="float:right">
+                <label>@StartNumber-@EndNumber of @purchaseviewList_forPagination.Count()</label> <a style="color:Highlight"><i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i></a>&nbsp;&nbsp;<a style="color:Highlight"><i class='bi bi-arrow-right-circle' style="font-size:30px;margin-right:10px" @onclick="@(e => NavigatTo("next"))"></i></a>
+            </div>
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        @*<th style="width:40px"></th>*@
+                        @*<th style="width:40px"></th>*@
+                        <td>PO Date</td>
+                        <td>Voucher No.</td>
+                        <td>Supplier</td>
+                        <td>Item</td>
+                        <td>QTY.</td>
+                        <td>Unit</td>
+                        <td>Rate</td>
+                        <td>Total</td>
+
+
+                        @*<td>Department</td>*@
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (purchaseviewList != null)
+                    {
+                        foreach (var item in purchaseviewList)
+                        {
+                            <tr>
+                                @*<td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.PO_ID))><span class="oi oi-trash"></span></a></td>*@
+                                @*<td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg-editItem" href="#" @onclick=@(() => EditItem(item.PO_DETAILS_ID))><span class="oi oi-pencil"></span></a></td>*@
+                                <td>@item.PO_DATE</td>
+                                <td>@item.VOUCHER_NO</td>
+                                <td>@item.VENDOR_NAME</td>
+                                <td>@item.ITEM_NAME</td>
+                                <td>@item.QUANTITY</td>
+                                <td>@item.UOM</td>
+                                <td>@item.UNIT_PRICE</td>
+                                <td>@item.UNIT_TOTAL</td>
+                                @*<td>@item.DEPARTMENT_NAME</td>*@
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="display_total">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="table_width">Total</td>
+                    <td class="table_width">@itemTotal</td>
+                </tr>
+                <tr>
+                    <td class="table_width">Transport Cost</td>
+                    <td class="table_width">@porderView.CARRING_WAY_COST</td>
+                </tr>
+                <tr>
+                    <td class="table_width">Labour.Cost</td>
+                    <td class="table_width">@porderView.LABOUR_COST</td>
+                </tr>
+                <tr>
+                    <td class="table_width">Other.Cost</td>
+                    <td class="table_width">@porderView.OTHERS_COST</td>
+                </tr>
+                <tr>
+                    <td class="table_width"><b>Grand Total</b></td>
+                    <td class="table_width"><b>@GrandTotal</b></td>
+                </tr>
+            </tbody>
+        </table>
+        
+
+    </div>
+
+</div>
+
+<div class="modal fade bd-example-modal-lg-editItem" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@orderItem">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">EDIT ITEMS</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>PO Date:</label></div>
+                                            <div class="col-md-6">
+                                                @*<input type="date" id="today" value="@currentDate" format-value="dd-MM-yyyy" style="width:200px" @onchange="GetDate">*@
+                                                <input type="text" id="date_1" @bind-value="@currentDate" autocomplete="off" style="width:200px" placeholder="dd/mm/yy" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Item:</label></div>
+                                            <div class="col-md-6">
+                                                <input type="search" @bind="searchitem" @bind:event="oninput" class="form-control" style="width:400px" />
+                                                <div class="autocom">
+                                                    @if (itemnameList != null)
+                                                    {
+                                                        @foreach (var item in itemnameList)
+                                                        {
+                                                            if (item.ToUpper().Contains(searchitem.ToUpper()) && searchitem.Length > 1)
+                                                            {
+                                                                if (searchitem != "")
+                                                                {
+                                                                    <section @onclick=@(() => SelectedItm(item)) style="width:84%">@item</section>
+                                                                }
+                                                                else
+                                                                { <section></section>}
+                                                            }
+                                                        }
+                                                    }
+
+                                                </div>
+                                                @*<InputSelect @bind-Value="@termsconditions.TERMS_AND_CONDITIONS" style="width:400px" cols="30" rows="3"></InputSelect>*@
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>UOM:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@orderItem.UOM" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Quantity:</label></div>
+                                            <div class="col-md-6"><InputNumber @bind-Value="@orderItem.Quantity" style="width:400px"></InputNumber></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Rate:</label></div>
+                                            <div class="col-md-6"><InputNumber @bind-Value="@orderItem.Rate" style="width:400px"></InputNumber></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Total:</label></div>
+                                            <div class="col-md-6"><InputNumber @bind-Value="@orderItem.Total" style="width:400px"></InputNumber></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => UpdatePO())>Edit</button>   @*@onclick=@(() => UpdatePO())*@
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<PurchaseOrderViewModel> purchaseviewList = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderViewModel> purchaseviewList_forPagination = new List<PurchaseOrderViewModel>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    OrderItemEntity orderItem = new OrderItemEntity();
+    List<ItemEntity> itemNameList = new List<ItemEntity>();
+    PurchaseOrderModel porderModel = new PurchaseOrderModel();
+    PurchaseOrderDetailsEntity podetailsEntity = new PurchaseOrderDetailsEntity();
+    List<PurchaseOrderDetailsEntity> podetailsList = new List<PurchaseOrderDetailsEntity>();
+    PurchaseOrderViewModel porderView = new PurchaseOrderViewModel();
+    [Parameter]
+    public string voucherNo { get; set; }
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    public int display_row_no { get; set; }
+    public string searchitem { get; set; } = "";
+    List<string> itemnameList;
+    string currentDate;
+    string selected_date;
+    string fdate;
+    int poId;
+    int podetailsId;
+    string from_date;
+    string to_date;
+    string itemTotal;
+    string GrandTotal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetList();
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product/GetProjectItem");
+
+
+        itemnameList = productList.Select(f => f.ITEM_NAME).Distinct().ToList();
+
+
+
+        display_row_no = 10;
+        Pagination();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("JsInteropDatepicker");
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task GetList()
+    {
+        purchaseviewList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseListForProject/"+ voucherNo);
+        purchaseviewList_forPagination = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseListForProject/"+voucherNo);
+        porderView = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseItemSumForProject");
+        GetSum();
+
+    }
+    private void GetSum()
+    {
+        double total = purchaseviewList.Sum(x => Convert.ToDouble(x.UNIT_TOTAL));
+        itemTotal = "0";
+        double gtotal = total + porderView.CARRING_WAY_COST + porderView.LABOUR_COST + porderView.OTHERS_COST;
+        itemTotal = String.Format("{0:#,###,###.##}", total);
+        GrandTotal = String.Format("{0:#,###,###.##}", gtotal);
+    }
+    private async Task GetPurchaseByDate()
+    {
+        if (from_date != null && to_date != null)
+        {
+            string fdate = from_date.Replace("/", "-");
+            string tdate = to_date.Replace("/", "-");
+            string url = "api/Purchase/GetPurchaseListForProjectByDate/" + fdate + "/" + tdate;
+            purchaseviewList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseListForProjectByDate/" + fdate + "/" + tdate);
+            purchaseviewList_forPagination = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseListForProjectByDate/" + fdate + "/" + tdate);
+            porderView = new PurchaseOrderViewModel();
+            porderView = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseItemSumForProject_By_Date/" + fdate + "/" + tdate);
+            GetSum();
+            Pagination();
+        }
+        else { toastService.ShowWarning("Please Select Date"); }
+
+    }
+
+    public async Task UpdatePO()
+    {
+        try
+        {
+            porderModel.PO_DATE = currentDate;
+            porderModel.PO_ID = purchaseviewList.Find(x => x.PO_DETAILS_ID == podetailsId).PO_ID;
+            //---Details table
+            podetailsEntity = new PurchaseOrderDetailsEntity();
+            podetailsEntity.ITEM_NAME = searchitem;
+            podetailsEntity.ITEM_ID = purchaseviewList.Find(x => x.PO_DETAILS_ID == podetailsId).ITEM_ID;
+            podetailsEntity.PO_DETAILS_ID = podetailsId;
+            podetailsEntity.QUANTITY = orderItem.Quantity;
+            podetailsEntity.UNIT_PRICE = orderItem.Rate;
+            podetailsEntity.UNIT_TOTAL = orderItem.Total;
+            podetailsList.Add(podetailsEntity);
+            porderModel.pOrderDetailsList = podetailsList;
+
+
+            var data = await Http.PutJsonAsync<PurchaseOrderModel>(Utility.BaseUrl + "api/Purchase/UpdatePurchaseForProject", porderModel);
+            await GetList();
+            toastService.ShowSuccess("Update Successfully!!!");
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError("Some error !");
+        }
+
+    }
+    private async void GetDate(ChangeEventArgs change)
+    {
+        selected_date = change.Value.ToString();
+        fdate = Convert.ToDateTime(selected_date).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Year;
+    }
+    public async Task EditItem(int Id)
+    {
+        podetailsId = Id;
+
+        currentDate = purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).PO_DATE;
+        searchitem = purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).ITEM_NAME;
+        orderItem.Quantity = Convert.ToDouble(purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).QUANTITY);
+        orderItem.UOM = purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).UOM;
+        orderItem.Rate = purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).UNIT_PRICE;
+        orderItem.Total = purchaseviewList.Find(x => x.PO_DETAILS_ID == Id).UNIT_TOTAL;
+
+
+
+
+
+
+        //currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+        //currentDate=Convert.ToDateTime(dt).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(dt).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(dt).Year;
+        //currentDate=Convert.ToDateTime(dt).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(dt).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(dt).Year;
+
+        //orderItem.PACK_SIZE = requestItemList.Find(x => x.ITEM_ID == Id).PACK_SIZE;
+        //orderItem.UOM = requestItemList.Find(x => x.ITEM_ID == Id).UOM;
+        //orderItem.Quantity = requestItemList.Find(x => x.ITEM_ID == Id).Quantity;
+        //orderItem.Rate = requestItemList.Find(x => x.ITEM_ID == Id).Rate;
+    }
+    //private async Task Delete(int Id)
+    //{
+
+    //    if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+    //        return;
+
+    //    await Http.DeleteAsync(Utility.BaseUrl + "api/Purchase/DeletePurchaseItem/" + Id);
+    //    await GetBrand();
+    //}
+    public async Task SelectedItm(string param_itm)
+    {
+        //itemName = param_itm;
+        searchitem = param_itm;
+        //unitId = itemNameList.Find(x => x.ITEM_NAME == searchitem).UNIT_ID;
+        //unitName = itemNameList.Find(x => x.ITEM_NAME == searchitem).UOM;
+        //itemEntity.UNIT_ID = unitId;
+
+
+
+        StateHasChanged();
+    }
+    private void Pagination()
+    {
+        pageSize = display_row_no;
+        if (purchaseviewList_forPagination.Count > 0)
+        {
+            purchaseviewList = purchaseviewList_forPagination.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(purchaseviewList_forPagination.Count() / (decimal)pageSize);
+            StartNumber = purchaseviewList.FirstOrDefault().SL;
+            EndNumber = purchaseviewList[purchaseviewList.Count - 1].SL;
+        }
+
+    }
+    public async Task GetPagination(ChangeEventArgs change)
+    {
+        if (change.Value != "")
+        {
+            int n = Convert.ToInt32(change.Value);
+
+            display_row_no = n;
+            pageSize = display_row_no;
+            if (purchaseviewList_forPagination.Count > 0)
+            {
+                purchaseviewList = purchaseviewList_forPagination.Take(pageSize).ToList();
+                TotalPage = (int)Math.Ceiling(purchaseviewList_forPagination.Count() / (decimal)pageSize);
+                StartNumber = purchaseviewList.FirstOrDefault().SL;
+                EndNumber = purchaseviewList[purchaseviewList.Count - 1].SL;
+            }
+        }
+
+    }
+    private void UpdateList(int pageNumber)
+    {
+        purchaseviewList = purchaseviewList_forPagination.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (purchaseviewList.Count > 0)
+        {
+            StartNumber = purchaseviewList.FirstOrDefault().SL;
+            EndNumber = purchaseviewList[purchaseviewList.Count - 1].SL;
+        }
+
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private async void GetReport()
+    {
+        //stockStatementList = new List<RStockInformation>();
+        //stockStatementList = await Http.GetJsonAsync<List<RStockInformation>>(Utility.BaseUrl + "api/Purchase/GetStockStatement/" + fromdate + "/" + todate);
+        SessionData.From_date = from_date;
+        SessionData.To_date = to_date;
+        SessionData.purchaseRecortList = purchaseviewList;
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseStatement", "_blank");
+    }
+}

@@ -1,0 +1,162 @@
+﻿@page "/AddColor"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+
+<div class="card">
+    <div class="card-header">
+        <h3>Color</h3>
+    </div>
+
+    <br />
+    <EditForm Model="@color" style="height:20%;margin-left:10px">
+        <div class="row">
+            <div class="col-md-2"><label><b>Color Name:</b></label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@color.COLOR_NAME" style="width:500px"></InputText>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <button type="submit" @onclick="SaveColor" class="btn btn-info" style="width:120px;margin-right:10px">@submit</button>
+                <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+            </div>
+        </div>
+
+    </EditForm>
+
+    <br />
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:40px"></th>
+                        <th style="width:40px"></th>
+                        <td>Country</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (colorList != null)
+                    {
+                        foreach (var item in colorList)
+                        {
+                            <tr>
+                                <td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.COLOR_ID))><span class="oi oi-trash"></span></a></td>
+                                <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => EditBrand(item.COLOR_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td>@item.COLOR_NAME</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    List<ColorModel> colorList = new List<ColorModel>();
+    ColorModel color = new ColorModel();
+    string submit = "Save";
+    protected override async Task OnInitializedAsync()
+    {
+        await GetColor();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetColor()
+    {
+        colorList = await Http.GetJsonAsync<List<ColorModel>>(Utility.BaseUrl + "api/Setup/GetColorList");
+    }
+    public async Task SaveColor()
+    {        
+        if (IsValidation_Color() != true)
+        {
+            try
+            {
+                if (submit == "Save")
+                {
+                    color.Operation_Type = 1;
+                    var data = await Http.PostJsonAsync<ColorModel>(Utility.BaseUrl + "api/Setup/AddColor", color);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                else if (submit == "Update")
+                {
+                    color.Operation_Type = 2;
+                    var data = await Http.PutJsonAsync<ColorModel>(Utility.BaseUrl + "api/Setup/UpdateColor", color);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                submit = "Save";
+                color = new ColorModel();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        await GetColor();
+    }
+    private bool IsValidation_Color()
+    {
+        bool flag = false;
+        if (color.COLOR_NAME == "" || color.COLOR_NAME == string.Empty || color.COLOR_NAME == null)
+        {
+            toastService.ShowWarning("Color Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async Task Cancel()
+    {
+        color = new ColorModel();
+        submit = "Save";
+    }
+    private async Task Delete(int Id)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteColor/" + Id);
+        await GetColor();
+    }
+    private async Task EditBrand(int Id)
+    {
+        submit = "Update";
+        color = new ColorModel();
+        color.COLOR_NAME = colorList.Find(x => x.COLOR_ID == Id).COLOR_NAME;
+        color.COLOR_ID = Id;
+        color.Operation_Type = 2;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

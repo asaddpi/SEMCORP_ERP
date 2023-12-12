@@ -1,0 +1,1570 @@
+﻿@inherits LayoutComponentBase
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager UriHelper
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IJSRuntime js
+
+
+<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter"
+                Timeout="10"
+                SuccessClass="success-toast-override" />
+<div id="sidebar-mobile" class="position-fixed">
+    <div class="sidebar-wrapper">
+        <ul class="list-group mt-4">
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                <div class="sub-list-collapse-icon align-self-center">
+                </div>
+                <span class="material-symbols-outlined mr-3">
+                    home
+                </span>
+                Home
+            </li>
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                href="#subListcollapse-2" role="button" aria-expanded="false" aria-controls="subListcollapse-2">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+
+                <span class="material-symbols-outlined mr-3">
+                    person
+                </span>
+                <p class="m-0">Admin</p>
+            </li>
+            <div class="collapse subListcollapse" id="subListcollapse-2">
+                <ul class="list-group">
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" data-toggle="collapse"
+                        href="#subListcollapse-2-1" role="button" aria-expanded="false"
+                        aria-controls="subListcollapse-2-1">
+                        <div class="sub-list-collapse-icon align-self-center">
+                            <i class="fa-solid fa-caret-right"></i>
+                        </div>
+                        <p class="m-0">Directory-01</p>
+
+                    </li>
+                    <div class="collapse subListcollapse" id="subListcollapse-2-1">
+                        <ul class="list-group">
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-01
+                            </li>
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-02
+                            </li>
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-03
+                            </li>
+                        </ul>
+                    </div>
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                        Directory-02
+                    </li>
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                        Directory-02
+                    </li>
+                </ul>
+            </div>
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+                <span class="material-symbols-outlined mr-3">
+                    devices
+                </span>
+                <p class="m-0">Devices</p>
+            </li>
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+                <span class="material-symbols-outlined mr-3">
+                    apps
+                </span>
+                <p class="m-0">Apps</p>
+            </li>
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+                <span class="material-symbols-outlined mr-3">
+                    credit_card
+                </span>
+                <p class="m-0">Billing</p>
+            </li>
+
+
+            @*----------------*@
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                href="#hr-subListcollapse-2" role="button" aria-expanded="false" aria-controls="subListcollapse-2">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+
+                <span class="material-symbols-outlined mr-3">
+                    person
+                </span>
+                <p class="m-0">HR</p>
+            </li>
+            <div class="collapse subListcollapse" id="hr-subListcollapse-2">
+                <ul class="list-group">
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" data-toggle="collapse"
+                        href="#subListcollapse-2-1" role="button" aria-expanded="false"
+                        aria-controls="subListcollapse-2-1">
+                        <div class="sub-list-collapse-icon align-self-center">
+                            <i class="fa-solid fa-caret-right"></i>
+                        </div>
+                        <p class="m-0">Directory-01</p>
+
+                    </li>
+                    <div class="collapse subListcollapse" id="subListcollapse-2-1">
+                        <ul class="list-group">
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-01
+                            </li>
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-02
+                            </li>
+                            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                Directory-01-03
+                            </li>
+                        </ul>
+                    </div>
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                        Directory-02
+                    </li>
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                        Directory-02
+                    </li>
+                </ul>
+            </div>
+
+            @*-----------------*@
+
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+
+                <span class="material-symbols-outlined mr-3">
+                    alternate_email
+                </span>
+                <p class="m-0">Account</p>
+            </li>
+            <!-- start save collapse links in this list -->
+            <div class="collapse" id="collapseExample">
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                href="#subListcollapse-1" role="button" aria-expanded="false" aria-controls="subListcollapse-1">
+                <div class="sub-list-collapse-icon align-self-center">
+                    <i class="fa-solid fa-caret-right"></i>
+                </div>
+
+                <span class="material-symbols-outlined mr-3">
+                    person
+                </span>Home
+            </li>
+            <div class="collapse subListcollapse" id="subListcollapse-1">
+                <ul class="list-group">
+                    <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                        test1
+                    </li>
+                </ul>
+            </div>
+    </div>
+    <!-- end save collapse links in this list -->
+    </ul>
+</div>
+</div>
+<div class="main d-flex flex-column">
+    <nav class="d-flex w-100 position-fixed px-3">
+        <div class="nav-left d-flex align-items-center flex-grow-1">
+            <span class="material-symbols-outlined text-white ml-3 cursor-pointer menu-controller">
+                menu
+            </span>
+            <a class="navbar-brand text-white ml-3" href="Home">
+                SEMCORP
+            </a>
+            <form class="form-inline flex-grow-1">
+                <div class="input-group flex-nowrap ml-5" style="width: 100%">
+                    <div class=" input-group-prepend">
+                        <span class="input-group-text border-0" id="addon-wrapping">
+                            <span class="material-symbols-outlined text-white">
+                                search
+                            </span>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control border-0 text-white" placeholder="Search"
+                           aria-label="Search" aria-describedby="addon-wrapping">
+                </div>
+            </form>
+        </div>
+        <div class="nav-right d-flex flex-grow-1 justify-content-end">
+            <div class="nav-group-icons d-flex align-items-center">
+                <ul class="list-group list-group-horizontal mr-3">
+                    <li class="list-group-item border-0">
+                        <div class="btn-group">
+                            <span class="material-symbols-outlined text-white"
+                                  data-toggle="dropdown" aria-expanded="false">
+                                notifications
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right px-2"
+                                 style="width: 350px;height: 350px;overflow: auto">
+                                <div class="noti-header d-flex justify-content-between">
+                                    <span>Alert</span>
+                                    <span>View All</span>
+                                </div>
+                                <div class="noti-wrapper d-flex mt-2">
+                                    <div class="noti-left d-flex align-items-start">
+                                        <img src="images/gmail.png" alt="" width="20" height="20"
+                                             class="mr-2 mt-1">
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-grow-1">
+                                        <div class="noti-title-middle d-flex flex-grow-1">
+                                            <div class="noti-sub-details d-flex flex-column justify-content-between">
+                                                <span>Google Operations</span>
+                                                <small class="text-truncate" style="max-width: 235px;">
+                                                    this is some
+                                                    random text for test
+                                                    purpose.this is some random
+                                                    text for test purposethis is some random text for test
+                                                    purpose
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="noti-title-right d-flex flex-column justify-content-between"
+                                             style="min-width: 60px;">
+                                            <small>2022-06-30</small>
+                                            <span class="badge badge-primary mt-2">Primary</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="noti-wrapper d-flex mt-2">
+                                    <div class="noti-left d-flex align-items-start">
+                                        <img src="images/gmail.png" alt="" width="20" height="20"
+                                             class="mr-2 mt-1">
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-grow-1">
+                                        <div class="noti-title-middle d-flex flex-grow-1">
+                                            <div class="noti-sub-details d-flex flex-column justify-content-between">
+                                                <span>Google Operations</span>
+                                                <small class="text-truncate" style="max-width: 235px;">
+                                                    this is some
+                                                    random text for test
+                                                    purpose.this is some random
+                                                    text for test purposethis is some random text for test
+                                                    purpose
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="noti-title-right d-flex flex-column justify-content-between"
+                                             style="min-width: 60px;">
+                                            <small>2022-06-30</small>
+                                            <span class="badge badge-primary mt-2">Primary</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div class="btn-group">
+                            <span class="material-symbols-outlined text-white "
+                                  data-toggle="dropdown" aria-expanded="false">
+                                hourglass_empty
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right px-2"
+                                 style="width: 350px;height: 350px;overflow: auto">
+                                <div class="noti-header d-flex justify-content-between">
+                                    <span>Alert</span>
+                                    <span>View All</span>
+                                </div>
+                                <div class="noti-wrapper d-flex mt-2">
+                                    <div class="noti-left d-flex align-items-start">
+                                        <img src="images/gmail.png" alt="" width="20" height="20"
+                                             class="mr-2 mt-1">
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-grow-1">
+                                        <div class="noti-title-middle d-flex flex-grow-1">
+                                            <div class="noti-sub-details d-flex flex-column justify-content-between">
+                                                <span>Google Operations</span>
+                                                <small class="text-truncate" style="max-width: 235px;">
+                                                    this is some
+                                                    random text for test
+                                                    purpose.this is some random
+                                                    text for test purposethis is some random text for test
+                                                    purpose
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="noti-title-right d-flex flex-column justify-content-between"
+                                             style="min-width: 60px;">
+                                            <small>2022-06-30</small>
+                                            <span class="badge badge-primary mt-2">Primary</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="noti-wrapper d-flex mt-2">
+                                    <div class="noti-left d-flex align-items-start">
+                                        <img src="images/gmail.png" alt="" width="20" height="20"
+                                             class="mr-2 mt-1">
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-grow-1">
+                                        <div class="noti-title-middle d-flex flex-grow-1">
+                                            <div class="noti-sub-details d-flex flex-column justify-content-between">
+                                                <span>Google Operations</span>
+                                                <small class="text-truncate" style="max-width: 235px;">
+                                                    this is some
+                                                    random text for test
+                                                    purpose.this is some random
+                                                    text for test purposethis is some random text for test
+                                                    purpose
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="noti-title-right d-flex flex-column justify-content-between"
+                                             style="min-width: 60px;">
+                                            <small>2022-06-30</small>
+                                            <span class="badge badge-primary mt-2">Primary</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div class="btn-group">
+                            <span class="material-symbols-outlined text-white "
+                                  data-toggle="dropdown" aria-expanded="false">
+                                help
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right px-2">
+                                <a href="Manual" target="_blank">Manual</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-user-icons d-flex align-items-center">
+                <ul class="list-group list-group-horizontal">
+
+                    <li class="list-group-item border-0 d-flex align-items-center mini-search-input">
+                        <div class="btn-group">
+                            <span class="material-symbols-outlined text-white "
+                                  data-toggle="dropdown" aria-expanded="false">
+                                search
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right p-2"
+                                 style="width: 275px;overflow-y: auto;">
+                                <input type="text" class="form-control" placeholder="Search..">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 d-flex align-items-center">
+                        <div class="btn-group">
+                            <span class="material-symbols-outlined text-white "
+                                  data-toggle="dropdown" aria-expanded="false">
+                                apps
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right p-2"
+                                 style="width: 275px;height: 350px;overflow-y: auto;">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <div class="apps-wrapper d-flex flex-column justify-content-center align-items-center">
+                                                <img src="images/google.png" alt="" width="40" height="40">
+                                                <span style="font-size: 14px;">Search</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/gmail.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Gmail</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/photos.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Photos</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/google.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Search</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/gmail.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Gmail</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="./images/photos.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Photos</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/google.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Search</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/gmail.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Gmail</span>
+                                        </div>
+                                        <div class="col-4 col-md-4 p-3 d-flex flex-column align-items-center justify-content-center apps-icons">
+                                            <img src="images/photos.png" alt="" width="40" height="40">
+                                            <span style="font-size: 14px;">Photos</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div class="btn-group">
+                            <img src="images/@employeeImage" width="35" height="35" alt="" class="rounded-circle dropdown-toggle"
+                                 data-toggle="dropdown" aria-expanded="false">
+                            <div class="dropdown-menu dropdown-menu-right py-3 ">
+                                <div class="user-details d-flex flex-column align-items-center">
+                                    <img src="images/@employeeImage" alt="" width="80" height="80" class="rounded-pill">
+                                    <div class="userName">
+                                        @employeeName
+                                        <AuthorizeView>
+                                            <Authorized>@context.User.Identity.Name</Authorized>
+                                        </AuthorizeView>
+                                    </div>
+                                    <div class="userEmail">
+                                        @loginId
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class=" d-flex justify-content-center">
+                                    <button class="py-2 px-3 bg-white singOut-btn rounded font-weight-bold" @onclick="Logout">
+                                        Sign Out
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout d-flex flex-grow-1">
+        <div class="sidebar d-flex flex-column position-relative" id="sidebar">
+            <div class="sidebar-content position-fixed h-100">
+                <div class="sidebar-top d-flex flex-column border-bottom">
+                    <ul class="list-group mt-4">
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+                            <div class="sub-list-collapse-icon">
+                            </div>
+                            <span class="material-symbols-outlined mr-3">
+                                home
+                            </span>
+                            <a href="Home">
+                                Home
+                            </a>
+
+                        </li>
+                        <!-----Materials bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#setup-item" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Materials</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="setup-item">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="NewCategory">Materials Category</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="SubCategory">Materials Sub-Category</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="AddBrand">Brand/Manufacturer</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="NewProduct">New Materials</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="ItemList">Materials List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="Services">Service Category</a>
+                </li>
+
+
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="EmployeeList">Employee List</a>
+                </li>*@
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="TermsConditionPage">Terms Condition</a>
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Materials bar end-->
+                        <!-----Service bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#service-item" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Service</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="service-item">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="ServiceCategory">Service Category</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="ServiceSubCategory">Service Sub-Category</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="Service">Service List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="TermsConditionPage">Terms Condition</a>
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Service bar end-->
+                        <!-----Supplier bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#supplier" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Vendor</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="supplier">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="AddVendor">New Vendor</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="VendorList">Vendor List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="Services">Service Sub-Category</a>
+                </li>
+
+
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="EmployeeList">Service List</a>
+                </li>*@
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="TermsConditionPage">Terms Condition</a>
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Supplier bar end-->
+                        <!-----Client bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#client" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Client</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="client">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="AddCustomer">New Client</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="Customers">Client List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="Services">Service Sub-Category</a>
+                </li>
+
+
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="EmployeeList">Service List</a>
+                </li>*@
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="TermsConditionPage">Terms Condition</a>
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Supplier bar end-->
+                        <!-----Client bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#quotation" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Quotation</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="quotation">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="SalesQuotation">New Quotation</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="SalesQuotation">Revised Quotation</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="QuotationList">Quotation List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="Services">Service Sub-Category</a>
+                </li>
+
+
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="EmployeeList">Service List</a>
+                </li>*@
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="TermsConditionPage">Terms Condition</a>
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Client bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#workorder" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Work Order</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="workorder">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="QuotationList">Received Work Order List</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="WorkOrderList">New Work Order</a>
+                                </li>
+
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="WorkOrderList">Work Order List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+            <a href="Services">Service Sub-Category</a>
+        </li>
+
+
+        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+            <a href="EmployeeList">Service List</a>
+        </li>*@
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+            <a href="TermsConditionPage">Terms Condition</a>
+        </li>*@
+                            </ul>
+                        </div>
+                        <!-----Supplier bar end-->
+                        <!-----Client bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#project" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Project</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="project">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="NewProject">New Project</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="ProjectList">Project List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="Services">Project Divisions</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="Services">Project Team</a>
+                                </li>*@
+
+                            </ul>
+                        </div>
+                        <!-----Purchase bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#setting-project" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Purchase</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="setting-project">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="PurchaseforProject">New Purchase</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="PurchaseList">Purchase List</a> 
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="NewPurchaseOrder">New Purchase Order</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="PurchaseOrderList">Purchase Order List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="DailyPurchaseListforProject">
+                    Purchase Statement
+                </li>*@
+
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="StockSummaryForProject">
+                    Stock Summary
+                </li>*@
+                            </ul>
+                        </div>
+
+                        <!-----Dilivery Note bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#deliverynote" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Dilivery Note</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="deliverynote">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="DeliveryNote">New Delivery Note</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="DeliveryNoteList">Delivery Note List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="NewPurchaseOrder">New Purchase Order</a>
+                </li>*@
+
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="DailyPurchaseListforProject">
+                    Purchase Statement
+                </li>*@
+
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="StockSummaryForProject">
+                    Stock Summary
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Dilivery Note bar end-->
+                        <!-----Dilivery Note bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#Invoice" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Invoice</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="Invoice">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="Invoice">New Invoice</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="InvoiceList">Invoice List</a>
+                                </li>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="NewPurchaseOrder">New Purchase Order</a>
+                </li>*@
+
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="DailyPurchaseListforProject">
+                    Purchase Statement
+                </li>*@
+
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="StockSummaryForProject">
+                    Stock Summary
+                </li>*@
+                            </ul>
+                        </div>
+                        <!-----Dilivery Note bar end-->
+                        @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+            href="#product-item" role="button" aria-expanded="false"
+            aria-controls="subListcollapse-2">
+            <div class="sub-list-collapse-icon align-self-center">
+                <i class="fa-solid fa-caret-right"></i>
+            </div>
+
+            <span class="material-symbols-outlined mr-3">
+                apps
+            </span>
+            <p class="m-0">Product</p>
+        </li>
+        <div class="collapse subListcollapse" id="product-item">
+            <ul class="list-group">
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="NewProduct">New Product</a>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    <a href="ItemList">Product List</a>
+                </li>
+            </ul>
+        </div>*@
+                        <!-----Accounce bar start-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#accounce-subListcollapse-2" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                person
+                            </span>
+                            <p class="m-0">Accounting</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="accounce-subListcollapse-2">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center"
+                                    data-toggle="collapse" href="#subListcollapse-2-1" role="button"
+                                    aria-expanded="false" aria-controls="subListcollapse-2-1">
+                                    <div class="sub-list-collapse-icon align-self-center">
+                                        <i class="fa-solid fa-caret-right"></i>
+                                    </div>
+                                    <p class="m-0">Master</p>
+
+                                </li>
+                                <div class="collapse subListcollapse" id="subListcollapse-2-1">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="BranchNameClicked">
+                                            Branch
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="CurrencyClicked">
+                                            Currency
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="LadgerGroupClicked">
+                                            Ledger Group
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="LedgerClicked">
+                                            Ledger
+                                        </li>
+                                    </ul>
+                                </div>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center"
+                                    data-toggle="collapse" href="#pending_subListcollapse" role="button"
+                                    aria-expanded="false" aria-controls="subListcollapse-2-1">
+                                    <div class="sub-list-collapse-icon align-self-center">
+                                        <i class="fa-solid fa-caret-right"></i>
+                                    </div>
+                                    <p class="m-0">Pending Bill</p>
+
+                                </li>
+                                <div class="collapse subListcollapse" id="pending_subListcollapse">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a href="SupplierPaymentPending">Payment</a>
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a href="CustomerReceiptPending">Receipt</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center"
+                                    data-toggle="collapse" href="#transection_subListcollapse" role="button"
+                                    aria-expanded="false" aria-controls="subListcollapse-2-1">
+                                    <div class="sub-list-collapse-icon align-self-center">
+                                        <i class="fa-solid fa-caret-right"></i>
+                                    </div>
+                                    <p class="m-0">Transection</p>
+
+                                </li>
+                                <div class="collapse subListcollapse" id="transection_subListcollapse">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="PaymentClicked">
+                                            Payment
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="ReceiveClicked">
+                                            Receipt
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="JournalClicked">
+                                            Journal
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="ContraClicked">
+                                            Contra
+                                        </li>
+                                    </ul>
+                                </div>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center"
+                                    data-toggle="collapse" href="#report_subListcollapse" role="button"
+                                    aria-expanded="false" aria-controls="subListcollapse-2-1">
+                                    <div class="sub-list-collapse-icon align-self-center">
+                                        <i class="fa-solid fa-caret-right"></i>
+                                    </div>
+                                    <p class="m-0">Reports</p>
+
+                                </li>
+                                <div class="collapse subListcollapse" id="report_subListcollapse">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target="._bd-example-modal-lg" @onclick=@(() => ReportTypeClick(1))>Trial Balance</a>
+
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target="._bd-example-modal-lg" @onclick=@(() => ReportTypeClick(2))>Balance Sheet</a>
+
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target="._bd-example-modal-lg" @onclick=@(() => ReportTypeClick(3))>Profit & Loss</a>
+
+                                        </li>
+                                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                            <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target="._bd-example-modal-lg_gl" @onclick=@(() => ReportTypeClick(3))>General Ledger</a>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                                @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                    Directory-02
+                </li>*@
+                            </ul>
+                        </div>
+
+                        <!---Misc Start-->
+                        <!-----Setting bar start-->
+                        <!--<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+        href="#misc" role="button" aria-expanded="false"
+        aria-controls="subListcollapse-2">
+        <div class="sub-list-collapse-icon align-self-center">
+            <i class="fa-solid fa-caret-right"></i>
+        </div>
+
+        <span class="material-symbols-outlined mr-3">
+            apps
+        </span>
+        <p class="m-0">Misc</p>
+    </li>-->
+                        @*<div class="collapse subListcollapse" id="misc">
+            <ul class="list-group">
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick="BillRequisition">
+                    Bill Requisition
+                </li>
+
+            </ul>
+        </div>*@
+
+                        <!---End-->
+                        <!-----HR bar start-->
+                        <!--<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+        href="#hr-subListcollapse-2" role="button" aria-expanded="false"
+        aria-controls="subListcollapse-2">
+        <div class="sub-list-collapse-icon align-self-center">
+            <i class="fa-solid fa-caret-right"></i>
+        </div>
+
+        <span class="material-symbols-outlined mr-3">
+            person
+        </span>
+        <p class="m-0">HR</p>
+    </li>-->
+                        @*<div class="collapse subListcollapse" id="hr-subListcollapse-2">
+            <ul class="list-group">
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center"
+                    data-toggle="collapse" href="#subListcollapse-2-1" role="button"
+                    aria-expanded="false" aria-controls="subListcollapse-2-1">
+                    <div class="sub-list-collapse-icon align-self-center">
+                        <i class="fa-solid fa-caret-right"></i>
+                    </div>
+                    <p class="m-0">Directory-01</p>
+
+                </li>
+                <div class="collapse subListcollapse" id="subListcollapse-2-1">
+                    <ul class="list-group">
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                            Directory-01-01
+                        </li>
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                            Directory-01-02
+                        </li>
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                            Directory-01-03
+                        </li>
+                    </ul>
+                </div>
+
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick=@EmployeeAttendance>
+                    Attendance
+                </li>
+            </ul>
+        </div>*@
+                        <!-----HR bar end-->
+                        <!-----Admin bar end-->
+                        @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end">
+            <div class="sub-list-collapse-icon">
+            </div>
+            <span class="material-symbols-outlined mr-3">
+                assessment
+            </span>
+            <a href="Reports">
+                Reports
+            </a>
+
+        </li>*@
+
+
+                        <!----Plan & Work-->
+                        <!--<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+        href="#customer" role="button" aria-expanded="false"
+        aria-controls="subListcollapse-2">
+        <div class="sub-list-collapse-icon align-self-center">
+            <i class="fa-solid fa-caret-right"></i>
+        </div>
+
+        <span class="material-symbols-outlined mr-3">
+            apps
+        </span>
+        <p class="m-0">Customer</p>
+    </li>
+    <div class="collapse subListcollapse" id="customer">
+        <ul class="list-group">
+
+
+            <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                <a href="SalesOrderList">Work Order</a>
+            </li>-->
+                        @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+            <a href="DeliveryNoteList">Delivery Note</a>
+        </li>
+        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+            <a href="InvoiceList">Invoice</a>
+        </li>*@
+
+
+                        <!--</ul>
+    </div>-->
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+                            href="#stock-item" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-2">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                apps
+                            </span>
+                            <p class="m-0">Stock</p>
+                        </li>
+                        <div class="collapse subListcollapse" id="stock-item">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="StockSummary">Stock Summary</a>
+                                </li>
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    <a href="ProjectWiseStock">Project Wise Stock</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*<li class="list-group-item border-0 px-3 py-2 d-flex align-items-end" data-toggle="collapse"
+            href="#plan" role="button" aria-expanded="false"
+            aria-controls="subListcollapse-2">
+            <div class="sub-list-collapse-icon align-self-center">
+                <i class="fa-solid fa-caret-right"></i>
+            </div>
+
+            <span class="material-symbols-outlined mr-3">
+                person
+            </span>
+            <p class="m-0">Plan & Work Schedule</p>
+        </li>
+        <div class="collapse subListcollapse" id="plan">
+            <ul class="list-group">
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center" @onclick=@PlanningClicked>
+                    Plan & Work Schedule List
+                </li>
+
+            </ul>
+        </div>*@
+                        <!------------------
+    <!-- start save collapse links in this list -->
+                        <div class="collapse" id="collapseExample">
+                        <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end"
+                            data-toggle="collapse" href="#subListcollapse-1" role="button" aria-expanded="false"
+                            aria-controls="subListcollapse-1">
+                            <div class="sub-list-collapse-icon align-self-center">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+
+                            <span class="material-symbols-outlined mr-3">
+                                person
+                            </span>Home
+                        </li>
+                        <div class="collapse subListcollapse" id="subListcollapse-1">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-center">
+                                    test1
+                                </li>
+                            </ul>
+                        </div>
+</div>
+                <!-- end save collapse links in this list -->
+                </ul>
+                <div class="d-flex w-100 justify-content-center">
+                    <button class="border bg-white collapse-btn btn-sm rounded-pill mt-4 w-50"
+                            data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Show more
+                    </button>
+                </div>
+            </div>
+            @*<div class="sidebar-down ">
+                    &copy; <small>2022 TocomaBD</small><br>
+                    <small>Trams of services - Billing services- Privacy Policy</small>
+                </div>*@
+        </div>
+
+
+    </div>
+    <!-- //mini sidebar section -->
+    <div class="mini-sidebar d-flex flex-column position-relative">
+        <div class="mini-sidebar-wrapper position-fixed">
+            <ul class="list-group mt-4">
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list">
+                    <span class="material-symbols-outlined">
+                        home
+                    </span>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list"
+                    data-toggle="collapse" href="#subListcollapse-2" role="button" aria-expanded="false"
+                    aria-controls="subListcollapse-2">
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list">
+                    <span class="material-symbols-outlined">
+                        devices
+                    </span>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list">
+                    <span class="material-symbols-outlined">
+                        apps
+                    </span>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list">
+                    <span class="material-symbols-outlined">
+                        credit_card
+                    </span>
+                </li>
+                <li class="list-group-item border-0 px-3 py-2 d-flex align-items-end mini-sidebar-list">
+                    <span class="material-symbols-outlined">
+                        alternate_email
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- //mini sidebar section -->
+    <div class="dashMainContainer px-5 pt-3 pb-5" style="margin-top:20px;margin-left:30px">
+        <div class="container-fluid">
+
+            @Body
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+@*----Group Modal-----------*@
+
+
+<div class="modal fade _bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="p-2"><span class="text-uppercase">@ReportType</span>  </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Date From </label>
+                    <div class="col-sm-4">
+                        <input type="date" value="@currentDate" @onchange="GetFromDate" />
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">To</label>
+                    <div class="col-sm-4">
+                        <input type="date" value="@currentDate" @onchange="GetToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button type="submit" style="width:100px;margin-right:10px" class="btn btn-info" @onclick=@(() => GetTrialBalance(ReportType))>Report</button>
+                    <button type="button" class="btn btn-danger" style="width:70px" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade _bd-example-modal-lg_gl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="p-2"><span class="text-uppercase">General Ledger</span>  </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>From</label>
+                        <input type="date" value="@currentDate" @onchange="GetFromDate" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>To</label>
+                        <input type="date" value="@currentDate" @onchange="GetToDate" />
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label>Ledger</label>
+                    <select @onchange="selectedledger" class="form-control">
+                        <option></option>
+                        @foreach (var item in ledgerList)
+                        {
+                            <option value="@item.LEDGER_NAME">@item.LEDGER_NAME</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button type="submit" style="width:100px;margin-right:10px" class="btn btn-info" @onclick=@(() => GetGeneralLedger())>Report</button>
+                    <button type="button" class="btn btn-danger" style="width:70px" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    IJSObjectReference module;
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+    private IJSObjectReference _jsModule;
+    public static string employeeName;
+    public static string employeeImage;
+    public static string employeeDesignation;
+    public static string employeeDepartment;
+    public static string loginId;
+    string SelectedString = "";
+
+    string ReportType;
+    List<ACC_Trial_Balance_Report> trialBalanceReport = new List<ACC_Trial_Balance_Report>();
+    List<ACC_PROFIT_LOSS> profitAndLossReport = new List<ACC_PROFIT_LOSS>();
+    List<ACC_Balance_Sheet_Report> balanceSheetReport = new List<ACC_Balance_Sheet_Report>();
+    List<ACC_General_Ledger_Report> generalLedgerReport = new List<ACC_General_Ledger_Report>();
+    LedgerModel ledger = new LedgerModel();
+    List<RStockInformation> stockStatementList = new List<RStockInformation>();
+    string fromdate;
+    string todate;
+    string currentDate;
+    EmployeeModel empModel = new EmployeeModel();
+    List<LedgerModel> ledgerList = new List<LedgerModel>();
+
+
+
+    //[CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        //await js.InitializeInactivityTimer(DotNetObjectReference.Create(this));
+        base.OnInitialized();
+        if (await localStorageService.GetItemAsync<string>("emailAddress") == null)
+        { UriHelper.NavigateTo("/"); }
+        ledgerList = await Http.GetJsonAsync<List<LedgerModel>>(Utility.BaseUrl + "api/Setup/GetLedger");
+        var result = await localStorageService.GetItemAsync<string>("emailAddress");
+        employeeImage = await localStorageService.GetItemAsync<string>("employeeImage");
+        currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+
+        //var authenticationState = await AuthenticationStateTask;
+        //if (authenticationState?.User?.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+        //{
+        //    var returnUrl = UriHelper.ToBaseRelativePath(UriHelper.Uri);
+
+        //    if (string.IsNullOrWhiteSpace(returnUrl))
+        //        UriHelper.NavigateTo("/", true);
+        //        else { }
+        //        //UriHelper.NavigateTo($"auth/login?returnUrl={returnUrl}", true);
+        //}
+
+
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsRuntime.InvokeVoidAsync("JsInteropcollaps");
+            //await ijsruntime.InvokeAsync<string>(
+            //    "QuillFunctions.createQuill", divEditorElement);
+
+            loginId = await sessionStorage.GetItemAsync<string>("session_employeeLoginId");
+            employeeName = await sessionStorage.GetItemAsync<string>("session_employeeName");
+            employeeImage = await sessionStorage.GetItemAsync<string>("employeeImage");
+            empModel.EMPLOYEE_ID = await sessionStorage.GetItemAsync<string>("session_employeeId");
+            employeeDesignation = await sessionStorage.GetItemAsync<string>("session_employeeDesignation");
+            employeeDepartment = await sessionStorage.GetItemAsync<string>("session_employeeDepartment");
+            currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+            //empModel = await Http.GetJsonAsync<EmployeeModel>(Utility.BaseUrl + "api/Employee/GetEmployeeById/" + empModel.EMPLOYEE_ID);
+        }
+
+    }
+
+    public async Task GetGeneralLedger()
+    {
+        if (fromdate == null)
+        { fromdate = currentDate; }
+        if (todate == null)
+        { todate = currentDate; }
+        generalLedgerReport = new List<ACC_General_Ledger_Report>();
+
+        generalLedgerReport = await Http.GetJsonAsync<List<ACC_General_Ledger_Report>>(Utility.BaseUrl + "api/Transection/GetGeneralLedger/" + fromdate + "/" + todate + "/" + SelectedString);
+        ledger = await Http.GetJsonAsync<LedgerModel>(Utility.BaseUrl + "api/Transection/GetLedgerDataByLedgerName/" + SelectedString);
+        SessionData.From_date = fromdate;
+        SessionData.To_date = todate;
+        SessionData.generalLedgerList = generalLedgerReport;
+        SessionData.sessionLedgerModel = ledger;
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetGeneralLedgerReport", "_blank");
+    }
+    void selectedledger(ChangeEventArgs e)
+    {
+        SelectedString = e.Value.ToString();
+    }
+
+    public async Task GetTrialBalance(string Type)
+    {
+
+        //int type = 4;
+        string REFNO = "1234";
+
+        int tpe = 1;
+        if (fromdate == null)
+        { fromdate = currentDate; }
+        if (todate == null)
+        { todate = currentDate; }
+        try
+        {
+            if (ReportType == "Trial Balance")
+            {
+                //trialBalanceReport = new List<ACC_Trial_Balance_Report>();
+                //string url = Utility.BaseUrl + "api/Transection/GetTrialBalanceInfo/" + fromdate+"/"+ todate;
+                //string url = Utility.BaseUrl + "api/Transection/GetTrialBalanceInfo/" + "20220801" + "/" + "20220911";
+                //string url = Utility.BaseUrl + "api/Transection/GetTrialBalanceInfo";
+                trialBalanceReport = new List<ACC_Trial_Balance_Report>();
+
+                trialBalanceReport = await Http.GetJsonAsync<List<ACC_Trial_Balance_Report>>(Utility.BaseUrl + "api/Transection/Get_ACC_TrialBalanceInfo/" + fromdate + "/" + todate);
+                //trialBalanceReport = await Http.GetJsonAsync<List<ACC_Trial_Balance_Report>>(url);
+                SessionData.From_date = fromdate;
+                SessionData.To_date = todate;
+                SessionData.trialBalanceList = trialBalanceReport;
+                await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetTrialBalanceReport", "_blank");
+            }
+            else if (ReportType == "Balance Sheet")
+            {
+                //await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetBalanceSheetReport/" + REFNO + "/" + tpe, "_blank");
+                balanceSheetReport = new List<ACC_Balance_Sheet_Report>();
+                balanceSheetReport = await Http.GetJsonAsync<List<ACC_Balance_Sheet_Report>>(Utility.BaseUrl + "api/Transection/GetBalanceSheet/" + fromdate + "/" + todate);
+                SessionData.From_date = fromdate;
+                SessionData.To_date = todate;
+                SessionData.balanceSheetList = balanceSheetReport;
+                await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetBalanceSheetReport", "_blank");
+            }
+            else if (ReportType == "Profit & Loss")
+            {
+
+                //await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetProfitLossReport/" + REFNO + "/" + tpe, "_blank");
+                profitAndLossReport = new List<ACC_PROFIT_LOSS>();
+                profitAndLossReport = await Http.GetJsonAsync<List<ACC_PROFIT_LOSS>>(Utility.BaseUrl + "api/Transection/GetProfitAndLoss/" + fromdate + "/" + todate);
+                //decimal income = profitAndLossReport.Sum(x => Convert.ToDecimal(x.));
+                decimal income = profitAndLossReport.Where(p => p.GR_PRIMARY_TYPE == "Income" && p.GR_NAME != "Total Income").Sum(p => Convert.ToDecimal(p.GR_AMOUNT));
+                decimal expense = profitAndLossReport.Where(p => p.GR_PRIMARY_TYPE == "Expenses" && p.GR_NAME != "Total Expense").Sum(p => Convert.ToDecimal(p.GR_AMOUNT));
+                decimal TotalProfitLoss = income - expense;
+                SessionData.TotalProfitLoss = TotalProfitLoss;
+                SessionData.From_date = fromdate;
+                SessionData.To_date = todate;
+                SessionData.profitAndLossList = profitAndLossReport;
+                await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetProfitLossReport", "_blank");
+            }
+            else if (ReportType == "StockStatement")
+            {
+                stockStatementList = new List<RStockInformation>();
+                stockStatementList = await Http.GetJsonAsync<List<RStockInformation>>(Utility.BaseUrl + "api/Purchase/GetStockStatement/" + fromdate + "/" + todate);
+                SessionData.From_date = fromdate;
+                SessionData.To_date = todate;
+                SessionData.stockStatementListReport = stockStatementList;
+                await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetstockStatement", "_blank");
+            }
+        }
+        catch (Exception EX)
+        {
+
+        }
+
+
+    }
+    private async void GetStockSummery()
+    {
+        stockStatementList = new List<RStockInformation>();
+        stockStatementList = await Http.GetJsonAsync<List<RStockInformation>>(Utility.BaseUrl + "api/Purchase/GetStockSummery");
+        SessionData.From_date = fromdate;
+        SessionData.To_date = todate;
+        SessionData.stockStatementListReport = stockStatementList;
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetstockStatement", "_blank");
+    }
+
+    public async Task Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggOut();
+        await sessionStorage.RemoveItemAsync("session_employeeLoginId");
+        UriHelper.NavigateTo("/", true);
+    }
+    [JSInvokable]
+    public async Task SystemLogout()
+    {
+        var authState = await AuthenticationStateTask;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            UriHelper.NavigateTo("Login");
+        }
+    }
+    private async void GetFromDate(ChangeEventArgs change)
+    {
+        fromdate = change.Value.ToString();
+        //accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(date);
+    }
+    private async void GetToDate(ChangeEventArgs change)
+    {
+        todate = change.Value.ToString();
+        //accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(date);
+    }
+    private void ReportTypeClick(int Type)
+    {
+        if (Type == 1)
+        { ReportType = "Trial Balance"; }
+        else if (Type == 2)
+        { ReportType = "Balance Sheet"; }
+        else if (Type == 3)
+        { ReportType = "Profit & Loss"; }
+        else if (Type == 5)
+        { ReportType = "StockStatement"; }
+    }
+    void Requisition() { UriHelper.NavigateTo("PurchaseRequisition"); }
+    void ManageRequisition() { UriHelper.NavigateTo("ManageRequisition"); }
+    void SendRFQ() { UriHelper.NavigateTo("SendRFQList"); }
+    void RequisitionList() { UriHelper.NavigateTo("RequisitionList"); }
+    void POList() { UriHelper.NavigateTo("PurchaseOrderList"); }
+    void POTrackingList() { UriHelper.NavigateTo("PurchaseOrderTracking"); }
+    void AddCustomer() { UriHelper.NavigateTo("AddCustomer"); }
+    void AddItem() { UriHelper.NavigateTo("NewProduct"); }
+    void AddBrand() { UriHelper.NavigateTo("AddBrand"); }
+    void AddVendor() { UriHelper.NavigateTo("AddVendor"); }
+    void VendorList() { UriHelper.NavigateTo("ManageVendor"); }
+    void AddBank() { UriHelper.NavigateTo("AddBank"); }
+    void AddBranch() { UriHelper.NavigateTo("AddBranch"); }
+    void PurchaseReport() { UriHelper.NavigateTo("PurchaseReport"); }
+    void SupplierAccount() { UriHelper.NavigateTo("SupplierReport"); }
+    void SupplierAccountSummery() { UriHelper.NavigateTo("SupplierAccountSummery"); }
+    void SupplierPaymentStatement() { UriHelper.NavigateTo("SupplierPaymentStatement"); }
+    void ProductReveiveinWarehouse() { UriHelper.NavigateTo("ProductReceive"); }
+    void VendorPaymentClicked() { UriHelper.NavigateTo("VendorPaymentList"); }
+    void VendorListClicked() { UriHelper.NavigateTo("VendorList"); }
+    void StockSummeryClicked() { UriHelper.NavigateTo("StockSummery"); }
+
+    void StockStatementClicked() { UriHelper.NavigateTo("StockStatement"); }
+    void GetCustomers() { UriHelper.NavigateTo("Customers"); }
+    void GetCustomersPaymentList() { UriHelper.NavigateTo("CustomerPaymentList"); }
+    void ReportsClicked() { UriHelper.NavigateTo("Reports"); }
+    void PlanningClicked() { UriHelper.NavigateTo("PlanningWorkScheduleList"); }
+    void NewSalesQuotation() { UriHelper.NavigateTo("SalesQuotation"); }
+    void SalesQuotationList() { UriHelper.NavigateTo("QuotationList"); }
+    void SalesOrderClicked() { UriHelper.NavigateTo("SalesOrder"); }
+    void SalesOrderListClicked() { UriHelper.NavigateTo("SalesOrderList"); }
+    void SalesOrderTrackingListClicked() { UriHelper.NavigateTo("SalesOrderTracking"); }
+    void EmployeeAttendance() { UriHelper.NavigateTo("Attendance"); }
+    void UnitClicked() { UriHelper.NavigateTo("AddUnit"); }
+    void ApplicationAreaClicked() { UriHelper.NavigateTo("ApplicationArea"); }
+    void NewProductClicked() { UriHelper.NavigateTo("NewProduct"); }
+    void ProductListClicked() { UriHelper.NavigateTo("ItemList"); }
+    void NewCategoryClicked() { UriHelper.NavigateTo("NewCategory"); }
+    void CountryClicked() { UriHelper.NavigateTo("Country"); }
+    void BankClicked() { UriHelper.NavigateTo("BankInfo"); }
+    void BranchClicked() { UriHelper.NavigateTo("BranchInfo"); }
+    void BrandClicked() { UriHelper.NavigateTo("AddBrand"); }
+    void ColorClicked() { UriHelper.NavigateTo("AddColor"); }
+    void InventoryTypeClicked() { UriHelper.NavigateTo("InventoryType"); }
+    void BranchNameClicked() { UriHelper.NavigateTo("BranchList"); }
+    void CurrencyClicked() { UriHelper.NavigateTo("Currency"); }
+    void LadgerGroupClicked() { UriHelper.NavigateTo("LadgerGroup"); }
+    void LedgerClicked() { UriHelper.NavigateTo("Ledgers"); }
+    void PaymentClicked() { UriHelper.NavigateTo("PaymentVoucherList"); }
+    void ReceiveClicked() { UriHelper.NavigateTo("ReceiveVoucherList"); }
+    void JournalClicked() { UriHelper.NavigateTo("JournalVoucherList"); }
+    void ContraClicked() { UriHelper.NavigateTo("ContraVoucherList"); }
+    void PurchaseforProject() { UriHelper.NavigateTo("Purchase"); }
+    void BillRequisition() { UriHelper.NavigateTo("BillRequisitionList"); }
+    void DailyPurchaseListforProject() { UriHelper.NavigateTo("DailyPurchaseForProject"); }
+    void DailyStockOut() { UriHelper.NavigateTo("DeliveryNoteList"); }
+    void StockSummaryForProject() { UriHelper.NavigateTo("StockSummary"); }
+    void ProjectCost() { UriHelper.NavigateTo("ProjectCostList"); }
+}

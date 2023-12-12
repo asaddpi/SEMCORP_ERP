@@ -1,0 +1,255 @@
+﻿@page "/BranchList"
+@layout CustomLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager nav 
+<div class="card">
+    <div class="card-header">
+        List /
+        <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target=".bd-example-modal-lg" @onclick="NewClick">New</a>
+    </div>
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:6%">ID</th>
+                        <th>Branch Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (branchList != null)
+                    {
+                        foreach (var item in branchList)
+                        {
+                            <tr>
+                                <td>@item.BRANCH_ID</td>
+                                <td>@item.BRANCH_NAME</td>
+                                <td>@item.BRANCH_ADD1</td>
+                                <td>@item.BRANCH_PHONE</td>
+                                <td>@item.BRANCH_EMAIL</td>
+                                <td style="width:6%">@item.BRANCH_STATUS</td>
+                                <td style="text-align:center;width:6%"><a data-toggle="modal" href="" data-target=".bd-example-modal-lg" @onclick=@(() => EditClick(item.BRANCH_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td style="text-align:center;width:6%"><a @onclick=@(() => DeleteBranch(item.BRANCH_ID))><span style="color:red" class="oi oi-trash"></span></a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*----Branch Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter"
+                            Timeout="10"
+                            SuccessClass="success-toast-override" />
+            <EditForm Model="@branch" OnValidSubmit="@SaveBranch">
+                <DataAnnotationsValidator />
+                @*<ValidationSummary />*@
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">Branch</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="testbox">
+                        <div class="form">
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Name :</label>
+                                <div class="col-sm-10">
+                                    <InputText @bind-Value="@branch.BRANCH_NAME" type="text" class="form-control" placeholder="Enter Branch Name here..." style="text-transform:capitalize" />
+                                    <ValidationMessage For="() => branch.BRANCH_NAME" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Address 1</label>
+                                <div class="col-sm-10">
+                                    <InputTextArea @bind-Value="@branch.BRANCH_ADD1" type="text" class="form-control" placeholder="Enter Address here..." />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Address 2</label>
+                                <div class="col-sm-10">
+                                    <InputTextArea @bind-Value="@branch.BRANCH_ADD2" type="text" class="form-control" placeholder="Enter Address here..." />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Country</label>
+                                <div class="col-sm-10">
+                                    <InputSelect @bind-Value="@branch.BRANCH_COUNTRY" class="form-control">
+                                        <option>--Select Country--</option>
+                                        @foreach (var item in countryList)
+                                        {
+                                            <option value="@item.COUNTRY_NAME">@item.COUNTRY_NAME</option>
+                                        }
+
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Phone</label>
+                                <div class="col-sm-10">
+                                    <InputTextArea @bind-Value="@branch.BRANCH_PHONE" type="text" class="form-control" placeholder="Enter Address here..." />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Fax</label>
+                                <div class="col-sm-10">
+                                    <InputTextArea @bind-Value="@branch.BRANCH_FAX" type="text" class="form-control" placeholder="Enter Address here..." />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <InputTextArea @bind-Value="@branch.BRANCH_EMAIL" type="text" class="form-control" placeholder="Enter Address here..." />
+                                    <ValidationMessage For="() => branch.BRANCH_EMAIL" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="colFormLabel" class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                    <InputSelect @bind-Value="@branch.BRANCH_STATUS" class="form-control">
+                                        <option></option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:10px" class="btn btn-info">@btnLabel</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<BranchModel> branchList = new List<BranchModel>();
+    List<CountryModel> countryList = new List<CountryModel>();
+    BranchModel branch = new BranchModel();
+    string btnLabel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnLabel = "Save";
+        await GetBranch();
+        await GetCountry();
+        StateHasChanged();
+
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    public async Task GetBranch()
+    {
+        branchList = await Http.GetJsonAsync<List<BranchModel>>(Utility.BaseUrl + "api/Setup/GetBranchList");
+    }
+    private async Task GetCountry()
+    {
+        countryList = await Http.GetJsonAsync<List<CountryModel>>(Utility.BaseUrl + "api/Setup/GetCountry");
+    }
+
+    public async Task SaveBranch()
+    {
+        //if (IsValidation() != true)
+        //{
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Do you want to save ?"))
+            return;
+
+        try
+        {
+            if(btnLabel=="Save")
+            {
+                branch.ENTRYBY = "Asaduzzaman";
+                branch.BRANCH_NAME_DEFAULT = branch.BRANCH_NAME;
+                var data = await Http.PostJsonAsync<BranchModel>(Utility.BaseUrl + "api/Setup/AddBranch", branch);
+                toastService.ShowSuccess("Branch Added Successfully!!!");
+
+            }
+            else if(btnLabel=="Update")
+            {
+                branch.UPDATEBY = "Asaduzzaman";
+                branch.BRANCH_NAME_DEFAULT = branch.BRANCH_NAME;
+                var data = await Http.PutJsonAsync<BranchModel>(Utility.BaseUrl + "api/Setup/UpdateBranch", branch);
+                toastService.ShowSuccess("Branch Updated Successfully!!!");
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+        await GetBranch();
+
+
+        //}
+    }
+    private void close()
+    {
+
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (branch.BRANCH_NAME == "" || branch.BRANCH_NAME == string.Empty || branch.BRANCH_NAME == null)
+        {
+            toastService.ShowWarning("Branch Name cannot be empty!");
+            flag = true;
+        }
+        else if (branch.BRANCH_COUNTRY == "")
+        {
+            toastService.ShowError("Please Select Country!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private void NewClick()
+    {
+        branch = new BranchModel();
+        btnLabel = "Save";
+    }
+    private void EditClick(string branchCode)
+    {
+        btnLabel = "Update";
+        branch = branchList.FirstOrDefault(x => x.BRANCH_ID == branchCode);
+    }
+    private async Task DeleteBranch(string Code)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteBranchById/" + Code);
+        await GetBranch();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //if (firstRender)
+        //{
+
+        //}
+
+    }
+
+}

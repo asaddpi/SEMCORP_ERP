@@ -1,0 +1,731 @@
+﻿@page "/PurchaseOrderTracking"
+@inject HttpClient Http
+@layout CustomLayout
+@inject NavigationManager UriHelper
+@*@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;*@
+@*@inject ProtectedSessionStorage storage*@
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@*@inject IJSRuntime JSRuntime*@
+@inject SessionState state
+@inject IToastService toastService
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@*@inject IWebHostEnvironment webhost*@
+@using AspNetCore.Reporting
+@using System.Reflection
+@*@using Tocoma_ERP_System.Controller*@
+@using Microsoft.AspNetCore.Mvc;
+@using System.Data
+@using System.Text;
+@*@inject SessionData sessionData*@
+@inject ProtectedLocalStorage ProtectedLocalStore
+@inject SessionData sessionData
+@*@inject AppState appState*@
+@*@inject PlanAndWorkScheduleService planAndWorkService
+    @inject Abc1Controller abcController*@
+@using System.Text.Json
+
+<div class="container">
+    <h3>Purchase Order Tracking</h3>
+    <br />
+    <!--<table width="100%" id="example">
+
+        <tr>
+            <td></td>
+            <td>General Information</td>
+            <td colspan="3">Order Information</td>
+            <td colspan="3">Shipment Info</td>
+            <td>Status</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Item</td>
+            <td>UOM</td>
+            <td>Qty.</td>
+            <td>ETD With QTY</td>
+            <td>ETA to CTG</td>
+            <td>Expected Arrival at TL-WH</td>
+            <td></td>
+        </tr>-->
+        @*<tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>ETD With QTY</td>
+        </tr>*@
+        @*<tr>
+            <td>PO NO</td>
+            <td>PO Date</td>
+            <td>Supplier</td>
+            <td>LC NO</td>
+            <td>LC Date</td>
+        </tr>
+        <tr>
+            <td colspan="5" style="font-size:13px">Order Information</td>
+        </tr>
+        <tr>
+            <td>Item</td>
+            <td>UOM</td>
+            <td>Quantity</td>
+            <td></td>
+            <td></td>
+
+        </tr>*@
+    <!--<tbody>
+        @if (purchaseOrderList != null)
+        {
+            foreach (var item in purchaseOrderList)
+            {
+        <tr>
+            <td style="text-align:center"><a data-toggle="modal" style="color:Highlight" data-target=".bd-example-modal-lg" @onclick=@(() => GetPOData(item.PO_ID))><span class="oi oi-pencil"></span></a></td>
+            <td>
+                @item.PO_NUMBER_LONG_CODE
+                @item.PO_DATE <br />
+                @item.VENDOR_NAME <br />
+                @item.LC_NO
+
+            </td>
+            <td>
+                @foreach (var i in item.pOrderDetailsList)
+                {
+                    if (item.PO_ID == i.PO_ID)
+                    {@i.ITEM_NAME <br />}
+            }
+            </td>
+            <td>
+                @foreach (var i in item.pOrderDetailsList)
+                {
+                    if (item.PO_ID == i.PO_ID)
+                    {@i.UOM <br />}
+            }
+            </td>
+            <td>
+                @foreach (var i in item.pOrderDetailsList)
+                {
+                    if (item.PO_ID == i.PO_ID)
+                    {@i.QUANTITY <br />}
+            }
+            </td>
+
+            <td>
+               
+                @item.ETD_1st_Date <br />
+                @item.ETD_2nd_Date <br />
+                @item.ETD_3rd_Date 
+
+            </td>
+            
+            <td>
+                
+                @item.ETA_1st_Date <br />
+                @item.ETA_2nd_Date <br />
+                @item.ETA_3rd_Date
+            </td>
+            <td>
+                
+                @item.EA_WH_1st_Date <br />
+                @item.EA_WH_2nd_Date <br />
+                @item.EA_WH_3rd_Date
+            </td>
+
+            @if (item.SHIPMENT_STATUS == "Success")
+            {
+                <td scope="col" style="background-color: green; color: white;text-align:center">
+                    @item.SHIPMENT_STATUS
+                </td>
+            }
+            else if (item.SHIPMENT_STATUS == "OnProcess")
+            {
+                <td scope="col" style="background-color: cyan; color: black;text-align:center">
+                    @item.SHIPMENT_STATUS
+                </td>
+            }
+            else if (item.SHIPMENT_STATUS == "Cancel")
+            {
+                <td scope="col" style="background-color:red;color:white;text-align:center">
+                    @item.SHIPMENT_STATUS
+                </td>
+            }
+            else
+            {
+                <td scope="col">
+                    @item.SHIPMENT_STATUS
+                </td>
+            }
+
+        </tr>
+            }
+        }
+            </tbody>
+
+    </table>
+    <br />-->
+    @*<table width="100%">
+
+        <tr>
+            <td colspan="5" style="font-size:13px">General Information</td>
+        </tr>
+        <tr>
+            <td>PO NO</td>
+            <td>PO Date</td>
+            <td>Supplier</td>
+            <td>LC NO</td>
+            <td>LC Date</td>
+        </tr>
+        <tr>
+            <td colspan="5" style="font-size:13px">Order Information</td>
+        </tr>
+        <tr>
+            <td>Item</td>
+            <td>UOM</td>
+            <td>Quantity</td>
+            <td></td>
+            <td></td>
+
+        </tr>
+
+    </table>*@
+    <br />
+    <table>
+        <thead>
+            <tr>
+                <td rowspan="3"></td>
+                <th colspan="2" style="padding-top:5px;padding-bottom:5px;background-color:lightgray">General Information</th>
+                <th colspan="3">Order Information</th>
+                <th style="background-color:lightgray;font-size:18px" colspan="9">Shipment Information</th>
+                <th style="background-color: lightgray;font-size: 18px" rowspan="3">Shipment Status/<br />Remarks</th>
+            </tr>
+            <tr>
+                @*<td></td>*@
+                <td style="background-color:lightgray" rowspan="2">PO/WO No. & Date<br />LC No. , LC Date , Status</td>
+                <td style="background-color:lightgray" rowspan="2">Supplier & <br /> Concern Person</td>
+                <td rowspan="2">Item</td>
+                <td rowspan="2">UOM</td>
+                <td rowspan="2">Quantity</td>
+
+                <td style="background-color:lightgray" colspan="3">ETD With QTY</td>
+                <td style="background-color:lightgray" colspan="3">ETA to CTG</td>
+                <td style="background-color:lightgray" colspan="3">Expected Arrival at TL-WH</td>
+
+            </tr>
+            <tr>
+                @*<td></td>*@
+                <td style="background-color:lightgray">1st Date</td>
+                <td style="background-color:lightgray">2nd Date</td>
+                <td style="background-color:lightgray">3rd Date</td>
+                <td style="background-color:lightgray">1st Date</td>
+                <td style="background-color:lightgray">2nd Date</td>
+                <td style="background-color:lightgray">3rd Date</td>
+                <td style="background-color:lightgray">1st Date</td>
+                <td style="background-color:lightgray">2nd Date</td>
+                <td style="background-color:lightgray">3rd Date</td>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (purchaseOrderList != null)
+            {
+                foreach (var item in purchaseOrderList)
+                {
+
+                    <tr>
+                        <td style="text-align:center"><a data-toggle="modal" style="color:Highlight" data-target=".bd-example-modal-lg" @onclick=@(() => GetPOData(item.PO_ID))><span class="oi oi-pencil"></span></a></td>
+                        <td scope="col">
+                            @item.PO_NUMBER_LONG_CODE <br />
+                            @item.PO_DATE <br>
+                            LC No: @item.LC_NO ,Date: @item.LC_DATE <br /> @item.LC_STATUS
+                        </td>
+                        <td scope="col">@item.VENDOR_NAME<br />@item.CONTACT_PERSON_NAME</td>
+                        <td>
+                            @foreach (var i in item.pOrderDetailsList)
+                            {
+                                if (item.PO_ID == i.PO_ID)
+                                {@i.ITEM_NAME <br />}
+                            }
+                        </td>
+                        <td>
+                            @foreach (var i in item.pOrderDetailsList)
+                            {
+                                if (item.PO_ID == i.PO_ID)
+                                {@i.UOM <br />}
+                        }
+                        </td>
+                        <td>
+                            @foreach (var i in item.pOrderDetailsList)
+                            {
+                                if (item.PO_ID == i.PO_ID)
+                                {@i.QUANTITY <br />}
+                        }
+                        </td>
+                        <td scope="col">@item.ETD_1st_Date</td>
+                        <td scope="col">@item.ETD_2nd_Date</td>
+                        <td scope="col">@item.ETD_3rd_Date</td>
+                        <td scope="col">@item.ETA_1st_Date</td>
+                        <td scope="col">@item.ETA_2nd_Date</td>
+                        <td scope="col">@item.ETA_3rd_Date</td>
+                        <td scope="col">@item.EA_WH_1st_Date</td>
+                        <td scope="col">@item.EA_WH_2nd_Date</td>
+                        <td scope="col">@item.EA_WH_3rd_Date</td>
+                        @if (item.SHIPMENT_STATUS == "Success")
+                        {
+                            <td scope="col" style="background-color: green; color: white;text-align:center">
+                                @item.SHIPMENT_STATUS
+                            </td>
+                        }
+                        else if (item.SHIPMENT_STATUS == "OnProcess")
+                        {
+                            <td scope="col" style="background-color: cyan; color: black;text-align:center">
+                                @item.SHIPMENT_STATUS
+                            </td>
+                        }
+                        else if (item.SHIPMENT_STATUS == "Cancel")
+                        {
+                            <td scope="col" style="background-color:red;color:white;text-align:center">
+                                @item.SHIPMENT_STATUS
+                            </td>
+                        }
+                        else
+                        {
+                            <td scope="col">
+                                @item.SHIPMENT_STATUS
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+
+
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+@*-------------Modal-----------------*@
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> UPDATE SHIPMENT INFORMATION</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@pOrderModel">
+                    <table class="table">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>PO NO</td>
+                                <td>PO Date</td>
+                                <td>Supplier</td>
+                                <td>Concern Person</td>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>@pOrderModel.PO_NUMBER_LONG_CODE</td>
+                                <td>@PODate</td>
+                                <td>@Vendor</td>
+                                <td>@concernPerson</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table width="100%">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>LC No.</td>
+                                <td>LC Date</td>
+                                <td>LC Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><InputText @bind-Value="@pOrderModel.LC_NO"></InputText></td>
+                                <td style="width:20%"><InputText @bind-Value="@pOrderModel.LC_DATE" id="date_11" autocomplete="off" /></td>
+                                <td>
+                                    <InputText @bind-Value="@pOrderModel.LC_STATUS"></InputText>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td scope="col" colspan="3">ETD with QTY</td>
+                                <td scope="col" colspan="3">ETA to CTG</td>
+                                <td scope="col" colspan="3">EA at TL-WH</td>
+                            </tr>
+                            <tr>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" id="date_1" autocomplete="off" @bind-value="@pOrderModel.ETD_1st_Date" /></td>
+                                <td><input type="text" id="date_2" autocomplete="off" @bind-value="@pOrderModel.ETD_2nd_Date" /></td>
+                                <td><input type="text" id="date_3" autocomplete="off" @bind-value="@pOrderModel.ETD_3rd_Date" /></td>
+                                <td><input type="text" id="date_4" autocomplete="off" @bind-value="@pOrderModel.ETA_1st_Date" /></td>
+                                <td><input type="text" id="date_5" autocomplete="off" @bind-value="@pOrderModel.ETA_2nd_Date" /></td>
+                                <td><input type="text" id="date_6" autocomplete="off" @bind-value="@pOrderModel.ETA_3rd_Date" /></td>
+                                <td><input type="text" id="date_7" autocomplete="off" @bind-value="@pOrderModel.EA_WH_1st_Date" /></td>
+                                <td><input type="text" id="date_8" autocomplete="off" @bind-value="@pOrderModel.EA_WH_2nd_Date" /></td>
+                                <td><input type="text" id="date_9" autocomplete="off" @bind-value="@pOrderModel.EA_WH_3rd_Date" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table width="100%">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>Receive Date</td>
+                                <td>Shipment Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:20%"><input type="text" id="date_10" autocomplete="off" @bind-value="@receivedDate" /></td>
+                                <td>
+                                    <InputSelect @bind-Value="@pOrderModel.SHIPMENT_STATUS" style="width:80%;height:28px">
+                                        <option value=""></option>
+                                        <option value="Order">Order</option>
+                                        <option value="OnProcess">OnProcess</option>
+                                        <option value="Success">Success</option>
+                                        <option value="Cancel">Cancel</option>
+                                    </InputSelect>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </EditForm>
+            </div>
+
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick="UpdateShipment">UPDATE</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    List<PurchaseOrderViewModel> purchaseOrderList = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderViewModel> pOrderList = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderViewModel> pOrderList1 = new List<PurchaseOrderViewModel>();
+    PurchaseOrderModel pOrderModel = new PurchaseOrderModel();
+    List<PurchaseOrderDetailsEntity> porderDetails = new List<PurchaseOrderDetailsEntity>();
+    List<string> numbers;
+
+    //numbers= nos.Split(',').ToList<string>();
+    string receivedDate;
+    string Vendor;
+    string PODate;
+    string concernPerson;
+    protected bool ETD_1st_Date_IsDisabled { get; set; }
+    protected bool ETD_2nd_Date_IsDisabled { get; set; }
+    protected bool ETD_3rd_Date_IsDisabled { get; set; }
+    protected bool ETD_4th_Date_IsDisabled { get; set; }
+
+    protected bool ETD_1st_Date_CheckStatus { get; set; }
+    protected bool ETD_2nd_Date_CheckStatus { get; set; }
+    protected bool ETD_3rd_Date_CheckStatus { get; set; }
+    protected bool ETD_4th_Date_CheckStatus { get; set; }
+
+    //----------------------
+
+    protected bool ETA_1st_Date_IsDisabled { get; set; }
+    protected bool ETA_2nd_Date_IsDisabled { get; set; }
+    protected bool ETA_3rd_Date_IsDisabled { get; set; }
+    protected bool ETA_4th_Date_IsDisabled { get; set; }
+
+    protected bool ETA_1st_Date_CheckStatus { get; set; }
+    protected bool ETA_2nd_Date_CheckStatus { get; set; }
+    protected bool ETA_3rd_Date_CheckStatus { get; set; }
+    protected bool ETA_4th_Date_CheckStatus { get; set; }
+
+    //----------------
+
+    protected bool EA_1st_Date_IsDisabled { get; set; }
+    protected bool EA_2nd_Date_IsDisabled { get; set; }
+    protected bool EA_3rd_Date_IsDisabled { get; set; }
+    protected bool EA_4th_Date_IsDisabled { get; set; }
+
+    protected bool EA_1st_Date_CheckStatus { get; set; }
+    protected bool EA_2nd_Date_CheckStatus { get; set; }
+    protected bool EA_3rd_Date_CheckStatus { get; set; }
+    protected bool EA_4th_Date_CheckStatus { get; set; }
+
+    protected bool Received_Date_IsDisabled { get; set; }
+    protected bool Received_Date_CheckStatus { get; set; }
+    DateTime ETD_1st_Date = System.DateTime.Now;
+    DateTime ETD_2nd_Date = System.DateTime.Now;
+    DateTime ETD_3rd_Date = System.DateTime.Now;
+    DateTime ETD_4th_Date = System.DateTime.Now;
+
+    DateTime ETA_1st_Date = System.DateTime.Now;
+    DateTime ETA_2nd_Date = System.DateTime.Now;
+    DateTime ETA_3rd_Date = System.DateTime.Now;
+    DateTime ETA_4th_Date = System.DateTime.Now;
+
+    DateTime EA_1st_Date = System.DateTime.Now;
+    DateTime EA_2nd_Date = System.DateTime.Now;
+    DateTime EA_3rd_Date = System.DateTime.Now;
+    DateTime EA_4th_Date = System.DateTime.Now;
+    DateTime Received_Date = System.DateTime.Now;
+
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllData();
+        pOrderList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOTrackingList");
+        pOrderList1 = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOTrackingList");
+        AppState.purchaseOrderList = pOrderList;
+        Pagination();
+        StateHasChanged();
+        await JsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+
+    private async Task GetAllData()
+    {
+        purchaseOrderList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOTrackingList");
+        porderDetails = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetAllPurchaseOrderDetails");
+        List<PurchaseOrderDetailsEntity> podetails = new List<PurchaseOrderDetailsEntity>();
+        PurchaseOrderDetailsEntity podetails1 = new PurchaseOrderDetailsEntity();
+        foreach (var item in purchaseOrderList)
+        {
+            try
+            {
+                podetails = porderDetails.FindAll(el => el.PO_ID == item.PO_ID);
+                foreach (var l in podetails)
+                {
+                    podetails1 = new PurchaseOrderDetailsEntity();
+                    if (item.pOrderDetailsList == null)
+                    { item.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>(); }
+                    podetails1.ITEM_NAME = l.ITEM_NAME;
+                    podetails1.ITEM_ID = l.ITEM_ID;
+                    podetails1.PO_ID = l.PO_ID;
+                    podetails1.UOM = l.UOM;
+                    podetails1.QUANTITY = l.QUANTITY;
+                    item.pOrderDetailsList.Add(podetails1);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        purchaseOrderList = pOrderList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (purchaseOrderList.Count > 0)
+        {
+            StartNumber = purchaseOrderList.FirstOrDefault().SL;
+            EndNumber = purchaseOrderList[purchaseOrderList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (pOrderList.Count > 0)
+        {
+            pOrderList1 = pOrderList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(pOrderList.Count() / (decimal)pageSize);
+            StartNumber = pOrderList1.FirstOrDefault().SL;
+            EndNumber = pOrderList1[pOrderList1.Count - 1].SL;
+        }
+
+    }
+    async void ETD_1st_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETD_1st_Date_IsDisabled = false; }
+        else
+        { ETD_1st_Date_IsDisabled = true; }
+    }
+    async void ETD_2nd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETD_2nd_Date_IsDisabled = false; }
+        else
+        { ETD_2nd_Date_IsDisabled = true; }
+    }
+    async void ETD_3rd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETD_3rd_Date_IsDisabled = false; }
+        else
+        { ETD_3rd_Date_IsDisabled = true; }
+    }
+    async void ETD_4th_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETD_4th_Date_IsDisabled = false; }
+        else
+        { ETD_4th_Date_IsDisabled = true; }
+    }
+    async void ETA_1st_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETA_1st_Date_IsDisabled = false; }
+        else
+        { ETA_1st_Date_IsDisabled = true; }
+    }
+    async void ETA_2nd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETA_2nd_Date_IsDisabled = false; }
+        else
+        { ETA_2nd_Date_IsDisabled = true; }
+    }
+    async void ETA_3rd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETA_3rd_Date_IsDisabled = false; }
+        else
+        { ETA_3rd_Date_IsDisabled = true; }
+    }
+    async void ETA_4th_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { ETA_4th_Date_IsDisabled = false; }
+        else
+        { ETA_4th_Date_IsDisabled = true; }
+    }
+    async void EA_1st_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { EA_1st_Date_IsDisabled = false; }
+        else
+        { EA_1st_Date_IsDisabled = true; }
+    }
+    async void EA_2nd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { EA_2nd_Date_IsDisabled = false; }
+        else
+        { EA_2nd_Date_IsDisabled = true; }
+    }
+    async void EA_3rd_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { EA_3rd_Date_IsDisabled = false; }
+        else
+        { EA_3rd_Date_IsDisabled = true; }
+    }
+    async void EA_4th_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { EA_4th_Date_IsDisabled = false; }
+        else
+        { EA_4th_Date_IsDisabled = true; }
+    }
+    async void Received_Date_CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { Received_Date_IsDisabled = false; }
+        else
+        { Received_Date_IsDisabled = true; }
+    }
+    private async Task GetPOData(int Id)
+    {
+        try
+        {
+            pOrderModel.PO_NUMBER_LONG_CODE = purchaseOrderList.Find(x => x.PO_ID == Id).PO_NUMBER_LONG_CODE;
+            PODate = purchaseOrderList.Find(x => x.PO_ID == Id).PO_DATE;
+            Vendor = purchaseOrderList.Find(x => x.PO_ID == Id).VENDOR_NAME;
+            concernPerson = purchaseOrderList.Find(x => x.PO_ID == Id).CONTACT_PERSON_NAME;
+            pOrderModel.ETD_1st_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETD_1st_Date;
+            pOrderModel.ETD_2nd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETD_2nd_Date;
+            pOrderModel.ETD_3rd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETD_3rd_Date;
+            pOrderModel.ETA_1st_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETA_1st_Date;
+            pOrderModel.ETA_2nd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETA_2nd_Date;
+            pOrderModel.ETA_3rd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).ETA_3rd_Date;
+            pOrderModel.EA_WH_1st_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_1st_Date;
+            pOrderModel.EA_WH_2nd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_2nd_Date;
+            pOrderModel.EA_WH_3rd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_3rd_Date;
+            receivedDate = Convert.ToString(purchaseOrderList.Find(x => x.PO_ID == Id).RECEIVED_DATE);
+            pOrderModel.SHIPMENT_STATUS = purchaseOrderList.Find(x => x.PO_ID == Id).SHIPMENT_STATUS;
+            pOrderModel.LC_NO = purchaseOrderList.Find(x => x.PO_ID == Id).LC_NO;
+            pOrderModel.LC_DATE = purchaseOrderList.Find(x => x.PO_ID == Id).LC_DATE;
+            pOrderModel.LC_STATUS = purchaseOrderList.Find(x => x.PO_ID == Id).LC_STATUS;
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+
+
+
+        StateHasChanged();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    }
+    public async Task UpdateShipment()
+    {
+        try
+        {
+            if (receivedDate == "" || receivedDate == null)
+            { pOrderModel.RECEIVED_DATE = null; }
+            else { pOrderModel.RECEIVED_DATE = Convert.ToDateTime(receivedDate); }
+
+            var data = await Http.PutJsonAsync<PurchaseOrderModel>(Utility.BaseUrl + "api/Purchase/UpdateShipmentInfo", pOrderModel);
+            toastService.ShowSuccess("Update Success!!!");
+            await GetAllData();
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError("Data not update!" + ex.Message);
+
+        }
+    }
+}

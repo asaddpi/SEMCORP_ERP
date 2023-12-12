@@ -1,0 +1,193 @@
+﻿@page "/EditProject/{projectId}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime jsruntime
+@inject NavigationManager UriHelper
+@using Blazored.Typeahead
+<style>
+    div section {
+        height: 30px;
+        width: 100%;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+
+        div section:hover {
+            background-color: lightseagreen;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+    .col-75 {
+        width: 84%;
+    }
+
+    .btnadd {
+        width: 55px;
+        margin-top: 30px;
+    }
+    /*table, tr, td {
+        border: none;
+        text-align: center;
+    }*/
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+</style>
+
+<div class="container">
+    @*<EditForm Model="@ledger">*@
+    <div class="card">
+        <div class="card-header">
+            <h4>Edit Project</h4>
+
+        </div>
+        <div class="testbox">
+            <div class="form">
+                <EditForm Model="@cProject">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Customer:</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block">
+                            <select value="@cProject.CUSTOMER_ID" @onchange="selectedcustomer" class="form-control">
+                                <option>--Select Customer--</option>
+                                @foreach (var item in customerList)
+                                {
+                                    <option value="@item.CUSTOMER_ID">@item.CUSTOMER_NAME</option>
+                                }
+                            </select>
+                            @*<input type="text" data-toggle="modal" data-target=".bd-example-modal-lgvendor" @oninput="SupplierNameClicked" value="@supplierName" @ref="myref" />*@
+                            @*<input type="search" @bind="searchCustomer" @oninput="GetCustomerList" @ref="cusotmerInput" class="form-control" />
+                                <div class="autocom">
+                                    @if (customer != null)
+                                    {
+                                        @foreach (var item in customer)
+                                        {
+                                            if (searchCustomer == "")
+                                            {
+                                                <section style="width:100%" @onclick=@(() => selectedcustomer(item))>@item</section>
+                                            }
+                                            if (item.ToUpper().Contains(searchCustomer.ToUpper()) && searchCustomer.Length > 1)
+                                            {
+                                                if (searchCustomer != "")
+                                                {
+                                                    <section style="width:100%" @onclick=@(() => selectedcustomer(item))>@item</section>
+                                                }
+                                                else
+                                                { <section></section>}
+                                            }
+
+                                        }
+                                    }
+
+                                </div>*@
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Project Name(Full Form):</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputText @bind-Value="@cProject.SHIPPING_PROJECT_NAME"></InputText>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Project Name(Short Form):</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputText @bind-Value="@cProject.PROJECT_NAME_SHORT_FORM"></InputText>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Address:</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputTextArea @bind-Value="@cProject.PROJECT_ADDRESS"></InputTextArea>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Project Contact Person:</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_NAME"></InputText>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Contact No:</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_PHONE"></InputText>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fname">Contact Email:</label>
+                        </div>
+                        <div class="col-75" style="display: inline-block;">
+                            <InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_EMAIL"></InputText>
+
+                        </div>
+                    </div>
+
+                </EditForm>
+
+            </div>
+            <br />
+
+
+        </div>
+        <div class="btn-block">
+            <button type="button" style="width:90px" class="btn btn-danger">Cancel</button>
+            <button type="submit" style="width:120px;margin-left:10px;" class="btn btn-primary" @onclick="@SaveProject">Update</button>
+
+
+        </div>
+    </div>
+    @*</EditForm>*@
+</div>
+
+@code {
+    List<CustomerModel> customerList = new List<CustomerModel>();
+    CustomerProjectModel cProject = new CustomerProjectModel();
+    int customerid;
+    [Parameter]
+    public string projectId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        customerList = await Http.GetJsonAsync<List<CustomerModel>>(Utility.BaseUrl + "api/Customer");
+        cProject = await Http.GetJsonAsync<CustomerProjectModel>(Utility.BaseUrl + "api/Customer/GetProjectDataByProjectId/" + projectId);
+        StateHasChanged();
+    }
+    public async Task selectedcustomer(ChangeEventArgs args)
+    {
+        //searchVendor = ff;
+        //searchCustomer = ff;
+        customerid = Convert.ToInt32(args.Value.ToString());
+        cProject.CUSTOMER_ID = customerid;
+
+        StateHasChanged();
+    }
+    public async Task SaveProject()
+    {
+        cProject.OPERATION_TYPE = 2;
+        var project = await Http.PostJsonAsync<CustomerProjectModel>(Utility.BaseUrl + "api/Customer/AddCustomerProject", cProject);
+        toastService.ShowSuccess("Update Successfully!!");
+        UriHelper.NavigateTo("ProjectList");
+    }
+}

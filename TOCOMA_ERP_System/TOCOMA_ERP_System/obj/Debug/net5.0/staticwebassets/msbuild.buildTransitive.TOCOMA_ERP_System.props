@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\TOCOMA_ERP_System.props" />
+</Project>

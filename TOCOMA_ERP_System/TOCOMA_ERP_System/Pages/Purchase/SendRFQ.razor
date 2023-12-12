@@ -1,0 +1,122 @@
+﻿@page "/SendRFQ"
+@inject HttpClient Http
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">SEND RFQ TO VENDORS</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-md-5"><label>Requisition NO:</label></div>
+                        <div class="col-md-7">9564-22</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5"><label>Requester:</label></div>
+                        <div class="col-md-7">Iffat</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5"><label>Department:</label></div>
+                        <div class="col-md-7">Supply Chain</div>
+                    </div>
+                </div>
+
+                @*----------------------------New Column-------------------------*@
+
+                <div class="col-lg-6">
+                    <div class="addRequisitionItems">
+                        <div class="addRequisitionItemsForm">
+                            <div class="row">
+                                <div class="col-md-5"><label>Request Date:</label></div>
+                                <div class="col-md-7">09/02/2022</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Require Date:</label></div>
+                                <div class="col-md-7">09/05/2022</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Status:</label></div>
+                                <div class="col-md-7">Approved</div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h5>REQUISITION ITEMS</h5>
+            <div class="analytic_details_contain_two">
+                <table class="table table-striped">
+                    <thead style="background-color:steelblue;color:white;height:20px">
+                        <tr>
+                            <td scope="col" width="90px">Id</td>
+                            <td scope="col">Item Description</td>
+                            <td scope="col">Quantity</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="col" width="90px">9168-12</td>
+                            <td scope="col">FX-E400</td>
+                            <td scope="col">10</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <h5>SELECT FROM APPROVED VENDORS</h5>
+            <div class="analytic_details_contain_two">
+                <table class="table table-striped">
+                    <thead style="background-color:lightsteelblue;color:white;height:20px">
+                        <tr>
+                            <td scope="col"></td>
+                            <td scope="col" width="90px">VendorCode</td>
+                            <td scope="col">Company Name</td>
+                            <td scope="col">Contact No</td>
+                            <td scope="col">Email</td>
+                            <td scope="col">Phone</td>
+                            <td scope="col">Vendor Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (vendorList != null)
+                        {
+                            foreach (var item in vendorList)
+                            {
+                                <tr>
+                                    <td scope="col"><input type="checkbox" /></td>
+                                    <td scope="col">@item.VENDOR_CODE</td>
+                                    <td scope="col">@item.VENDOR_NAME</td>
+                                    <td scope="col">@item.CONTACT_NO</td>
+                                    <td scope="col">@item.EMAIL</td>
+                                    <td scope="col">@item.FAX</td>
+                                    <td scope="col">@item.VENDOR_TYPE_STATUS</td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-4 d-flex align-items-end" style="margin-top:100px">
+        <button class="btn btn-success" style="border:none;border-radius:10px">SEND RFQ TO SELECTED VENDORS</button>
+    </div>
+</div>
+
+
+@code {
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVendorList();
+    }
+    private async Task GetVendorList()
+    {
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+    }
+}

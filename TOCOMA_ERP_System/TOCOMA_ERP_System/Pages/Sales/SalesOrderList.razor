@@ -1,0 +1,366 @@
+﻿@page "/SalesOrderList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+
+
+<style>
+    table, tr, td {
+        border: none;
+        text-align: center;
+    }
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+</style>
+
+<div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+    <div class="col-md-4"><h5>WorkOrder List</h5></div>
+    <div class="" style="display:flex;gap:10px;align-items:center">
+        <a href="QuotationList">
+            <button class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px">          <i class='bi bi-plus' style="font-size:30px" /> New</button>
+        </a>
+
+
+        <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @salesOrderList.Count()</label>
+        <a style="color:Highlight;">
+            <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+        </a><a style="color:Highlight">
+            <i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+        </a>
+    </div>
+</div>
+
+
+<hr />
+
+<table id="#example" width="100%">
+    <thead>
+        <tr>
+            @*<td></td>*@
+            <td></td>
+            <td>Qut. No.</td>
+            <td>PO/WO NUMBER</td>
+            <td>PO/WO DATE</td>
+            <td style="text-align:left">CUSTOMER</td>
+            <td>DELIVERY DATE</td>
+            <td>SALES TOTAL</td>
+            <td></td>
+            @*<td>Status</td>*@
+
+        </tr>
+
+    </thead>
+    
+    <tbody>
+        @if (salesOrderList != null)
+        {
+            foreach (var item in salesOrderList)
+            {
+        <tr>
+            @*<td style="text-align:center;width:30px"><a href="EditSalesOrder/@item.SALES_ORDER_NO"><span class="oi oi-pencil"></span></a></td>*@
+            @*<td style="width:150px"><a href="SalesDetails/@item.SALES_ORDER_NO">@item.SALES_ORDER_NO</a></td>*@
+            @*<td style="text-align:center;width:30px"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.PO_WO_NUMBER), eventArgs.Value); }" /></td>*@
+            <td>
+                <div class="dropdown">
+                    <a class="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h6 style="font-size:20px">...</h6>
+                    </a>
+                    
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="EditSalesOrder/@item.SALES_ORDER_NO">Edit</a>
+                        <a class="dropdown-item" href="WorkOrder/@item.QUOTATION_NO">New Work Order</a>
+                        <a class="dropdown-item" href="DeliveryNoteList/@item.PO_WO_NUMBER">Delivery Note</a>
+                        <a class="dropdown-item" href="InvoiceList/@item.PO_WO_NUMBER">Invoice</a>
+                        
+
+                    </div>
+                </div>
+            </td>
+            <td><a style="color:Highlight;cursor:pointer" @onclick=@(() => GetSalesQuotationById(item.QUOTATION_NO))>@item.QUOTATION_NO</a></td>
+            <td><a href="file:///C:/Users/Administrator/Downloads/1365_Sdama_S&Ap_16.10.22.pdf">@item.PO_WO_NUMBER</a> </td>
+            <td>@item.PO_WO_DATE</td>
+            <td style="text-align:left">@item.CUSTOMER_NAME</td>
+            <td>@item.DELIVERY_DATE</td>
+            <td>@item.GRAND_TOTAL</td>
+
+            @*<td>
+
+            <select class="form-control" @bind="@item.STATUS_OF_SHIPMENT" @oninput="eventArgs => { ChangeStatus(Convert.ToString(item.SALES_ORDER_NO), eventArgs.Value); }">
+                <option value=""></option>
+                @foreach (var status in shipmentStatusList)
+                {
+                    <option value="@status.STATUS_OF_SHIPMENT">@status.STATUS_OF_SHIPMENT</option>
+                }
+
+            </select>
+        </td>*@
+
+        </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+    List<SalesOrderViewModel> AllsalesOrderList = new List<SalesOrderViewModel>();
+    List<SalesOrderViewModel> salesOrderList = new List<SalesOrderViewModel>();
+    SalesOrderViewModel salesInfo = new SalesOrderViewModel();
+    List<SalesItemDetailsModel> itemList = new List<SalesItemDetailsModel>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> termsAndConditionList = new List<PurchaseTermsConditionsModel>();
+    PurchaseTermsConditionsModel condition = new PurchaseTermsConditionsModel();
+    List<SalesOrderViewModel> shipmentStatusList = new List<SalesOrderViewModel>();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    string termsId = "";
+    int iOption = 0;
+    int rptType;
+    string WorkOrderNo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            AllsalesOrderList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetSalesOrderInfo");
+            salesOrderList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetSalesOrderInfo");
+            shipmentStatusList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetShipmentStatus");
+            StateHasChanged();
+            await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        }
+        catch (Exception ex)
+        {
+
+        }
+        Pagination();
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AllsalesOrderList = salesOrderList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (AllsalesOrderList.Count > 0)
+        {
+            StartNumber = AllsalesOrderList.FirstOrDefault().SL;
+            EndNumber = AllsalesOrderList[AllsalesOrderList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (salesOrderList.Count > 0)
+        {
+            AllsalesOrderList = salesOrderList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(salesOrderList.Count() / (decimal)pageSize);
+            StartNumber = AllsalesOrderList.FirstOrDefault().SL;
+            EndNumber = AllsalesOrderList[AllsalesOrderList.Count - 1].SL;
+        }
+
+    }
+    private async Task GetSalesQuotationById(string quotationNo)
+    {
+
+        salesQuotationInfo = await Http.GetJsonAsync<SalesQuotationView>(Utility.BaseUrl + "api/Sales/GetsalesQuotationInfoByQuotationNo/" + quotationNo);
+        if (salesQuotationInfo.TERMS_AND_CONDITION != null && salesQuotationInfo.TERMS_AND_CONDITION != "")
+        {
+            termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetSalesTermsAndConditionsByIds/" + salesQuotationInfo.TERMS_AND_CONDITION);
+            AppState.SalestermsConditionList = termsConditionList;
+        }
+
+        //porder.REPORT_TYPE = "1";
+        salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListByByQuotationNo/" + quotationNo);
+        //porder.pOrderDetailsList = purchaseOrderDetailsList;
+        AppState.salesQuotation = salesQuotationInfo;
+        AppState.salesQuotationitemList = salesQuotationItemList;
+
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesQuotation", "_blank");
+    }
+    public async Task ChangeStatus(string salesOrderNo, object checkedValue)
+    {
+
+        string status = checkedValue.ToString();
+        SalesOrderModel p = new SalesOrderModel();
+        p.SALES_ORDER_NO = salesOrderNo;
+        p.STATUS_OF_SHIPMENT = status;
+        //ACC_COMPANY_VOUCHER_MODEL accCompanyVoucherModel = new ACC_COMPANY_VOUCHER_MODEL();
+        //List<ACC_VOUCHER_MODEL> paymentVoucherDetails = new List<ACC_VOUCHER_MODEL>();
+        //ACC_VOUCHER_MODEL voucherDetails = new ACC_VOUCHER_MODEL();
+
+        //try
+        //{
+        //    if (selected_date == "" || selected_date == null)
+        //    { accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(currentDate); }
+        //    accCompanyVoucherModel.BRANCH_ID = branchList.Find(x => x.BRANCH_NAME == BranchName).BRANCH_ID;
+        //    accCompanyVoucherModel.LEDGER_NAME = voucherItemList.FirstOrDefault().particular;
+        //    accCompanyVoucherModel.COMP_VOUCHER_AMOUNT = totalDebit;
+        //    accCompanyVoucherModel.COMP_VOUCHER_ADD_AMOUNT = totalDebit;
+        //    accCompanyVoucherModel.COMP_VOUCHER_LESS_AMOUNT = totalDebit;
+        //    accCompanyVoucherModel.COMP_VOUCHER_NET_AMOUNT = totalDebit;
+        //    accCompanyVoucherModel.COMP_VOUCHER_PROCESS_AMOUNT = totalDebit;
+        //    accCompanyVoucherModel.COMP_VOUCHER_NARRATION = narration;
+        //    accCompanyVoucherModel.COMP_VOUCHER_TYPE = 3;
+        //    accCompanyVoucherModel.ENTRYBY = "Asaduzzaman";
+        //    accCompanyVoucherModel.UPDATEBY = "Asaduzzaman";
+
+
+
+
+        //    //var data = await Http.PostJsonAsync<ACC_COMPANY_VOUCHER_MODEL>(Utility.BaseUrl + "api/Transection/AddPaymentVoucher", accCompanyVoucherModel);
+        //    foreach (var item in voucherItemList)
+        //    {
+        //        voucherDetails = new ACC_VOUCHER_MODEL();
+        //        voucherDetails.COMP_REF_NO = accCompanyVoucherModel.COMP_REF_NO;
+        //        voucherDetails.VOUCHER_REF_KEY = "";
+        //        voucherDetails.BRANCH_ID = accCompanyVoucherModel.BRANCH_ID;
+        //        voucherDetails.COMP_VOUCHER_DATE = accCompanyVoucherModel.COMP_VOUCHER_DATE;
+        //        voucherDetails.COMP_VOUCHER_TYPE = 3;
+        //        voucherDetails.LEDGER_NAME = item.particular;
+        //        voucherDetails.VOUCHER_DEBIT_AMOUNT = item.debitAmount;
+        //        voucherDetails.VOUCHER_CREDIT_AMOUNT = item.creditAmount;
+        //        voucherDetails.VOUCHER_ADD_AMOUNT = item.creditAmount;
+        //        voucherDetails.VOUCHER_LESS_AMOUNT = item.creditAmount;
+        //        voucherDetails.VOUCHER_TOBY = item.symbol;
+        //        voucherDetails.VOUCHER_FC_DEBIT_AMOUNT = 0;
+        //        voucherDetails.VOUCHER_FC_CREDIT_AMOUNT = 0;
+        //        if (item.ChequeNo != "" && item.ChequeNo != null && item.ChequeNo != "NULL")
+        //        {
+        //            voucherDetails.VOUCHER_CHEQUE_NUMBER = item.ChequeNo;
+        //            voucherDetails.VOUCHER_CHEQUE_DATE = item.ChequeDate;
+        //            voucherDetails.VOUCHER_CHEQUE_DRAWN_ON = item.DrawnOn;
+        //        }
+        //        paymentVoucherDetails.Add(voucherDetails);
+        //        accCompanyVoucherModel.accVoucherList.Add(voucherDetails);
+        //    }
+        //    //var voucher = await Http.PostJsonAsync<List<ACC_VOUCHER_MODEL>>(Utility.BaseUrl + "api/Transection/AddPaymentVoucherDetails", paymentVoucherDetails);
+        //    var data = await Http.PostJsonAsync<ACC_COMPANY_VOUCHER_MODEL>(Utility.BaseUrl + "api/Transection/AddPaymentVoucher", accCompanyVoucherModel);
+        //    if (data.status == true)
+        //    {
+        //        toastService.ShowSuccess("Status Updated!!!");
+        //        //await LoadPage();
+        //    }
+        //    else { toastService.ShowError("Not Save :" + data.ErrorMessage); }
+
+        //}
+        //catch (Exception ex)
+        //{
+
+        //}
+        var payment = await Http.PutJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/UpdateSalesShipmentStatus", p);
+    }
+    async void CheckboxClicked(string salesOrderNo, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            WorkOrderNo = salesOrderNo;
+            //salesInfo = await Http.GetJsonAsync<SalesOrderViewModel>(Utility.BaseUrl + "api/Sales/GetSalesInfoByPONo/" + salesOrderNo);
+            //itemList = await Http.GetJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/GetSalesItemByPONo/" + salesOrderNo);
+            //termsId = salesInfo.TERMS_AND_CONDITION;
+            //if (termsId != null)
+            //{ termsAndConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetTermsAndConditions/" + termsId); }
+
+            //foreach (var item in termsAndConditionList)
+            //{
+            //    condition = new PurchaseTermsConditionsModel();
+            //    condition.PURCHASE_TERMS_CONDITION_ID = item.PURCHASE_TERMS_CONDITION_ID;
+            //    condition.SALES_TERMS_CONDITION_ID = item.SALES_TERMS_CONDITION_ID;
+            //    condition.SL = item.SL;
+            //    condition.TERMS_AND_CONDITIONS = item.SL + " ." + item.TERMS_AND_CONDITIONS;
+
+            //    termsConditionList.Add(condition);
+
+            //}
+
+            //AppState.SalestermsConditionList = termsConditionList;
+
+        }
+        this.StateHasChanged();
+    }
+    private async void DeliveryNoteClicked()
+    {
+        iOption = 1;
+        rptType = 1;
+        //await GoPreview();
+        try
+        {
+            await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesDeliveryNote", "_blank");
+        }
+        catch { }
+
+
+    }
+    private async void InvoiceClicked()
+    {
+        iOption = 2;
+        rptType = 2;
+        //await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesInvoice", "_blank");
+        //await GoPreview();
+        //StateHasChanged();
+        try { await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesInvoice", "_blank"); }
+        catch { }
+
+    }
+    private async Task GoPreview()
+    {
+        //if(rptType==1)
+        //{ }
+        //else if(rptType==2)
+        //{ }
+        try
+        {
+            if (rptType == 1)
+            { await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesDeliveryNote", "_blank"); }
+            else if (rptType == 2)
+            { await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesInvoice", "_blank"); }
+        }
+        catch { }
+
+
+
+    }
+}

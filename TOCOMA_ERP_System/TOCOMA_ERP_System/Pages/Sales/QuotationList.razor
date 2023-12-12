@@ -1,0 +1,205 @@
+﻿@page "/QuotationList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime js
+
+<style>
+    table, tr, td {
+        /*border: none;*/
+        text-align: left;
+    }
+    table, tbody, tr, td{
+        /*padding:5px;*/
+    }
+     
+</style>
+
+<div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+    <div class="col-md-4"><h5>Quotation List</h5></div>
+    <div class="" style="display:flex;gap:10px;align-items:center">
+        <a href="SalesQuotation">
+            <button class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px"><i class='bi bi-plus' style="font-size:30px" /> New</button>
+        </a>
+        
+
+    <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @quotationList.Count()</label>
+    <a style="color:Highlight;">
+        <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+     </a>
+     <a style="color:Highlight"><i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+     </a>
+    </div>
+</div>
+
+
+<hr />
+
+<table id="#example" width="100%">
+    <thead>
+        <tr>
+            @*<th></th>*@
+            <td></td>
+            <td></td>
+            <td>Quotation No</td>
+            <td>Quotation Date</td>
+            <td style="text-align:left">Customer</td>
+            <td>Sales Person</td>
+            <td>Status</td>
+            <td></td>
+
+        </tr>
+
+    </thead>
+    <tbody>
+        @if (AllquotationList != null)
+        {
+            foreach (var item in AllquotationList)
+            {
+                @*@onclick=@(() => GetPOData(item.PO_ID))*@
+        <tr>
+            @*<td style="text-align:center"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked((item.SALES_QUOTATION_ID), eventArgs.Value); }" /></td>*@
+            <td>
+                <div class="dropdown">
+                    <a class="" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h6 style="font-size:30px">...</h6>
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="EditSalesQuotation/@item.QUOTATION_NO">Edit</a>
+                        <a class="dropdown-item" href="WorkOrder/@item.QUOTATION_NO">New Work Order</a>
+                    </div>
+                </div>
+            </td>
+            <td style="width:150px"><a href="WorkOrder/@item.QUOTATION_NO">New Work Order</a></td>
+            <td style="width:150px"><a style="color:Highlight;cursor:pointer" @onclick=@(() => GetSalesQuotationById(item.SALES_QUOTATION_ID))>@item.QUOTATION_NO</a></td>
+
+            <td>@item.QUOTATION_DATE</td>
+            <td style="text-align:left">@item.CUSTOMER_NAME</td>
+            <td>@item.SALES_PERSON</td>
+            <td>@item.STATUS</td>
+
+        </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+@code {
+
+    CustomerModel customer = new CustomerModel();
+    List<CustomerViewModel> allcustomerList = new List<CustomerViewModel>();
+    List<CustomerViewModel> customerList = new List<CustomerViewModel>();
+    List<SalesQuotationView> AllquotationList = new List<SalesQuotationView>();
+    List<SalesQuotationView> quotationList = new List<SalesQuotationView>();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<ItemEntity> itemList = new List<ItemEntity>();
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    bool checkStatus = false;
+    int iOption = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllquotationList = await Http.GetJsonAsync<List<SalesQuotationView>>(Utility.BaseUrl + "api/Sales/GetAllQuotation");
+        quotationList = await Http.GetJsonAsync<List<SalesQuotationView>>(Utility.BaseUrl + "api/Sales/GetAllQuotation");
+        //AppState.salesQuotation = quotationList;
+        //Pagination();
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+        Pagination();
+    }
+
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AllquotationList = quotationList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (AllquotationList.Count > 0)
+        {
+            StartNumber = AllquotationList.FirstOrDefault().SL;
+            EndNumber = AllquotationList[AllquotationList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (quotationList.Count > 0)
+        {
+            AllquotationList = quotationList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(quotationList.Count() / (decimal)pageSize);
+            StartNumber = AllquotationList.FirstOrDefault().SL;
+            EndNumber = AllquotationList[AllquotationList.Count - 1].SL;
+        }
+
+    }
+    async void CheckboxClicked(int poId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+
+            await GetSalesQuotationById(poId);
+            checkStatus = true;
+            StateHasChanged();
+        }
+    }
+    private async Task GetSalesQuotationById(int poId)
+    {
+
+        salesQuotationInfo = await Http.GetJsonAsync<SalesQuotationView>(Utility.BaseUrl + "api/Sales/GetsalesQuotationInfoById/" + poId);
+        if (salesQuotationInfo.TERMS_AND_CONDITION != null && salesQuotationInfo.TERMS_AND_CONDITION != "")
+        {
+            termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetSalesTermsAndConditionsByIds/" + salesQuotationInfo.TERMS_AND_CONDITION);
+            AppState.SalestermsConditionList = termsConditionList;
+        }
+        if(salesQuotationInfo.USED_PRODUCT!=null)
+        {
+            itemList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Sales/GetItemListByUsedProduct/" + salesQuotationInfo.USED_PRODUCT);
+            AppState.usedProductList = itemList;
+        }
+
+        //porder.REPORT_TYPE = "1";
+        salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListById/" + poId);
+        //porder.pOrderDetailsList = purchaseOrderDetailsList;
+        AppState.salesQuotation = salesQuotationInfo;
+        AppState.salesQuotationitemList = salesQuotationItemList;
+
+        await js.InvokeAsync<object>("open", "api/RDLCReport/GetSalesQuotation", "_blank");
+    }
+    private void Download()
+    {
+        if (checkStatus == true)
+        {
+            iOption = 1;
+            StateHasChanged();
+
+
+        }
+        else { toastService.ShowWarning("Please Select Item For Download"); }
+
+    }
+
+}

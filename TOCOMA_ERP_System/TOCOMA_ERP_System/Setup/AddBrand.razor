@@ -1,0 +1,156 @@
+﻿@page "/AddBrand"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+<div class="card">
+    <div class="card-header">
+        <h3>Brand</h3>
+    </div>
+
+    <br />
+    <EditForm Model="@brand" style="height:20%;margin-left:10px">
+        <div class="row">
+            <div class="col-md-2"><label><b>Brand Name:</b></label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@brand.BRAND_NAME" style="width:500px"></InputText>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <button type="submit" @onclick="SaveBrand" class="btn btn-info" style="width:120px;margin-right:10px">@submit</button>
+                <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+            </div>
+        </div>
+
+    </EditForm>
+
+    <br />
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:40px"></th>
+                        <th style="width:40px"></th>
+                        <td>Country</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (brandList != null)
+                    {
+                        foreach (var item in brandList)
+                        {
+                            <tr>
+                                <td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.BRAND_ID))><span class="oi oi-trash"></span></a></td>
+                                <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => EditBrand(item.BRAND_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td>@item.BRAND_NAME</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    List<BrandModel> brandList = new List<BrandModel>();
+    BrandModel brand = new BrandModel();
+    string submit = "Save";
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBrand();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetBrand()
+    {
+        brandList = await Http.GetJsonAsync<List<BrandModel>>(Utility.BaseUrl + "api/Setup/GetBrandList");
+    }
+    public async Task SaveBrand()
+    {
+        if (IsValidation_Brand() != true)
+        {
+            try
+            {
+                if (submit == "Save")
+                {
+                    brand.Operation_Type = 1;
+                    var data = await Http.PostJsonAsync<BrandModel>(Utility.BaseUrl + "api/Setup/AddBrand", brand);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                else if (submit == "Update")
+                {
+                    brand.Operation_Type = 2;
+                    var data = await Http.PutJsonAsync<BrandModel>(Utility.BaseUrl + "api/Setup/UpdateBrand", brand);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                submit = "Save";
+                brand = new BrandModel();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        await GetBrand();
+    }
+    private bool IsValidation_Brand()
+    {
+        bool flag = false;
+        if (brand.BRAND_NAME == "" || brand.BRAND_NAME == string.Empty || brand.BRAND_NAME == null)
+        {
+            toastService.ShowWarning("Brand Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async Task Cancel()
+    {
+        brand = new BrandModel();
+        submit = "Save";
+    }
+    private async Task Delete(int Id)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteBrand/" + Id);
+        await GetBrand();
+    }
+    private async Task EditBrand(int Id)
+    {
+        submit = "Update";
+        brand = new BrandModel();
+        brand.BRAND_NAME = brandList.Find(x => x.BRAND_ID == Id).BRAND_NAME;
+        brand.BRAND_ID = Id;
+        brand.Operation_Type = 2;
+    }
+}
+
+
+
+
+
+
+
+
+
+

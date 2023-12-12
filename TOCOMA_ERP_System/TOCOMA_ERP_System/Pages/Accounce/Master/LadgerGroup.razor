@@ -1,0 +1,323 @@
+﻿@page "/LadgerGroup"
+@layout CustomLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+
+
+
+
+<div class="card">
+    <div class="card-header">
+        Ledger GroupList /
+        <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target=".bd-example-modal-lg" @onclick="NewClick">New Ledger Group</a>
+        &nbsp;<a style="margin-left:200px;margin-left:50px;height:100px" href="ChartOfAccounts">Chart Of Accounts</a>
+    </div>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>                
+                <th>Group Name</th>
+                <th>Under</th>
+                <th>Nature</th>
+                <th></th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @if (ledgerGroupList != null)
+            {
+                foreach (var item in ledgerGroupList)
+                {
+                    <tr>                        
+                        <td>@item.GR_NAME</td>
+                        <td>@item.GR_PARENT</td>
+                        <td>@item.GR_PRIMARY</td>
+                        <td style="text-align:center;width:6%"><a data-toggle="modal" href="" data-target=".bd-example-modal-lg" @onclick=@(() => EditClick(item.GR_SERIAL))><span class="oi oi-pencil"></span></a></td>
+                        <td style="text-align:center;width:6%"><a @onclick=@(() => DeleteClick(item.GR_SERIAL))><span style="color:red" class="oi oi-trash"></span></a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@*----Group Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter"
+                            Timeout="10"
+                            SuccessClass="success-toast-override" />
+            <EditForm Model="@ledgerGroup" OnValidSubmit="@SaveGroups">
+                <DataAnnotationsValidator />
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">Ledger Group</span>  </h4>
+
+                    <label style="background-color:green;color:white;width:200px;margin-left:50px;margin-top:20px;font-size:20px;text-align:center">@message</label>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-3 col-form-label">Group Name :</label>
+                        <div class="col-sm-9">
+                            @*<input @bind-Value="ledgerGroup.GR_NAME" type="text" @ref="myref" class="form-control" placeholder="Enter Group Name here..." />*@
+                            <input @bind-value="@ledgerGroup.GR_NAME" @ref="myref" class="form-control" placeholder="Enter Group Name here..." />
+                            <ValidationMessage For="() => ledgerGroup.GR_NAME" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-3 col-form-label">Under :</label>
+                        <div class="col-sm-9">
+                            <select @onchange="UnderClicked" class="form-control">
+                                <option value="Primary">Primary</option>
+                                @foreach (var item in ledgerGroupList)
+                                {
+                                    <option value="@item.GR_NAME">@item.GR_NAME</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-3 col-form-label">Nature :</label>
+                        <div class="col-sm-9">
+                            <InputSelect @bind-Value="@ledgerGroup.GR_PRIMARY" class="form-control">
+                                <option></option>
+                                @foreach (var item in primaryList)
+                                {
+                                    <option value="@item.PRIMARY_NAME">@item.PRIMARY_NAME</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    @if (cashflow_visible_Status == 1)
+                    {
+                        <div class="form-group row">
+                            <label for="colFormLabel" class="col-sm-3 col-form-label">Cash Flow Type :</label>
+                            <div class="col-sm-9">
+                                <InputSelect @bind-Value="@ledgerGroup.GR_CASH_FLOW_TYPE" class="form-control">
+                                    <option></option>
+                                    <option value="End Of List">End Of List</option>
+                                    <option value="Operating Activities">Operating Activities</option>
+                                    <option value="Investing Activities">Investing Activities</option>
+                                    <option value="Financing Activities">Financing Activities</option>
+                                </InputSelect>
+
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row">
+
+                        <input type="checkbox" style="width:10px" class="col-sm-1 col-form-label" @onchange="eventArgs => { CashFlow_ChequeClicked( eventArgs.Value); }" />
+                        <div class="col-sm-9">
+                            <label>Cash Flow Type</label>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:10px" class="btn btn-info">@btnLabel</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </EditForm>
+
+
+        </div>
+    </div>
+</div>
+@code {
+    LedgerGroupModel ledgerGroup = new LedgerGroupModel();
+    List<LedgerGroupModel> ledgerGroupList = new List<LedgerGroupModel>();
+    List<BranchModel> branchList = new List<BranchModel>();
+    List<PrimaryModel> primaryList = new List<PrimaryModel>();
+    List<ParentModel> parentList = new List<ParentModel>();
+    string btnLabel;
+    private ElementReference myref;
+    int cashflow_visible_Status = 0;
+    string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnLabel = "Save";
+        ledgerGroupList = await Http.GetJsonAsync<List<LedgerGroupModel>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+        primaryList = await Http.GetJsonAsync<List<PrimaryModel>>(Utility.BaseUrl + "api/Setup/GetPrimaryList");
+        await GetLedgerGroup();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        //await GetLedgerGroup();
+    }
+    public async Task GetLedgerGroup()
+    {
+        ledgerGroupList = await Http.GetJsonAsync<List<LedgerGroupModel>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+        //primaryList = await Http.GetJsonAsync<List<PrimaryModel>>(Utility.BaseUrl + "api/Setup/GetPrimaryList");
+
+    }
+
+    public async Task SaveGroups()
+    {
+        //if (IsValidation() != true)
+        //{
+        try
+        {
+            if (btnLabel == "Save")
+            {
+                //ledgerGroup.GR_PARENT = ledgerGroup.GR_NAME;
+                if (ledgerGroup.GR_PARENT == null)
+                { ledgerGroup.GR_PARENT = "Primary"; }
+                ledgerGroup.ENTRYBY = "Asad";
+                if (ledgerGroup.GR_CASH_FLOW_TYPE == "Operating Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "1"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "Investing Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "2"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "Financing Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "3"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "End Of List")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "4"; }
+                else { ledgerGroup.GR_CASH_FLOW_TYPE = "4"; }
+
+                var data = await Http.PostJsonAsync<LedgerGroupModel>(Utility.BaseUrl + "api/Setup/AddLedgerGroup", ledgerGroup);
+                if(data.Success_Status==true)
+                { toastService.ShowSuccess("Save Successfully!!"); }
+                else { toastService.ShowError("Not Save"); }
+
+                //message = "Save Successfully!!!";
+
+            }
+            else if (btnLabel == "Update")
+            {
+                ledgerGroup.UPDATEBY = "Asad";
+                if (ledgerGroup.GR_PARENT == null)
+                { ledgerGroup.GR_PARENT = "Primary"; }
+                if (ledgerGroup.GR_CASH_FLOW_TYPE == "Operating Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "1"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "Investing Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "2"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "Financing Activities")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "3"; }
+                else if (ledgerGroup.GR_CASH_FLOW_TYPE == "End Of List")
+                { ledgerGroup.GR_CASH_FLOW_TYPE = "4"; }
+                else { ledgerGroup.GR_CASH_FLOW_TYPE = "4"; }
+                var data = await Http.PutJsonAsync<LedgerGroupModel>(Utility.BaseUrl + "api/Setup/UpdateLedgerGroup", ledgerGroup);
+                //toastService.ShowSuccess("Update Successfully!!!");
+                if (data.Success_Status == true)
+                { toastService.ShowSuccess("Updated Successfully!!"); }
+                else { toastService.ShowError("Not Updated"); }
+                //message = "Update Successfully!!!";
+
+                //message = "";
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetLedgerGroup();
+        //}
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (ledgerGroup.GR_NAME == "" || ledgerGroup.GR_NAME == string.Empty || ledgerGroup.GR_NAME == null)
+        {
+            toastService.ShowWarning("Branch Name cannot be empty!");
+            flag = true;
+        }
+        return flag;
+    }
+    private async Task UnderClicked(ChangeEventArgs change)
+    {
+        ledgerGroup.GR_PARENT = change.Value.ToString();
+    }
+    private void NewClick()
+    {
+        ledgerGroup = new LedgerGroupModel();
+        btnLabel = "Save";
+        message = "";
+    }
+    private async void EditClick(int code)
+    {
+        btnLabel = "Update";
+        message = "";
+        ledgerGroup = ledgerGroupList.FirstOrDefault(x => x.GR_SERIAL == code);
+        if (ledgerGroup.GR_LEVEL == 1)
+        {
+            ledgerGroup.GR_PARENT = "Primary";
+        }
+        if (ledgerGroup.GR_PRIMARY_TYPE == 1)
+        {
+            ledgerGroup.GR_PRIMARY = "Assets";
+        }
+        else if (ledgerGroup.GR_PRIMARY_TYPE == 2)
+        {
+            ledgerGroup.GR_PRIMARY = "Equity And Liabilities";
+        }
+        else if (ledgerGroup.GR_PRIMARY_TYPE == 3)
+        {
+            ledgerGroup.GR_PRIMARY = "Income";
+        }
+        else if (ledgerGroup.GR_PRIMARY_TYPE == 4)
+        {
+            ledgerGroup.GR_PRIMARY = "Expenses";
+        }
+
+        if (ledgerGroup.GR_CASH_FLOW_TYPE == "1")
+        {
+            ledgerGroup.GR_CASH_FLOW_TYPE = "Operating Activities";
+        }
+        else if (ledgerGroup.GR_CASH_FLOW_TYPE == "2")
+        {
+            ledgerGroup.GR_CASH_FLOW_TYPE = "Investing Activities";
+        }
+        else if (ledgerGroup.GR_CASH_FLOW_TYPE == "3")
+        {
+            ledgerGroup.GR_CASH_FLOW_TYPE = "Financing Activities";
+        }
+        else if (ledgerGroup.GR_CASH_FLOW_TYPE == "4")
+        {
+            ledgerGroup.GR_CASH_FLOW_TYPE = "End Of List";
+        }
+        await myref.FocusAsync();
+    }
+    private async Task DeleteClick(int serial)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+        bool isExist = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/Setup/GetLedgerGroupByGRName/" + serial);
+        if (isExist != true)
+        { await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteLedgerGroup/" + serial); }
+        else { toastService.ShowWarning("Default Group could not be deleted."); }
+        await GetLedgerGroup();
+
+    }
+    async void CashFlow_ChequeClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            cashflow_visible_Status = 1;
+        }
+        else
+        {
+            cashflow_visible_Status = 0;
+        }
+        StateHasChanged();
+    }
+
+}

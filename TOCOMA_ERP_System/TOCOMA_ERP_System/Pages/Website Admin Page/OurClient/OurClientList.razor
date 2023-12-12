@@ -1,0 +1,61 @@
+﻿@page "/Website/OurClientList"
+@layout WebsiteAdminLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IWebHostEnvironment env
+@using System.IO
+@using System.Net.Http.Headers;
+@inject IJSRuntime JSRuntime
+
+<div class="testbox">
+    <div class="tablearea">
+        <table id="example" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width:40px"></th>
+                    <th style="width:40px"></th>
+                    <td style="width:80%">Project Type</td>
+                    <td></td>
+                </tr>
+
+            </thead>
+            <tbody>
+                @if (ourClientList != null)
+                {
+                    foreach (var item in ourClientList)
+                    {
+                        <tr>
+                            <td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.OUR_CLIENT_ID))><span class="oi oi-trash"></span></a></td>
+                            <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => EditBrand(item.OUR_CLIENT_ID))><span class="oi oi-pencil"></span></a></td>
+                            <td>@item.CLIENT_NAME</td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    List<clsClientDetails> ourClientList = new List<clsClientDetails>();
+
+    private async Task Delete(int Id)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/ReferenceProjectType/DeleteRefProjectType/" + Id);
+
+    }
+    private async Task EditBrand(int Id)
+    {
+        //submit = "Update";
+        //item = new ReferenceProjectTypeModel();
+        ////item.REF_PROJECT_TYPE_NAME = itemList.Find(x => x.REF_PROJECT_TYPE_ID == Id).REF_PROJECT_TYPE_NAME;
+        //item.REF_PROJECT_TYPE_ID = Id;
+        //item.OPERATION_TYPE = 2;
+    }
+}

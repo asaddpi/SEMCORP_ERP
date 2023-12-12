@@ -1,0 +1,495 @@
+﻿@layout LoginLayout
+@page "/"
+
+@inject HttpClient Http
+@inject NavigationManager UriHelper
+@inject NavigationManager navmanager
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime js
+@*@using Tocoma_ERP_System.Authentication*@
+@inject IToastService toastService
+@using System.Security.Claims
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject NavigationManager _navigationManager;
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+
+<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter"
+                Timeout="10"
+                SuccessClass="success-toast-override" />
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<div class="dashboard-main">
+    <div class="top-header p-4  border-bottom">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 d-flex justify-content-center">
+                    <img src="images/SEMCORP-Icon.png" alt="logo">
+
+
+                </div>
+                @*<label style="float:right">Login</label>
+                    <label style="margin-left:20px">Register</label>*@
+
+                <!-- <div class="col-lg-5 d-flex align-items-center m-auto">
+                    <p class="m-0">Welcome, <span>Admin User</span> | System Admin, <span>HR and Admin</span> | My Account | <span style="color: rgb(255, 208, 0)">Logout</span> </p>
+                </div> -->
+
+            </div>
+
+        </div>
+
+    </div>
+    @*@Body*@
+    @*<div class="login-main">
+            <div class="login-main-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="login-left">
+                                <img src="images/chart-vector-113750.jpg" alt="" class="ml-5 mb-4" width="100" height="100">
+                                <p>Supply O Chain Application</p>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-12 col-sm-8 m-auto">
+                                    <label style="background-color:red;color:white;font-size:20px">@message</label>
+                                    <div class="login-right">
+
+                                        <div class="card">
+                                            <div class="card-body px-3 py-5">
+                                                <div class="row">
+                                                    <div class="col-2 d-flex align-items-center">
+                                                        <img src="images/login-icon.png" alt="">
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <EditForm Model="usermodel" OnValidSubmit="UserLogin">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <InputText class="form-control form-control-md" @bind-Value="@usermodel.LOGIN_ID" placeholder="Email"></InputText>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <InputText class="form-control form-control-md" type="password" @bind-Value="@usermodel.PASSWORD" placeholder="Password"></InputText>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-10">
+                                                                    <button type="submit" class="btn btn-primary btn-block" style="width:150px">Sign in</button>
+                                                                    <br />
+                                                                    <input style="width:20px" type="checkbox" /> Remember Password | &nbsp;
+                                                                    <a href="#">Forgot Password ?</a>
+                                                                </div>
+                                                            </div>
+                                                        </EditForm>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>*@
+
+    <div class="login-main">
+        <div class="login-main-wrapper">
+            <div class="container-fluid">
+
+
+
+
+                <div class="row" style="width:100%; justify-content:center; align-items:center">
+
+
+                    <div id="loginbox" class="mainbox col-md-3  col-sm-8">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" style="align-items:center">
+                                <div class="panel-title">Sign In</div>
+                                @*<div style="float:right; font-size: 90%; position: relative; top:-20px"><a href="#">Forgot password?</a></div>*@
+                            </div>
+
+                            <div style="padding-top:30px" class="panel-body">
+
+                                <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+                                <EditForm Model="usermodel" OnValidSubmit="UserLogin" id="loginform" class="form-horizontal" role="form">
+
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <InputText id="login-username" type="text" class="form-control" name="username" @bind-Value="@usermodel.LOGIN_ID" placeholder=" username"></InputText>
+                                    </div>
+
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        <InputText id="login-password" type="password" class="form-control" @onkeyup="DoTheThing" @bind-Value="@usermodel.PASSWORD" placeholder="password"></InputText>
+                                    </div>
+
+
+
+                                    <div class="input-group">
+                                        <div class="checkbox">
+                                            <label style="display:flex; gap:5px">
+                                                <input id="login-remember" type="checkbox" name="remember" value="1" style="height:12px; width:12px; align-items:center"> Remember me
+                                                <span style="color:blue; cursor:pointer">Forgot Password?</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div style="margin-top:10px" class="form-group">
+                                        <!-- Button -->
+
+                                        <div class="col-sm-12 controls">
+                                            @*<a id="btn-danger" href="#" class="btn btn-danger">Cancel  </a>*@
+                                            <a id="btn-login" style="width:75px;color:white" class="btn btn-success" @onclick="UserLogin">Login</a>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 control">
+                                            <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                                                Don't have an account !
+                                                <a onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                                                    <label style="color:Highlight">Sign Up Here</label>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </EditForm>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @*---------------Signup start here---------------------*@
+                    <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-3  col-sm-8">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="panel-title">Sign Up</div>
+                                <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" style="color:Highlight;cursor:pointer" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
+                            </div>
+                            <div class="panel-body">
+                                <EditForm Model="@usermodel" id="signupform" class="form-horizontal" role="form">
+
+                                    <div id="signupalert" style="display:none" class="alert alert-danger">
+                                        <p>Error:</p>
+                                        <span></span>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="firstname" class="col-md-3 control-label">Full Name</label>
+                                        <div class="col-md-9">
+                                            <InputText type="text" class="form-control" @bind-Value="@usermodel.FULL_NAME" placeholder="full name"></InputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastname" class="col-md-3 control-label">Email</label>
+                                        <div class="col-md-9">
+                                            <InputText type="text" class="form-control" @bind-Value="@usermodel.EMAIL" placeholder="email"></InputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastname" class="col-md-3 control-label">Mobile</label>
+                                        <div class="col-md-9">
+                                            <InputText type="text" class="form-control" @bind-Value="@usermodel.MOBILE" placeholder="mobile"></InputText>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password" class="col-md-3 control-label">User Name</label>
+                                        <div class="col-md-9">
+                                            <InputText type="text" class="form-control" @bind-Value="@usermodel.LOGIN_ID" placeholder="user Name"></InputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="col-md-3 control-label">Password</label>
+                                        <div class="col-md-9">
+                                            <InputText type="password" class="form-control" @bind-Value="@usermodel.PASSWORD" placeholder="password"></InputText>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <!-- Button -->
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button id="btn-signup" type="button" class="btn btn-info" @onclick="CreateUser"><i class="icon-hand-right"></i> &nbsp Sign Up</button>
+                                            @*<span style="margin-left:8px;">or</span>*@
+                                        </div>
+                                    </div>
+
+                                    @*<div style="border-top: 1px solid #999; padding-top:20px" class="form-group">
+
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button id="btn-fbsignup" type="button" class="btn btn-primary"><i class="icon-facebook"></i>   Sign Up with Facebook</button>
+                                            </div>
+                                        </div>*@
+                                </EditForm>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @*---------------Signup end here---------------------*@
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <h6 class="text-center m-0">Copyright &copy; All rights reserved.</h6>
+    </footer>
+</div>
+
+@code
+{
+    UserModel usermodel = new UserModel();
+    UserModel loginUser = new UserModel();
+    string message;
+    ClaimsPrincipal claimsPrincipal;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //usermodel = new UserModel();
+
+        //claimsPrincipal = (await authenticationStateTask).User;
+
+        //if (claimsPrincipal.Identity.IsAuthenticated)
+        //{
+        //    UriHelper.NavigateTo("/Home");
+        //}
+
+
+
+
+        //var item = await localStorageService.GetItemAsync<string>("session_employeeLoginId");
+        //if (await localStorageService.GetItemAsync<string>("session_employeeLoginId") != null)
+        //{ UriHelper.NavigateTo("/Home"); }
+        //else {
+        //    loginUser = new UserModel();
+        //    UriHelper.NavigateTo("/");
+        //}
+
+
+
+
+
+        //{
+        //    usermodel.LOGIN_ID = "philip.cramer@gmail.com";
+        //    usermodel.PASSWORD = "philip.cramer";
+        //}
+        //loginUser = new UserModel();
+        //return base.OnInitializedAsync();
+        //var authState = await authenticationStateTask;
+        //var user = authState.User;
+
+        //if (user.Identity.IsAuthenticated)
+        //{
+        //    Console.WriteLine($"{user.Identity.Name} is authenticated.");
+        //}
+
+    }
+    //protected override void OnAfterRender(bool firstRender)
+    //{
+    //    base.OnAfterRender(firstRender);
+    //    _navigationManager.NavigateTo("/login", false);
+    //}
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    var authenticationState = await authenticationStateTask;
+    //    try
+    //    {
+    //        if (authenticationState?.User?.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+    //        {
+    //            var returnUrl = UriHelper.ToBaseRelativePath(UriHelper.Uri);
+
+    //            if (string.IsNullOrWhiteSpace(returnUrl))
+    //                UriHelper.NavigateTo("/", true);
+    //            else
+    //                UriHelper.NavigateTo($"/Identity/Account/Login?returnUrl=~/{returnUrl}", true);
+    //        }
+    //    }
+    //    catch (Exception e)
+    //    {
+
+
+    //    }
+
+    //}
+    private async Task<bool> ValidateUser(string userloginId)
+    {
+        ((CustomAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(userloginId);
+
+        if (userloginId == "Admin")
+        {
+            UriHelper.NavigateTo("/AdminHome");
+        }
+        else { UriHelper.NavigateTo("/Home"); }
+
+
+        //await sessionStorage.SetItemAsync("emailAddress", userloginId);
+        await localStorageService.SetItemAsync<string>("emailAddress", userloginId);
+        return await Task.FromResult(true);
+    }
+    private async void DoTheThing(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key == "Enter")
+        {
+            await UserLogin();
+        }
+    }
+    private async Task CreateUser()
+    {
+        try
+        {
+            if (IsValidation() != true)
+            {
+                bool isUserExist = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/Authentication/GetExistingUser/" + usermodel.LOGIN_ID);
+                if (isUserExist != true)
+                {
+                    bool status = await Http.PostJsonAsync<bool>(Utility.BaseUrl + "api/Authentication/CreateUser", usermodel);
+                    if (status == true)
+                    {
+                        //message = "Request Submitted ! You will be notify by mail within short time.";
+                        toastService.ShowSuccess("Request Submitted ! You will be notify by mail within short time.");
+                        ClearData();
+
+                    }
+                    else { toastService.ShowError("Not Save!!"); }
+                    //if(SentMail()==true)
+                    //{
+                    //    bool status = await Http.PostJsonAsync<bool>(Utility.BaseUrl + "api/Authentication/CreateUser", usermodel);
+                    //    if (status == true)
+                    //    {
+                    //        message = "Request Submitted ! You will be notify by mail within short time.";
+                    //        ClearData();
+
+                    //    }
+                    //    else { toastService.ShowError("Not Save!!"); }
+                    //}
+                }
+                else
+                {
+                    toastService.ShowWarning("This user already exist!!");
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (usermodel.FULL_NAME == "" || usermodel.FULL_NAME == string.Empty || usermodel.FULL_NAME == null)
+        {
+            toastService.ShowWarning("Name cannot be empty!");
+            flag = true;
+        }
+        else if (usermodel.EMAIL == "" || usermodel.EMAIL == string.Empty || usermodel.EMAIL == null)
+        {
+            toastService.ShowWarning("Email is Empty");
+            flag = true;
+        }
+        else if (usermodel.MOBILE == "" || usermodel.MOBILE == string.Empty || usermodel.MOBILE == null)
+        {
+            toastService.ShowWarning("Mobile No. is Empty");
+            flag = true;
+        }
+        else if (usermodel.LOGIN_ID == "" || usermodel.LOGIN_ID == string.Empty || usermodel.LOGIN_ID == null)
+        {
+            toastService.ShowWarning("User Name Can not be empty");
+            flag = true;
+        }
+        else if (usermodel.PASSWORD == "" || usermodel.PASSWORD == string.Empty || usermodel.PASSWORD == null)
+        {
+            toastService.ShowWarning("Password Can not be empty");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private void ClearData()
+    {
+        usermodel.FULL_NAME = string.Empty;
+        usermodel.EMAIL = string.Empty;
+        usermodel.DEPARTMENT_ID = 0;
+        usermodel.DEPARTMENT_NAME = "";
+        usermodel.MOBILE = string.Empty;
+        usermodel.LOGIN_ID = "";
+        usermodel.PASSWORD = "";
+    }
+    private async Task UserLogin()
+    {
+        try
+        {
+            if (usermodel.LOGIN_ID == null || usermodel.LOGIN_ID == "" || usermodel.PASSWORD == null || usermodel.PASSWORD == "")
+            {
+                await js.InvokeVoidAsync("alert", " User Name or Password Is Empty");
+                return;
+            }
+            else
+            {
+                loginUser = await Http.PostJsonAsync<UserModel>(Utility.BaseUrl + "api/Authentication/UserLogin", usermodel);
+                if (loginUser.PASSWORD != usermodel.PASSWORD)
+                {
+                    await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
+                    return;
+                }
+                await sessionStorage.SetItemAsync("session_employeeName", loginUser.EMPLOYEE_NAME);
+                await sessionStorage.SetItemAsync("session_employeeId", loginUser.EMPLOYEE_ID);
+                await sessionStorage.SetItemAsync("session_employeeDesignation", loginUser.DESIGNATION);
+                await sessionStorage.SetItemAsync("session_employeeDepartment", loginUser.DEPARTMENT_NAME);
+                await sessionStorage.SetItemAsync("session_employeeDepartmentId", loginUser.DEPARTMENT_ID);
+                await sessionStorage.SetItemAsync("emailAddress", loginUser.LOGIN_ID);
+                await localStorageService.SetItemAsync("emailAddress", loginUser.LOGIN_ID);
+                await sessionStorage.SetItemAsync("session_employeeLoginId", loginUser.LOGIN_ID);
+                await sessionStorage.SetItemAsync("session_userRoleId", loginUser.USER_ROLE_ID);
+                await sessionStorage.SetItemAsync("session_userId", loginUser.USER_ID);
+                await sessionStorage.SetItemAsync("employeeImage", loginUser.EMPLOYEE_IMAGE);
+                await localStorageService.SetItemAsync("employeeImage", loginUser.EMPLOYEE_IMAGE);
+                await ValidateUser(loginUser.LOGIN_ID);
+
+
+                var authState = await authenticationStateTask;
+                //authState.User = loginUser.USER_ID;
+                var user = authState.User;
+
+                if (user.Identity.IsAuthenticated)
+                {
+                    // Console.WriteLine($"{user.Identity.Name} is authenticated.");
+                    //UriHelper.NavigateTo("/Home");
+                }
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+}

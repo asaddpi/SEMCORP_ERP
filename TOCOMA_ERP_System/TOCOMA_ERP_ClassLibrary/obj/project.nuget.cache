@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "A9ZYu7PNf0vuxiXQwQDxyAjjqPQapsksDP43VfD99QktMnrB5PVVo5cL8E860NJm5kqFuMTxlWc2uae8nzpNdg==",
+  "success": true,
+  "projectFilePath": "D:\\SEMCORP\\TOCOMA_ERP_System\\TOCOMA_ERP_ClassLibrary\\TOCOMA_ERP_ClassLibrary.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\NAZAT\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\NAZAT\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\NAZAT\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,742 @@
+﻿@page "/ItemDetails/{ItemCode}"
+@layout CustomLayout
+@inject HttpClient Http
+@using System.IO
+@inject IWebHostEnvironment env
+@inject IJSRuntime JSRuntime
+
+<style>
+
+    h2 {
+        font-size: 30px;
+        font-weight: 600;
+        color: #333;
+        margin-block-start: 0;
+        margin-block-end: 0;
+    }
+
+    span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .productDetails {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .productDetails__container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding: 0 40px;
+    }
+
+    .productDetails__headerdesc {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .product__imgAndInfo {
+        width:100%;
+        display: grid;
+        grid-template-columns: .5fr 1fr;
+        gap: 50px;
+    }
+
+    .product__img {
+        width: 100%;
+        height: 300px;
+        padding: 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+    }
+
+    .product__infos {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .product__infoTitles {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat( auto-fit, minmax(60px, 1fr) );
+        gap: 10px;
+    }
+
+    .product__infoTitle {
+        font-size: 15px;
+        font-weight: 500;
+        padding: 5px 10px;
+        border-bottom: 1px solid rgb(51, 51, 51);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: black;
+    }
+
+        .product__infoTitle:hover {
+            color: orange;
+            /*border-bottom: 1px solid orange;*/
+            /*transition: all 0.2s ease-in-out;*/
+        }
+
+    .relatedApplications {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .relatedApplications__items {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .relatedApplications__item {
+        position: relative;
+    }
+
+    .relatedApplications__itemImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .relatedApplications__itemText {
+        position: absolute;
+        left: 5px;
+        bottom: 5px;
+        padding: 3px;
+        border-radius: 2px;
+        background-color: rgba(68, 68, 68, 0.61);
+        color: white;
+        font-size: 12px;
+    }
+    .product__infoTitle {
+        font-size: 15px;
+        font-weight: 500;
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        border: transparent;
+        border-bottom: 1px solid transparent;
+        outline: none;
+        background: transparent;
+    }
+
+        .product__infoTitle:hover {
+            font-size:18px;
+            /*font-weight: 500;*/
+            color: orange;
+            /*border-bottom: 1px solid orange;*/
+            /*transition: all 0.2s ease-in-out;*/
+        }
+
+    .active {
+        font-size: 20px;
+        font-weight: 500;
+        color: orange;
+        border-bottom: 1px solid orange;
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+
+
+
+<div class="container-fluid">
+
+
+    <div class="productDetails">
+        <div class="productDetails__container">
+
+
+            <div class="productDetails__headerdesc">
+                <h2>@itemDetails.ITEM_NAME</h2>
+                @*<span> Lorem ipsum dolor sit amet </span>*@
+            </div>
+
+            <div class="product__imgAndInfo">
+                <div class="product__img" >
+                    <img src="@itemDetails.ITEM_IMAGE" 
+                         alt="" class="product__img1" />
+                </div>
+
+                
+                    <div class="product__infos">
+                        @*<div class="product__infoTitles">
+                <div class="product__infoTitle tab active" id="piText" onclick="changeInfo(event, 'piButton')">
+                    Material Info
+                </div>
+
+                <div class="product__infoTitle tab" id="pdButton" onclick="changeInfo(event, 'pdButton')">
+                    Description
+                </div>
+
+                <div class="product__infoTitle tab" onclick="changeInfo('poText')">
+                    Application Area
+                </div>
+                <div class="product__infoTitle tab" onclick="changeInfo('swText')">
+                    Sewistiveness/Precaution
+                </div>
+                <div class="product__infoTitle tab" onclick="changeInfo('dcText')">
+                    Document
+                </div>
+                <div class="product__infoTitle tab" onclick="changeInfo('ctText')">
+                    Certification
+                </div>
+            </div>*@
+                        <div class="product__infoTitles">
+                            <button class="product__infoTitle tablink active"
+                                    onclick="openCity(event, 'London')">
+                                Item Info
+                            </button>
+                            <button class="product__infoTitle tablink"
+                                    onclick="openCity(event,'Paris')">
+                                Description
+                            </button>
+                            <button class="product__infoTitle tablink"
+                                    onclick="openCity(event,'Tokyo')">
+                                Application Area
+                            </button>
+                            <button class="product__infoTitle tablink"
+                                    onclick="openCity(event,'precaution')">
+                                Precaution
+                            </button>
+                            <button class="product__infoTitle tablink"
+                                    onclick="openCity(event,'documents')">
+                                Documents
+
+                            </button>
+                            <button class="product__infoTitle tablink"
+                                    onclick="openCity(event,'certificate')">
+                                Certification
+
+                            </button>
+                        </div>
+
+                        <div class="product__infoDesc">
+                            <div id="London" class="city">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Code:</b> @itemDetails.ITEM_CODE</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Supplier:</b> @itemDetails.VENDOR_NAME</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Model:</b> @itemDetails.MODEL</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Color:</b> @itemDetails.COLOR_NAME</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Brand:</b> @itemDetails.BRAND_NAME</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Type:</b> @itemDetails.ITEM_TYPE</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Made In Country:</b> @itemDetails.MAID_IN_COUNTRY</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Category:</b> @itemDetails.CATEGORY_NAME</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Sub-Category:</b> @itemDetails.SUBCATEGORY_NAME</p>
+                                    </div>
+
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Unit Of Mesurment:</b> @itemDetails.UNIT_NAME</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Pack Size/Dimension:</b> @itemDetails.PACK_SIZE</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Shelf Life:</b> @itemDetails.SHELF_LIFE</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Batch/Manufacturing No.:</b> @itemDetails.ITEM_BATCH_NO</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Type Of Inventory:</b> @itemDetails.TYPE_OF_INVENTORY</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><b>Product Form/<br />Appearance:</b> @itemDetails.ITEM_FORM_APPEARANCE</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><b>Keyword:</b> @itemDetails.ITEM_KEYWORD</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><b>Power/Voltage/Specification:</b> @itemDetails.COVERAGE_CONSUMPTION</p>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div id="Paris" class="city" style="display: none">
+                                <p>@((MarkupString)@itemDetails.LONG_DESCRIPTION)</p>
+                            </div>
+
+                            <div id="Tokyo" class="city" style="display: none">
+                                <p>@((MarkupString)@itemDetails.APPLICATION_AREA)</p>
+                            </div>
+                            <div id="precaution" class="city" style="display: none">
+                                <p>@((MarkupString)@itemDetails.SEWSTIVENESS)</p>
+                            </div>
+                            <div id="documents" class="city" style="display: none">
+                                @if (tdslist != null && tdslist.Count > 0)
+                                {
+
+                                    <table width="70%">
+                                        <tbody>
+                                            @foreach (var item in tdslist)
+                                            {
+                                                <tr>
+                                                    <td style="width:90%"><p>@item</p></td>
+                                                    <td style="width:10%"><button class="raise" style="background-color: black; color: white" @onclick=@(() => DownloadTDS(item))>Download</button></td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                            <div id="certificate" class="city" style="display: none">
+                                @if (sdslist != null && sdslist.Count > 0)
+                                {
+
+                                    <table width="70%">
+                                        <tbody>
+                                            @foreach (var item in sdslist)
+                                            {
+                                                <tr>
+                                                    <td style="width:90%"><p>@item</p></td>
+                                                    <td style="width:10%"><button style="background-color: black; color: white" @onclick=@(() => DownloadSDS(item))>Download</button></td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                            @*<div id="piButton" class="product__infoText">
+                    Material Info
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Code:</b> @itemDetails.ITEM_CODE</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Supplier:</b> @itemDetails.VENDOR_NAME</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Model:</b> @itemDetails.MODEL</p>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Color:</b> @itemDetails.COLOR_NAME</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Brand:</b> @itemDetails.BRAND_NAME</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Type:</b> @itemDetails.ITEM_TYPE</p>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Made In Country:</b> @itemDetails.MAID_IN_COUNTRY</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><b>Keyword:</b> @itemDetails.ITEM_KEYWORD</p>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Power/Voltage/Specification:</b> @itemDetails.COVERAGE_CONSUMPTION</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Category:</b> @itemDetails.CATEGORY_NAME</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Sub-Category:</b> @itemDetails.SUBCATEGORY_NAME</p>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Unit Of Mesurment:</b> @itemDetails.UNIT_NAME</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Pack Size/Dimension:</b> @itemDetails.PACK_SIZE</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Shelf Life:</b> @itemDetails.SHELF_LIFE</p>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><b>Batch/Manufacturing No.:</b> @itemDetails.ITEM_BATCH_NO</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Type Of Inventory:</b> @itemDetails.TYPE_OF_INVENTORY</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>Product Form/<br />Appearance:</b> @itemDetails.ITEM_FORM_APPEARANCE</p>
+                        </div>
+
+                    </div>
+                </div>*@
+
+                            <!--<div id="pdText" class="product__infoText" style="display: none">-->
+                            @*<p>@((MarkupString)@itemDetails.LONG_DESCRIPTION)</p>*@
+                            <!--</div>-->
+                            <!--<div class="product__infoText" id="poText">-->
+                            @*<p>@((MarkupString)@itemDetails.APPLICATION_AREA)</p>*@
+                            <!--</div>-->
+                            <!--<div class="product__infoText" id="swText">-->
+                            @*<p>@((MarkupString)@itemDetails.SEWSTIVENESS)</p>*@
+                            <!--</div>-->
+                            @*<div class="product__infoText" id="dcText">
+                    @if (tdslist != null && tdslist.Count > 0)
+                    {
+                        <h3>Item Documents</h3>
+                        <table width="70%">
+                            <tbody>
+                                @foreach (var item in tdslist)
+                                {
+                                    <tr>
+                                        <td style="width:90%"><p>@item</p></td>
+                                        <td style="width:10%"><button class="raise" style="background-color: black; color: white" @onclick=@(() => DownloadTDS(item))>Download</button></td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <br />
+                    <br />
+                </div>*@
+                            @*<div class="product__infoText" id="ctText">
+                    Certification<br />
+                    Your other product information goes here.
+                </div>*@
+                        </div>
+                    </div>
+                    
+                    @*<div class="product__infoTitles">
+            <div class="product__infoTitle">Item Info</div>
+            <div class="product__infoTitle">Description</div>
+            <div class="product__infoTitle">Application Area</div>
+            <div class="product__infoTitle">Sewistiveness/Precaution</div>
+
+            <div class="product__infoTitle">Document</div>
+
+            <div class="product__infoTitle">Certification</div>
+        </div>*@
+
+                    <!--<div class="product__infoDesc">
+    <span class="product__infoDescText">-->
+                    @*CJ-200-15 Adhesive is a premium quality water-based adhesive
+        primer formulated to enhance the bonding of specialised butyl
+        materials to concrete surfaces.
+        <br />
+        <br />
+        It aids in preventing water penetration of sound concrete, has
+        low viscosity, is easy to apply, has a short tack time and
+        offers a superior bonding strength. This product is part of our
+        Sealing Systems product range. It aids in preventing water
+        penetration of sound concrete, has low viscosity, is easy to
+        apply, has a short tack time and offers a superior bonding
+        strength. This product is part of our Sealing Systems product
+        range.*@
+                    <!--</span>
+    </div>-->
+                
+            </div>
+            
+            <div class="relatedApplications">
+                <h2>Related Items</h2>
+
+                <div class="relatedApplications__items">
+                    @if (itemDetails.relateditemList != null && itemDetails.relateditemList.Count() > 0)
+                    {
+                        @foreach (var item in itemDetails.relateditemList)
+                        {
+                            <div class="relatedApplications__item">
+                                <img class="relatedApplications__itemImg"
+                                     src="@item.ITEM_IMAGE"
+                                     alt="" />
+                                @item.ITEM_NAME
+                                @*<span class="relatedApplications__itemText">
+                                @item.ITEM_NAME
+                            </span>*@
+                            </div>
+                        }
+                    }
+
+
+
+                    @*<div class="relatedApplications__item">
+                    <img class="relatedApplications__itemImg"
+                         src="https://images.pexels.com/photos/19031635/pexels-photo-19031635/free-photo-of-a-window-with-a-reflection-of-trees-and-water.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                         alt="" />
+
+                    <span class="relatedApplications__itemText">
+                        Concrete Additives
+                    </span>
+                </div>
+
+                <div class="relatedApplications__item">
+                    <img class="relatedApplications__itemImg"
+                         src="https://images.pexels.com/photos/19031635/pexels-photo-19031635/free-photo-of-a-window-with-a-reflection-of-trees-and-water.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                         alt="" />
+
+                    <span class="relatedApplications__itemText">
+                        Concrete Additives
+                    </span>
+                </div>
+
+                <div class="relatedApplications__item">
+                    <img class="relatedApplications__itemImg"
+                         src="https://images.pexels.com/photos/19031635/pexels-photo-19031635/free-photo-of-a-window-with-a-reflection-of-trees-and-water.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                         alt="" />
+
+                    <span class="relatedApplications__itemText">
+                        Concrete Additives
+                    </span>
+                </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="row">
+        <div class="col-3">
+            <img src="@itemDetails.ITEM_IMAGE" style="width:250px;height:170px" />
+        </div>
+        <div class="col-9">
+            <h2 style="margin-top:20px">@itemDetails.ITEM_NAME</h2>
+            <br />
+            <p><b>Code:</b> @itemDetails.ITEM_CODE</p>
+            <p><b>Category:</b> @itemDetails.CATEGORY_NAME</p>
+            <p><b>Sub-Category:</b> @itemDetails.SUBCATEGORY_NAME</p>
+            <p><b>Color:</b> @itemDetails.COLOR_NAME</p>
+            <p><b>Brand:</b> @itemDetails.BRAND_NAME</p>
+            <p><b>Type:</b> @itemDetails.ITEM_TYPE</p>
+            <p><b>Keyword:</b> @itemDetails.ITEM_KEYWORD</p>
+            <p><b>Brand Origin Country:</b> @itemDetails.BRAND_ORIGIN_COUNTRY</p>
+            <p><b>Made In Country:</b> @itemDetails.MAID_IN_COUNTRY</p>
+            <p><b>Import From:</b> @itemDetails.IMPORT_FROM</p>
+
+            <hr />
+            <p>@((MarkupString)@itemDetails.LONG_DESCRIPTION)</p>
+
+            <h6>Application Area</h6>
+            <hr />
+            <p>@((MarkupString)@itemDetails.APPLICATION_AREA)</p>
+            <h6>Sewistiveness/Precaution</h6>
+            <hr />
+            <p>@((MarkupString)@itemDetails.SEWSTIVENESS)</p>-->
+    @*<h4>Application Video</h4>
+        @foreach (var item in videolist)
+        {
+            <video controls="controls" width="400px" height="300px">
+                <source src="/Video/@item" type="video/mp4" />
+            </video>
+        }*@
+
+    <!--<br />
+            <br />
+            @if (tdslist != null && tdslist.Count > 0)
+            {
+                <h3>Item Documents</h3>
+                <table width="70%">
+                    <tbody>
+                        @foreach (var item in tdslist)
+                        {
+                            <tr>
+                                <td style="width:90%"><p>@item</p></td>
+                                <td style="width:10%"><button class="raise" style="background-color: black; color: white" @onclick=@(() => DownloadTDS(item))>Download</button></td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            }
+            <br />
+            <br />
+            @if (sdslist != null && sdslist.Count > 0)
+            {
+                <h2>Item Certificate</h2>
+                <table width="70%">
+                    <tbody>
+                        @foreach (var item in sdslist)
+                        {
+                            <tr>
+                                <td style="width:90%"><p>@item</p></td>
+                                <td style="width:10%"><button style="background-color: black; color: white" @onclick=@(() => DownloadSDS(item))>Download</button></td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            }
+
+
+        </div>
+
+
+
+
+
+    </div>-->
+    @*<div class="row">
+            <h4>Application</h4>
+            <video controls="controls" width="400px" height="300px">
+                <source src="/Video/waterproof.mp4" type="video/mp4" />
+            </video>
+
+        </div>*@
+
+
+</div>
+
+@code {
+    [Parameter]
+    public string ItemCode { get; set; }
+    ItemViewModel itemDetails = new ItemViewModel();
+    List<string> tdslist = new List<string>();
+    List<string> sdslist = new List<string>();
+    List<string> videolist = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        itemDetails = await Http.GetJsonAsync<ItemViewModel>(Utility.BaseUrl + "api/Product/GetItemByCode/" + ItemCode);
+        if (itemDetails.ITEM_CODE != null && itemDetails.ITEM_CODE != "")
+        {
+            var path = $"{env.WebRootPath}\\images\\File\\ITEM_DOCUMENTS";
+            string[] tdsfilelist = Directory.GetFiles(path);
+
+            var sdspath = $"{env.WebRootPath}\\images\\File\\Certificate";
+            string[] sdsfilelist = Directory.GetFiles(sdspath);
+
+            var videoPath = $"{env.WebRootPath}\\Video";
+            string[] allvideolist = Directory.GetFiles(videoPath);
+
+
+            List<string> file = new List<string>();
+            //itemDetails.ITEM_CODE = "100";
+            foreach (var item in tdsfilelist)
+            {
+                if (item.Contains(itemDetails.ITEM_CODE))
+                {
+                    tdslist.Add(Path.GetFileName(item));
+                }
+
+            }
+            //----------------
+            foreach (var item in sdsfilelist)
+            {
+                if (item.Contains(itemDetails.ITEM_CODE))
+                {
+                    sdslist.Add(Path.GetFileName(item));
+                }
+
+            }
+            //--------------
+            foreach (var item in allvideolist)
+            {
+                if (item.Contains(itemDetails.ITEM_CODE))
+                {
+                    videolist.Add(Path.GetFileName(item));
+                }
+
+            }
+
+
+        }
+
+
+        //await JSRuntime.InvokeVoidAsync("openCity");
+
+    }
+    private async Task DownloadTDS(string item)
+    {
+        try
+        {
+            //var path = $"{env.WebRootPath}\\images\\File\\TDS";
+            var path = "images//File//TDS";
+            var fileName = item;
+            //var fileURL = "https://localhost:5001/files/quote.txt";
+            var fileURL = path + "//" + item;
+            await JSRuntime.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
+        }
+        catch (Exception EX)
+        {
+
+        }
+
+    }
+    private async Task DownloadSDS(string item)
+    {
+        try
+        {
+            //var path = $"{env.WebRootPath}\\images\\File\\TDS";
+            var path = "images//File//SDS";
+            var fileName = item;
+            //var fileURL = "https://localhost:5001/files/quote.txt";
+            var fileURL = path + "//" + item;
+            await JSRuntime.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
+        }
+        catch (Exception EX)
+        {
+
+        }
+
+    }
+
+}

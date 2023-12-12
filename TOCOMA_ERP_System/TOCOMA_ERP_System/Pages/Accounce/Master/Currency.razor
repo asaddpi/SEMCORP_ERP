@@ -1,0 +1,167 @@
+﻿@page "/Currency"
+@layout CustomLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<div class="card">
+    <div class="card-header">
+        Currency List /
+        <a data-toggle="modal" data-backdrop="static" data-keyboard="false" href="" data-target=".bd-example-modal-lg" @onclick="NewClick">New Currency</a>
+    </div>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th style="width:6%">ID</th>
+                <th>Symbol</th>
+                <th>Name</th>                
+                <th></th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @if (currencyList != null)
+            {
+                foreach (var item in currencyList)
+                {
+                    <tr>
+                        <td>@item.CURRENCY_SERIAL</td>
+                        <td>@item.CURRENCY_SYMBOL</td>
+                        <td>@item.CURRENCY_NAME</td>
+                        <td style="text-align:center;width:6%"><a data-toggle="modal" href="" data-target=".bd-example-modal-lg" @onclick=@(() => EditClick(item.CURRENCY_SERIAL))><span class="oi oi-pencil"></span></a></td>
+                        <td style="text-align:center;width:6%"><a @onclick=@(() => DeleteCurrency(item.CURRENCY_SERIAL))><span style="color:red" class="oi oi-trash"></span></a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@*----Group Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopCenter"
+                            Timeout="2"
+                            SuccessClass="success-toast-override" />
+            <EditForm Model="@currencyModel" OnValidSubmit="@SaveCurrency">
+                <DataAnnotationsValidator />
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">Currency</span>  </h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Symbol :</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@currencyModel.CURRENCY_SYMBOL" type="text" class="form-control" placeholder="Enter Symbol here..." />
+                            <ValidationMessage For="() => currencyModel.CURRENCY_SYMBOL" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Name :</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@currencyModel.CURRENCY_NAME" type="text" class="form-control" placeholder="Enter Name here..." />
+                            <ValidationMessage For="() => currencyModel.CURRENCY_NAME" />
+                        </div>
+                    </div>
+                    @*<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">String :</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@currencyModel.CURRENCY_STRING" type="text" class="form-control" />
+                    </div>
+                </div>*@
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:10px" class="btn btn-info">@btnLabel</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+@code {
+    CurrencyModel currencyModel = new CurrencyModel();
+    List<CurrencyModel> currencyList = new List<CurrencyModel>();
+    string btnLabel;
+    protected override async Task OnInitializedAsync()
+    {
+        btnLabel = "Save";
+        await GetCurrency();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetCurrency()
+    {
+        currencyList = await Http.GetJsonAsync<List<CurrencyModel>>(Utility.BaseUrl + "api/Setup/GetCurrency");
+        StateHasChanged();
+    }
+    public async Task SaveCurrency()
+    {
+        //if (IsValidation() != true)
+        //{
+        try
+        {
+            if(btnLabel=="Save")
+            {
+                currencyModel.ENTRYBY = "Asaduzzaman";
+                var data = await Http.PostJsonAsync<CurrencyModel>(Utility.BaseUrl + "api/Setup/AddCurrency", currencyModel);
+                toastService.ShowSuccess("Save Successfully!!!");
+            }
+            else if(btnLabel=="Update")
+            {
+                currencyModel.UPDATEBY = "Asaduzzaman";
+                var data = await Http.PutJsonAsync<CurrencyModel>(Utility.BaseUrl + "api/Setup/UpdateCurrency", currencyModel);
+                toastService.ShowSuccess("Update Successfully!!!");
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetCurrency();
+        //}
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (currencyModel.CURRENCY_NAME == "" || currencyModel.CURRENCY_NAME == string.Empty || currencyModel.CURRENCY_NAME == null)
+        {
+            toastService.ShowWarning("Branch Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private void NewClick()
+    {
+        currencyModel = new CurrencyModel();
+        btnLabel = "Save";
+    }
+    private void EditClick(int serial)
+    {
+        btnLabel = "Update";
+        currencyModel = currencyList.FirstOrDefault(x => x.CURRENCY_SERIAL == serial);
+    }
+    private async Task DeleteCurrency(int serial)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteCurrency/" + serial);
+        await GetCurrency();
+    }
+}

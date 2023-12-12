@@ -1,0 +1,293 @@
+﻿@page "/EditRequisition_bkp"
+@layout MainLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">UPDATE REQUISITION</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-7">
+                    <EditForm Model="@purchaseRequisition" OnValidSubmit="@SavePurchaseRequision">
+                        <div class="row">
+                            <div class="col-md-5"><label>Requisition NO:</label></div>
+                            <div class="col-md-7">
+                                <InputText @bind-Value="@purchaseRequisition.REQUISITION_NO"></InputText>
+
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Requester:</label></div>
+                            <div class="col-md-7"><InputText @bind-Value="@purchaseRequisition.REQUESTED_BY"></InputText></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Department:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect @bind-Value="@purchaseRequisition.REQUEST_DEPARTMENT_ID">
+                                    <option value="">--Select Department--</option>
+                                    @foreach (var department in departmentList)
+                                    {
+                                        <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Request Date:</label></div>
+                            <div class="col-md-7"><input type="date" @bind-value="@request_date" /></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Require Date:</label></div>
+                            <div class="col-md-7"><input type="date" @bind-value="@require_date" /></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Request For:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect name="" id="" @bind-Value="@purchaseRequisition.REQUEST_FOR">
+                                    <option value=""></option>
+                                    <option value="Material">Material</option>
+                                    <option value="Service">Service</option>
+                                    <option value="Others Official">Others Official</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Priority:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect name="" id="" @bind-Value="@purchaseRequisition.PRIORITY">
+                                    <option value=""></option>
+                                    <option value="High">High</option>
+                                    <option value="Medial">Medial</option>
+                                    <option value="Low">Low</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>General Purpose of Requisition*:</label></div>
+                            <div class="col-md-7">
+                                <InputTextArea @bind-Value="@purchaseRequisition.REQUISITION_PURPOSE" cols="30" rows="5"></InputTextArea>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Requisition Total:</label></div>
+                            <div class="col-md-7">@requisitionTotal</div>
+                        </div>
+                        <br />
+                        <div class="row mt-4 border-top">
+                            <div class="col-md-7">
+                                <div class="row">
+                                    <div class="col-5"></div>
+                                    <div class="col-6">
+                                        <div class="form-group form-check d-flex align-items-center">
+                                            <input type="submit" class="btn btn-primary" value="Save as Requisition" />
+                                        </div>
+                                        <div class="form-group form-check d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input my-0" id="sendForApproval">
+                                            <label class="form-check-label" for="sendForApproval">Send For Approval</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-5"></div>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="col-lg-5">
+                    <div class="addRequisitionItems">
+                        <h4 class="p-2">Add Requisition Items</h4>
+                        <div class="addRequisitionItemsForm">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="itemDescription">Item Description*</label>
+                                        <input type="text" @bind-value="@itemname" list="txtSearch" style="width:400px" />
+                                        <datalist id="txtSearch">
+                                            @foreach (var product in productList)
+                                            {
+                                                <option>@product.ITEM_NAME</option>
+                                            }
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="quantity">Quantity*</label>
+                                    <input type="text" @bind-value="@q" id="quantity" class="w-100" />
+                                </div>
+                                <div class="col-4">
+                                    <label for="quantity">Rate*</label>
+                                    <input type="text" @bind-value="@r" class="w-100" />
+                                </div>
+                                <div class="col-4 d-flex align-items-end">
+                                    <button class="btn btn-primary btn-sm" @onclick=@(() => AddItem())>Add Item</button>
+                                </div>
+                            </div>
+                            <br />
+                            <table class="table table-striped">
+                                <thead style="background-color:steelblue;color:white">
+                                    <tr>
+                                        <td scope="col" width="70%">Item</td>
+                                        <td scope="col">Quantity</td>
+                                        <td scope="col">Rate</td>
+                                        <td scope="col">Amount</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var tableitem in requestItemList)
+                                    {
+                                        <tr>
+                                            <td scope="col">@tableitem.ITEM_NAME</td>
+                                            <td scope="col">@tableitem.Quantity</td>
+                                            <td scope="col">@tableitem.Rate</td>
+                                            <td scope="col">@tableitem.Total</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    private List<PurchaseRequisitionEntity> Customers { get; set; }
+    PurchaseRequisitionEntity purchaseRequisition = new PurchaseRequisitionEntity();
+    List<PurchaseRequisitionDetailsEntity> requisitionDetailsEntities = new List<PurchaseRequisitionDetailsEntity>();
+    PurchaseRequisitionDetailsEntity details = new PurchaseRequisitionDetailsEntity();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    private ItemEntity SelectedArticle;
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    string searchitem = "";
+    OrderItemEntity orderitem;
+    OrderItemEntity order_itm = null;
+    string q = "";
+    string r = "";
+    string itemname = "";
+    double requisitionTotal = 0;
+    DateTime request_date = System.DateTime.Now;
+    DateTime require_date = System.DateTime.Now;
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DepartmentList();
+        await GetItemList();
+    }
+    private async Task GetItemList()
+    {
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+    }
+
+    private async Task<IEnumerable<ItemEntity>> SearchArticles(string searchText)
+    {
+        searchitem = searchText;
+        return await Task.FromResult(productList.Where(x => x.ITEM_NAME.ToLower().Contains(searchText.ToLower())));
+    }
+    private async Task DepartmentList()
+    {
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+        }
+        //await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    protected async Task AddItem()
+    {
+        bool alreadyExists = productList.Any(x => x.ITEM_NAME == itemname);
+        order_itm = new OrderItemEntity();
+        order_itm.ITEM_NAME = itemname;
+        order_itm.Quantity = Convert.ToDouble(q);
+        order_itm.Rate = Convert.ToDouble(r);
+        if (alreadyExists == true) { order_itm.ITEM_ID = productList.FirstOrDefault(x => x.ITEM_NAME == itemname).ITEM_ID; }
+        else
+        {
+            order_itm.ITEM_ID = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Purchase/GetItemId/" + itemname);
+        }
+
+        order_itm.Total = Convert.ToDouble(order_itm.Quantity) * Convert.ToDouble(order_itm.Rate);
+        requisitionTotal += order_itm.Total;
+        requestItemList.Add(order_itm);
+
+    }
+
+
+    public async Task SavePurchaseRequision()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                purchaseRequisition.REQUEST_DATE = request_date;
+                //purchaseRequisition.REQUIRED_DATE = require_date;
+                purchaseRequisition.REQUISITION_TOTAL = requisitionTotal;
+                purchaseRequisition.STATUS = "Open";
+                purchaseRequisition.REG_BY = "Asad";
+                var data = await Http.PostJsonAsync<PurchaseRequisitionEntity>(Utility.BaseUrl + "api/Purchase", purchaseRequisition);
+                var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Purchase/GetPurchaseRequisitionId/" + purchaseRequisition.REQUISITION_NO);
+                foreach (var item in requestItemList)
+                {
+                    details = new PurchaseRequisitionDetailsEntity();
+                    details.PURCHASE_REQUISITION_ID = id;
+                    details.REQUISITION_NO = purchaseRequisition.REQUISITION_NO;
+                    details.ITEM_ID = item.ITEM_ID;
+                    details.QUANTITY = item.Quantity;
+                    details.RATE = item.Rate;
+                    requisitionDetailsEntities.Add(details);
+                }
+                var requisition_details = await Http.PostJsonAsync<List<PurchaseRequisitionDetailsEntity>>(Utility.BaseUrl + "api/Purchase/AddPurchaseRequisitionDetails", requisitionDetailsEntities);
+                toastService.ShowSuccess("Requisition Generate Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (purchaseRequisition.REQUISITION_NO == "" || purchaseRequisition.REQUISITION_NO == string.Empty || purchaseRequisition.REQUISITION_NO == null)
+        {
+            toastService.ShowWarning("Requisition No cannot be empty!");
+            flag = true;
+        }
+        else if (purchaseRequisition.REQUESTED_BY == "" || purchaseRequisition.REQUESTED_BY == string.Empty || purchaseRequisition.REQUESTED_BY == null)
+        {
+            toastService.ShowWarning("Requested By cannot be empty!");
+            flag = true;
+        }
+        else if (purchaseRequisition.REQUEST_DEPARTMENT_ID == 0)
+        {
+            toastService.ShowWarning("Please Select Department");
+            flag = true;
+        }
+        else if (requestItemList.Count == 0)
+        {
+            toastService.ShowWarning("Please Select Requisition Item");
+            flag = true;
+        }
+
+        return flag;
+    }
+
+}

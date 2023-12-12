@@ -1,0 +1,204 @@
+﻿
+@page "/BillRequisitionList"
+@layout CustomLayout
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject IToastService toastService
+
+<style>
+    
+    /*span.a {
+        display: inline;*/ /* the default for span */
+        /*width: 100px;
+        height: 100px;
+        padding: 5px;
+        border: 1px solid blue;
+        background-color: yellow;
+    }*/
+    .new-btn{
+        font-size:20px;
+        text-align:right;
+        padding-right:40px;
+        display:flex;
+        justify-content:flex-end;
+        
+
+        
+
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Requisition</h3>
+    </div>
+
+    <br />
+    @*<button class="btn btn-primary" ><h6>New</h6></button>*@
+    @*<div style="float:right">
+            <a href="/BillRequisition"><i class="fa fa-plus" aria-hidden="true"></i><h6>New</h6></a>
+        </div>*@
+    <!-- Example split danger button -->
+    
+    
+
+
+    <div class="new-btn">
+        @*<div class="dropdown">
+            <select @onchange="DoStuff">
+
+                <option value=""></option>
+                <option value="Submitted">Submitted</option>
+                <option value="Approved">Approved</option>
+                <option value="Paid">Paid</option>
+                <option value="Cancel">Cancel</option>
+            </select>
+        </div>*@
+        @*<div class="col-md-4">*@
+            <div class="dropdown" style="margin-right:10px">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"  aria-haspopup="true" aria-expanded="false">
+                    Dropdown button
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </div>
+        @*</div>*@
+        @*<div class="col-md-2">*@
+            <a href="/BillRequisition" style="margin-top:10px">
+                <i class="fa fa-plus"></i>
+                <span>New</span>
+            </a>
+        @*</div>*@
+
+
+    </div>
+
+    @*<h2>display: inline</h2>
+        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum consequat scelerisque elit sit amet consequat. Aliquam erat volutpat. <span class="a">Aliquam</span> <span class="a">venenatis</span> gravida nisl sit amet facilisis. Nullam cursus fermentum velit sed laoreet. </div>*@
+    <br />
+    <div class="testbox">
+        <div class="tablearea">
+
+
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:20px"></th>
+                        <th style="width:30px"></th>
+                        <th style="width:30px"></th>
+                        <td>Date</td>
+                        <td>Subject</td>
+                        <td>From</td>
+                        <td>To</td>
+                        <td>Purpose</td>
+                        <td>Tour By</td>
+                        <td>Amount</td>
+                        <td>Submit By</td>
+                        <td>Status</td>
+                        <td></td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (misclist != null)
+                    {
+                        foreach (var item in misclist)
+                        {
+                            <tr>
+                                <td><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.BILL_REQUISITION_ID), eventArgs.Value); }" /></td>
+                                <td style="text-align:center"><a style="color:red" @onclick=@(() => Delete(item.BILL_REQUISITION_ID))><span class="oi oi-trash"></span></a></td>
+                                <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => EditBrand(item.BILL_REQUISITION_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td>@item.DATE</td>
+                                <td>@item.LEDGER_NAME</td>
+                                <td>@item.LOCATION_FROM</td>
+                                <td>@item.DESTINATION_TO</td>
+                                <td>@item.PURPOSE</td>
+                                <td>@item.TOUR_BY</td>
+                                <td>@item.AMOUNT</td>
+                                <td>@item.EMPLOYEE</td>
+                                <td>
+                                    @item.STATUS
+                                    @*<select @bind="@item.STATUS" @oninput=@(() => StatusChangeClick(item.STATUS))>
+
+                                            <option value="Submitted">Submitted</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Paid">Paid</option>
+                                            <option value="Cancel">Cancel</option>
+                                        </select>*@
+
+                                </td>
+                                <td style="text-align:center;width:20px"><a @onclick=@(() => BillReqViewReport(item.BILL_REQUISITION_ID)) style="cursor:pointer;color:Highlight">View</a></td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    List<clsMiscBillRequisition> misclist = new List<clsMiscBillRequisition>();
+    List<clsMiscBillRequisitionViewModel> misclistById = new List<clsMiscBillRequisitionViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBillReq();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetBillReq()
+    {
+        misclist = await Http.GetJsonAsync<List<clsMiscBillRequisition>>(Utility.BaseUrl + "api/Transection/GetBillReqList");
+    }
+    private async Task EditBrand(int Id)
+    {
+        //submit = "Update";
+        //misc = new clsMiscBillRequisition();
+        ////misc.LEDGER_NAME = brandList.Find(x => x.BRAND_ID == Id).BRAND_NAME;
+        //misc.BILL_REQUISITION_ID = Id;
+        //misc.Operation_Type = 2;
+    }
+    private async Task Delete(int Id)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteBrand/" + Id);
+        await GetBillReq();
+    }
+    async void CheckboxClicked(string poId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            //customerPayment.SALES_ORDER_NO = poId;
+            //customerPayment.SALES_ID = Convert.ToInt32(poList.Find(x => x.SALES_ORDER_NO == poId).SALES_ID);
+            //OUTSTANDING_BALANCE = await Http.GetJsonAsync<double>(Utility.BaseUrl + "api/Customer/GetCustomerReceiveableBalance/" + customerPayment.SALES_ORDER_NO);
+        }
+        this.StateHasChanged();
+    }
+    async void StatusChangeClick(ChangedEventArgs value)
+    {
+
+    }
+    void DoStuff(ChangeEventArgs e)
+    {
+        //SelectedString = e.Value.ToString();
+        //Console.WriteLine("It is definitely: " + SelectedString);
+    }
+    public async Task BillReqViewReport(int Id)
+    {
+        misclistById = new List<clsMiscBillRequisitionViewModel>();
+        misclistById = await Http.GetJsonAsync<List<clsMiscBillRequisitionViewModel>>(Utility.BaseUrl + "api/Transection/GetBillReqListById/" + Id);
+        SessionData.miscBillReqList = misclistById;
+        int type = 3;
+        //await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetPaymentReport" + type, "_blank");
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetBillTransectionView", "_blank");
+    }
+}

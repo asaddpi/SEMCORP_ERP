@@ -1,0 +1,304 @@
+﻿@page "/PurchaseOrderList"
+@inject HttpClient Http
+@inject IToastService toastService
+@layout CustomLayout
+@inject IJSRuntime js
+@using System.Data
+
+
+
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">PURCHASE ORDER LIST</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <!--<label>Select Item for Print</label>
+            <select style="height:32px" @onchange="ReportType_Clicked">
+                <option value=""></option>
+                <option value="1">Purchase Order</option>-->
+                @*<option value="2">Purchase Order Tracker</option>*@
+            <!--</select>
+            <label>From Date</label><input type="date" @bind-value="PO_FROM_DATE" />
+            <label>To Date</label><input type="date" @bind-value="PO_TO_DATE" />-->
+            @*<button class="btn btn-info" @onclick="PrintOption">Print</button>*@
+            <br />
+            <div class="analytic_details_contain_two">
+                <table class="table table-striped">
+                    <thead style="background-color:steelblue;color:white">
+                        <tr>
+                            @*<td scope="col"></td>*@
+                            @*<td></td>*@
+                            <td>PO No.</td>
+                            <td>PO Date</td>
+                            <td>PO Total</td>
+                            <td>Status</td>
+                            <td>Vendor Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (poList != null)
+                        {
+                            foreach (var item in poList)
+                            {
+                                <tr>
+                                    @*<td scope="col"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.PO_ID), eventArgs.Value); }" /></td>*@
+                                    @*<td style="width:120px"><a href="UpdatePurchaseOrder/@item.PO_NUMBER_LONG_CODE">UPDATE PO</a></td>*@
+                                    <td style="width:150px"><a  @onclick=@(() => PurchaseOrderInvoice(item.PO_NUMBER_LONG_CODE)) style="cursor:pointer;color:Highlight">@item.PO_NUMBER_LONG_CODE</a></td>                                    
+                                    <td>@item.PO_DATE</td>
+                                    <td>@item.GRAND_TOTAL @item.CURRENCY</td>
+                                    <td>@item.SHIPMENT_STATUS</td>
+                                    <td>@item.VENDOR_TYPE_STATUS</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    List<PurchaseOrderViewModel> poList = new List<PurchaseOrderViewModel>();
+
+    PurchaseOrderModel poModel = new PurchaseOrderModel();
+    List<PurchaseOrderViewModel> pOrderView = new List<PurchaseOrderViewModel>();
+    PurchaseOrderViewModel porder = new PurchaseOrderViewModel();
+    PurchaseOrderViewModel purchaseOrderView = new PurchaseOrderViewModel();
+    List<PurchaseOrderDetailsEntity> purchaseOrderDetailsListByPO_Id = new List<PurchaseOrderDetailsEntity>();
+    List<PurchaseOrderDetailsEntity> purchaseOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+    PurchaseOrderDetailsEntity porderDetailsEntity = new PurchaseOrderDetailsEntity();
+    DateTime PO_FROM_DATE = System.DateTime.Now;
+    DateTime PO_TO_DATE = System.DateTime.Now;
+    string str;
+    bool isChecked;
+    public List<string> checkedPOIds { get; set; } = new List<string>();
+
+    string reportType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPurchaseRequisition();
+    }
+    private async Task GetPurchaseRequisition()
+    {
+        poList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOList");
+    }
+    private async Task PrintOption()
+    {
+        //if (reportType == "1") { await Http.PostJsonAsync("http://localhost:8060/Report/PurchaseOrder", porder); }
+        //else if (reportType == "2")
+        //{
+        //    await GetPODetailsItemByPOID(PO_FROM_DATE, PO_TO_DATE);
+        //    if (pOrderView.Count > 0) { await Http.PostJsonAsync("https://localhost:44350/Report/PurchaseOrderTracker", pOrderView); }
+
+
+        //}
+        if (isChecked == true)
+        {
+            try
+            {
+                //await Http.PostJsonAsync("https://localhost:44350/Report/PurchaseOrder", porder);
+                //await Http.GetStringAsync("http://localhost:44350/Report/PurchaseOrder/"+porder);
+                //var data =await Http.PostJsonAsync<PurchaseOrderViewModel>("http://localhost:44350/Report/PurchaseOrder", porder);
+                //var data=await Http.PostJsonAsync<PurchaseOrderViewModel>("http://localhost:44350/api/Test2/PurchaseOrder", porder);
+
+
+                //var data = await Http.PostJsonAsync<PurchaseOrderViewModel>("http://localhost:8060/api/Test3", porder);  //  web
+                var data = await Http.PostJsonAsync<PurchaseOrderViewModel>("http://localhost:8060/api/Test3", porder);
+
+                //using var response = await Http.PostJsonAsync("https://reqres.in/invalid-url", porder);
+                //await Http.PostJsonAsync("http://localhost:44350/Report/PurchaseOrder", porder);
+                //var data= await Http.PostJsonAsync<PurchaseOrderViewModel>("http://localhost:44350/Report/PurchaseOrder",porder);
+                //string reqNo = await Http.GetStringAsync("http://localhost:44350/api/Test2/GetReqNo");
+                //porder.ADDRESS = "hgfhgfh";
+                //await Http.GetStringAsync("http://localhost:44350/Report/GetReqNo/" + porder.ADDRESS);
+
+                //string url =Utility.ReportUrl + "Report/PurchaseOrder";
+
+                //var data = await Http.PostJsonAsync<PurchaseOrderViewModel>(url, porder);
+
+                //-------
+
+
+
+
+
+
+
+
+
+
+
+
+
+                await js.InvokeVoidAsync("alert", "Success!!");
+            }
+            catch (Exception ex)
+            {
+                await js.InvokeVoidAsync("alert", ex.Message);
+                return;
+            }
+
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", "Please Select One to print.");
+            return;
+        }
+
+    }
+    async void CheckboxClicked(string poId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            isChecked = true;
+            //if(reportType=="1")
+            //{
+            //    await GetPOItemByPOID(poId);
+            //}
+            await GetPOItemByPOID(poId);
+
+            //if (!checkedBrandIds.Contains(poId))
+            //{
+            //    checkedBrandIds.Add(poId);
+            //}
+        }
+        else
+        {
+            //if (checkedBrandIds.Contains(poId))
+            //{
+            //    checkedBrandIds.Remove(poId);
+            //}
+            isChecked = false;
+        }
+        //str = String.Join(",", checkedBrandIds);
+
+
+
+    }
+    protected async void ReportType_Clicked(ChangeEventArgs categoryevent)
+    {
+        //pOrderView.REPORT_TYPE = categoryevent.Value.ToString();
+        reportType = categoryevent.Value.ToString();
+        //pOrderView.Add(porder.REPORT_TYPE);
+        //if(categoryevent.Value.ToString()=="1")
+        //{
+        //    porder= await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderByPOId/" + poId);
+        //}
+        //else if(categoryevent.Value.ToString() == "2")
+        //{
+
+        //}
+
+
+        this.StateHasChanged();
+    }
+    private async Task GetPOItemByPOID(string poId)
+    {
+
+        porder = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderByPOId/" + poId);
+        porder.REPORT_TYPE = "1";
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_ID/" + poId);
+        porder.pOrderDetailsList = purchaseOrderDetailsList;
+
+    }
+    private async Task GetPODetailsItemByPOID(DateTime date1, DateTime date2)
+    {
+        //pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderByPOId/" + poId);
+        pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderIdByPurchaseDate/" + date1 + "/" + date2);
+
+        if (pOrderView.Count > 0)
+        {
+            foreach (var p in pOrderView)
+            {
+                if (!checkedPOIds.Contains(Convert.ToString(p.PO_ID)))
+                {
+                    checkedPOIds.Add(Convert.ToString(p.PO_ID));
+                }
+                str = String.Join(",", checkedPOIds);
+            }
+            purchaseOrderDetailsListByPO_Id = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsBYPO_ID_IN/" + str);
+            foreach (var p in pOrderView)
+            {
+                p.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+                p.pOrderDetailsList = purchaseOrderDetailsListByPO_Id.FindAll(x => x.PO_ID == p.PO_ID);
+            }
+        }
+        else { toastService.ShowInfo("No Record Found For Print!"); }
+    }
+    public async Task PurchaseOrderInvoice(string po_number)
+    {
+        //string packInsId = "";
+        //string termsId = "";
+        //List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        //List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        ////purchaseOrderView = new PurchaseOrderViewModel();
+        ////purchaseOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+
+
+
+
+
+        purchaseOrderView = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderInfo/" + po_number);
+        if(purchaseOrderView.VENDOR_TYPE_STATUS=="Local")
+        {
+            await GetLocal(purchaseOrderView.PO_NUMBER_LONG_CODE);
+        }
+        else if(purchaseOrderView.VENDOR_TYPE_STATUS=="International")
+        {
+            await GetInt(purchaseOrderView.PO_NUMBER_LONG_CODE);
+        }
+        //purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        //packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        //termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        //if (packInsId != null && packInsId!="") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        //if (termsId != null && termsId !="") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        //AppState.porder = purchaseOrderView;
+        //AppState.porderDetails = purchaseOrderDetailsList;
+        //AppState.termsConditionList = termsConditionList;
+        //if (purchaseOrderView.VENDOR_TYPE_STATUS=="Local")
+        //{ await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceLocal", "_blank"); }
+        //else if(purchaseOrderView.VENDOR_TYPE_STATUS == "International")
+        //{ await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceInt", "_blank"); }
+
+
+    }
+
+    private async Task GetLocal(string po_number)
+    {
+        string packInsId = "";
+        string termsId = "";
+        List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        if (packInsId != null && packInsId != "") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        if (termsId != null && termsId != "") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        AppState.porder = purchaseOrderView;
+        AppState.porderDetails = purchaseOrderDetailsList;
+        AppState.termsConditionList = termsConditionList;
+        AppState.packagingList = packagingInsList;
+
+        await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceLocal", "_blank");
+    }
+    private async Task GetInt(string po_number)
+    {
+        string packInsId = "";
+        string termsId = "";
+        List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        if (packInsId != null && packInsId != "") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        if (termsId != null && termsId != "") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        AppState.porder = purchaseOrderView;
+        AppState.porderDetails = purchaseOrderDetailsList;
+        AppState.termsConditionList = termsConditionList;
+        AppState.packagingList = packagingInsList;
+
+        await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceInt", "_blank");
+    }
+}

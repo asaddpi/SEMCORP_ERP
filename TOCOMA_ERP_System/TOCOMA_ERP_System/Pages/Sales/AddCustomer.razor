@@ -1,0 +1,584 @@
+﻿@page "/AddCustomer"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject NavigationManager navManager
+
+<div class="container">
+    <div class="card">
+        <div class="card-header card-header_backcolor">
+            <h4>Customer Registration</h4>
+        </div>
+
+        <br />
+        <EditForm Model="@customer" style="height:20%;margin-left:10px">
+
+            <fieldset class="fieldset_color p-4">
+                <legend class="w-auto">Customer Info</legend>
+
+                @*<div class="row">
+                        <div class="col-md-2"><label>Vendor Code:</label></div>
+                        <div class="col-md-2">
+                            <InputText @bind-Value="@vendor.VENDOR_CODE" maxlength="20"></InputText>
+                        </div>
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-2"><label>Customer Type:</label></div>
+                    <div class="col-md-5">
+                        <InputSelect @bind-Value="@customer.CUSTOMER_TYPE_ID" style="height:30px">
+                            <option value="">--Select Customer Type--</option>
+                            @foreach (var item in customerTypeList)
+                            {
+                                <option value="@item.CUSTOMER_TYPE_ID">@item.CUSTOMER_TYPE</option>
+                            }
+
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Customer Name (Full Form):</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CUSTOMER_NAME"></InputText>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Customer Name (Short Form):</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CUSTOMER_NAME_SHORT_FORM"></InputText>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Corporate Address:</label></div>
+                    <div class="col-md-5"><InputTextArea @bind-Value="@customer.CORPORATE_ADDRESS"></InputTextArea></div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Shipping Address:</label></div>
+                    <div class="col-md-5"><InputTextArea @bind-Value="@customer.SHIPPING_ADDRESS"></InputTextArea></div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Atten.:</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CONTACT_PERSON_NAME"></InputText>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Designation:</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CONTACT_PERSON_DESIGNATION"></InputText>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>Contact.:</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CONTACT_PERSON_PHONE"></InputText>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"><label>E-Mail:</label></div>
+                    <div class="col-md-5">
+                        <InputText @bind-Value="@customer.CONTACT_PERSON_EMAIL"></InputText>
+                    </div>
+                </div>
+            </fieldset>
+
+            <br />
+            <fieldset class="border p-4">
+                <legend class="w-auto">Contact Details</legend>
+
+                <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-contact" style="font-size:18px;text-decoration:none">AddContact &nbsp;<span class="oi oi-pencil"></span></a>
+                <table width="70%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Dept.</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>WeChat</th>
+                            <th>WhatsApp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in customerContactList)
+                        {
+                            <tr>
+                                <td>@item.NAME</td>
+                                <td>@item.DESIGNATION</td>
+                                <td>@item.DEPARTMENT_NAME</td>
+                                <td>@item.MOBILE</td>
+                                <td>@item.EMAIL</td>
+                                <td>@item.WECHAT</td>
+                                <td>@item.WHATSAPP</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @*<div class="row">
+                        <div class="col-md-2"><label>Sales:</label></div>
+                        <div class="col-md-8">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.NAME_SALES" placeholder="name" maxlength="100"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.PHONE_SALES" placeholder="phone" maxlength="30"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.EMAIL_SALES" placeholder="email" maxlength="30"></InputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-md-2">
+                            <label>Technical Support:</label>
+                        </div>
+
+                        <div class="col-md-7">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.NAME_TECHNICAL_SUPPORT" placeholder="name" maxlength="100"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.PHONE_TECHNICAL_SUPPORT" placeholder="phone" maxlength="30"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.EMAIL_TECHNICAL_SUPPORT" placeholder="email" maxlength="30"></InputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-md-2">
+                            <label>Finance:</label>
+                        </div>
+
+                        <div class="col-md-7">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.NAME_FINANCE" placeholder="name" maxlength="100"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.PHONE_FINANCE" placeholder="phone" maxlength="30"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.EMAIL_FINANCE" placeholder="email" maxlength="30"></InputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-md-2">
+                            <label>Others 1:</label>
+                        </div>
+
+                        <div class="col-md-7">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.NAME_OTHERS1" placeholder="name" maxlength="100"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.PHONE_OTHERS1" placeholder="phone" maxlength="30"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.EMAIL_OTHERS1" placeholder="email" maxlength="30"></InputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>*@
+                @*<div class="row">
+                        <div class="col-md-2">
+                            <label>Others 2:</label>
+                        </div>
+
+                        <div class="col-md-7">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.NAME_OTHERS2" placeholder="name" maxlength="100"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.PHONE_OTHERS2" placeholder="phone" maxlength="30"></InputText>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="@vendor.EMAIL_OTHERS2" placeholder="email" maxlength="30"></InputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>*@
+            </fieldset>
+
+            @*<br />
+            <fieldset class="border p-4">
+                <legend class="w-auto">Project Details</legend>
+
+                <br />
+
+                <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg" style="font-size:18px;text-decoration:none">AddProject &nbsp;<span class="oi oi-pencil"></span></a>
+                <table width="70%">
+                    <thead>
+                        <tr>
+                            <th>Project Name(Full Form)</th>
+                            <th>Project Name(Short Form)</th>
+                            <th>Address</th>
+                            <th>Contact Person</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th></th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in customerProjectlist)
+                        {
+                            <tr>
+                                <td>@item.SHIPPING_PROJECT_NAME</td>
+                                <td>@item.PROJECT_NAME_SHORT_FORM</td>
+                                <td>@item.PROJECT_ADDRESS</td>
+                                <td>@item.PROJECT_CONTACT_PERSON_NAME</td>
+                                <td>@item.PROJECT_CONTACT_PERSON_PHONE</td>
+                                <td>@item.PROJECT_CONTACT_PERSON_EMAIL</td>
+                                <td><a data-toggle="modal" data-target=".bd-example-modal-lg" @onclick=@(() => EditItem(item.SHIPPING_PROJECT_NAME))><span class="oi oi-pencil"></span></a>&nbsp; &nbsp;<a @onclick=@(() => DeleteItem(item.SHIPPING_PROJECT_NAME))><span class="oi oi-delete"></span></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>*@
+
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-7">
+                    <button type="submit" @onclick="SaveCustomer" class="btn btn-info" style="width:120px;margin-right:10px">Save</button>
+                    <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+                </div>
+            </div>
+
+        </EditForm>
+
+
+    </div>
+</div>
+
+
+
+
+
+@*----Contact  Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg-contact" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@customerContact">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">ADD CONTACT</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Name:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Designation:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.DESIGNATION" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Department:</label></div>
+                                            <div class="col-md-5">
+                                                <InputText @bind-Value="@customerContact.DEPARTMENT_NAME" style="width:400px"></InputText>
+                                                @*<InputSelect @bind-Value="@customerContact.DEPARTMENT_ID" style="width:400px">
+                                                        <option value=""></option>
+                                                        @foreach (var department in departmentList)
+                                                        {
+                                                            <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                                        }
+                                                    </InputSelect>*@
+                                            </div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Mobile:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.MOBILE" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Email:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.EMAIL" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>WeChat:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.WECHAT" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Whatsapp:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.WHATSAPP" style="width:400px"></InputText></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => AddCustomerContact())>ADD</button>
+                        <button style="width:90px;margin-right:20px" class="btn btn-danger" data-dismiss="modal" @onclick="close">Cancel</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*----Project Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@cProject">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">ADD PROJECT</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Name(Full Form):</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@cProject.SHIPPING_PROJECT_NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Name(Short Form):</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@cProject.PROJECT_NAME_SHORT_FORM" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Address:</label></div>
+                                            <div class="col-md-5"><InputTextArea @bind-Value="@cProject.PROJECT_ADDRESS" style="width:400px"></InputTextArea></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Contact Person:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Contact No:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_PHONE" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Project Contact Email:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@cProject.PROJECT_CONTACT_PERSON_EMAIL" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => AddItem())>ADD</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<style>
+        tr th {
+            font-size: 20px;
+            background-color: lightgray;
+        }
+    </style>*@
+
+
+
+
+
+
+
+@code {
+    CustomerModel customer = new CustomerModel();
+    CustomerProjectModel customerProject = new CustomerProjectModel();
+    CustomerProjectModel cProject = new CustomerProjectModel();
+    List<CustomerProjectModel> customerProjectlist = new List<CustomerProjectModel>();
+    List<CustomerProjectModel> Projectlist = new List<CustomerProjectModel>();
+    List<CustomerTypeModel> customerTypeList = new List<CustomerTypeModel>();
+    CustomerContactModel customerContactModel = new CustomerContactModel();
+    CustomerContactModel customerContact = new CustomerContactModel();
+    List<CustomerContactModel> customerContactList = new List<CustomerContactModel>();
+    List<CustomerContactModel> ContactList = new List<CustomerContactModel>();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    string customerCode;
+    protected override async Task OnInitializedAsync()
+    {
+        customerTypeList = await Http.GetJsonAsync<List<CustomerTypeModel>>(Utility.BaseUrl + "api/Customer/GetCustomerType");
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+    }
+    public async Task AddItem()
+    {
+        //if(cProject.CUSTOMER_ID!=0)
+        //{
+        customerProject = new CustomerProjectModel();
+        customerProject.SHIPPING_PROJECT_NAME = cProject.SHIPPING_PROJECT_NAME;
+        customerProject.PROJECT_NAME_SHORT_FORM = cProject.PROJECT_NAME_SHORT_FORM;
+        customerProject.PROJECT_ADDRESS = cProject.PROJECT_ADDRESS;
+        customerProject.PROJECT_CONTACT_PERSON_NAME = cProject.PROJECT_CONTACT_PERSON_NAME;
+        customerProject.PROJECT_CONTACT_PERSON_PHONE = cProject.PROJECT_CONTACT_PERSON_PHONE;
+        customerProject.PROJECT_CONTACT_PERSON_EMAIL = cProject.PROJECT_CONTACT_PERSON_EMAIL;
+
+        customerProjectlist.Add(customerProject);
+        cProject = new CustomerProjectModel();
+        StateHasChanged();
+        //    }
+        //else { toastService.ShowWarning("Please Select Customer"); }
+
+    }
+    public async void EditItem(string item)
+    {
+        cProject.SHIPPING_PROJECT_NAME = customerProjectlist.Find(x => x.SHIPPING_PROJECT_NAME == item).SHIPPING_PROJECT_NAME;
+        cProject.PROJECT_NAME_SHORT_FORM= customerProjectlist.Find(x => x.SHIPPING_PROJECT_NAME == item).PROJECT_NAME_SHORT_FORM;
+        StateHasChanged();
+    }
+    public async void DeleteItem(string item)
+    {
+        var itemToRemove = customerProjectlist.Single(r => r.SHIPPING_PROJECT_NAME == item);
+        customerProjectlist.Remove(itemToRemove);
+        StateHasChanged();
+    }
+    public async Task AddCustomerContact()
+    {
+        customerContactModel = new CustomerContactModel();
+        customerContactModel.NAME = customerContact.NAME;
+        customerContactModel.DESIGNATION = customerContact.DESIGNATION;
+        customerContactModel.DEPARTMENT_NAME = customerContact.DEPARTMENT_NAME;
+        customerContactModel.MOBILE = customerContact.MOBILE;
+        customerContactModel.EMAIL = customerContact.EMAIL;
+        customerContactModel.WECHAT = customerContact.WECHAT;
+        customerContactModel.WHATSAPP = customerContact.WHATSAPP;
+        customerContactModel.TYPE = "C";
+
+        customerContactList.Add(customerContactModel);
+
+        customerContact = new CustomerContactModel();
+        StateHasChanged();
+
+
+    }
+    public async Task SaveCustomer()
+    {
+        if (IsValidation() != true)
+        {
+            try
+            {
+                customerCode = await Http.GetStringAsync(Utility.BaseUrl + "api/Customer/GetCustomerCode/" + "C");
+                customer.CUSTOMER_CODE = customerCode;
+                var data = await Http.PostJsonAsync<CustomerModel>(Utility.BaseUrl + "api/Customer", customer);
+
+                var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Customer/GetCustomerId/" + customerCode);
+                foreach (var item in customerProjectlist)
+                {
+                    customerProject = new CustomerProjectModel();
+                    customerProject.CUSTOMER_ID = id;
+                    customerProject.SHIPPING_PROJECT_NAME = item.SHIPPING_PROJECT_NAME;
+                    customerProject.PROJECT_NAME_SHORT_FORM = item.PROJECT_NAME_SHORT_FORM;
+                    customerProject.PROJECT_ADDRESS = item.PROJECT_ADDRESS;
+                    customerProject.PROJECT_CONTACT_PERSON_NAME = item.PROJECT_CONTACT_PERSON_NAME;
+                    customerProject.PROJECT_CONTACT_PERSON_PHONE = item.PROJECT_CONTACT_PERSON_PHONE;
+                    customerProject.PROJECT_CONTACT_PERSON_EMAIL = item.PROJECT_CONTACT_PERSON_EMAIL;
+
+                    Projectlist.Add(customerProject);
+                }
+
+                //var project = await Http.PostJsonAsync<List<CustomerProjectModel>>(Utility.BaseUrl + "api/Customer/AddCustomerProject", Projectlist);
+
+                foreach (var item in customerContactList)
+                {
+                    customerContactModel = new CustomerContactModel();
+                    customerContactModel.CUSTOMER_VENDOR_CODE = customerCode;
+                    customerContactModel.NAME = item.NAME;
+                    customerContactModel.DESIGNATION = item.DESIGNATION;
+                    customerContactModel.DEPARTMENT_NAME = item.DEPARTMENT_NAME;
+                    customerContactModel.MOBILE = item.MOBILE;
+                    customerContactModel.EMAIL = item.EMAIL;
+                    customerContactModel.WECHAT = item.WECHAT;
+                    customerContactModel.WHATSAPP = item.WHATSAPP;
+                    customerContactModel.TYPE = item.TYPE;
+
+                    ContactList.Add(customerContactModel);
+                }
+
+                var customercontact = await Http.PostJsonAsync<List<CustomerContactModel>>(Utility.BaseUrl + "api/Customer/AddCustomerContact", ContactList);
+                toastService.ShowSuccess("Save Success!!");
+            }
+            catch (Exception EX)
+            {
+
+            }
+        }
+
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (customer.CUSTOMER_NAME == "" || customer.CUSTOMER_NAME == string.Empty || customer.CUSTOMER_NAME == null)
+        {
+            toastService.ShowWarning("Customer Name Is Empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async Task Cancel()
+    {
+        customer = new CustomerModel();
+        navManager.NavigateTo("Customers");
+    }
+    private void close()
+    {
+        customer = new CustomerModel();
+        customerContact = new CustomerContactModel();
+    }
+}

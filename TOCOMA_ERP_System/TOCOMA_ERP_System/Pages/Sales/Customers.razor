@@ -1,0 +1,233 @@
+﻿@page "/Customers"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IJSRuntime js
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Customer List &nbsp;
+                <a href="AddCustomer">New Customer</a>
+            </h4>
+            @*<div style="float:right">
+                    <label>@StartNumber-@EndNumber of @customerList.Count()</label> <a style="color:Highlight"><i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i></a>&nbsp;&nbsp;<a style="color:Highlight"><i class='bi bi-arrow-right-circle' style="font-size:30px;margin-right:10px" @onclick="@(e => NavigatTo("next"))"></i></a>
+                </div>*@
+        </div>
+        <br />
+        <table class="table" id="example">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Customer Code</td>
+                    <th></th>
+
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @if (allcustomerList != null)
+                {
+                    foreach (var item in allcustomerList)
+                    {
+                        <tr>
+
+                            <td style="width:15%;font-weight:bold;text-align:left">
+                                Code <br />
+                                Name <br />
+                                Corporate Address <br />
+                                Shipping Address <br />
+                                Contact Person <br />
+                                Phone <br />
+                                Email 
+
+                            </td>
+                            <td>
+                                <a style="color:Highlight;cursor:pointer" @onclick=@(() => GetCustomerProfile(item.CUSTOMER_ID))>@item.CUSTOMER_CODE</a> <br />
+                                @item.CUSTOMER_NAME <br />
+                                @item.CORPORATE_ADDRESS <br />
+                                @item.SHIPPING_ADDRESS <br />
+                                @item.CONTACT_PERSON_NAME <br />
+                                @item.CONTACT_PERSON_PHONE <br />
+                                @item.CONTACT_PERSON_EMAIL
+                            </td>
+                            <td style="text-align:center;width:50px"><a href="EditCustomer/@item.CUSTOMER_ID"><span class="oi oi-pencil"></span></a></td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+           
+        </table>
+        <br />
+
+
+    </div>
+</div>
+
+
+@*-------------Modal-----------------*@
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> UPDATE SHIPMENT INFORMATION</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@customer">
+                    <table class="table">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>PO NO</td>
+                                <td>PO Date</td>
+                                <td>Supplier</td>
+                                <td>Concern Person</td>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td scope="col" colspan="3">ETD with QTY</td>
+                                <td scope="col" colspan="3">ETA to CTG</td>
+                                <td scope="col" colspan="3">EA at TL-WH</td>
+                            </tr>
+                            <tr>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table width="100%">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>Receive Date</td>
+                                <td>Shipment Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </EditForm>
+            </div>
+
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick="SaveCustomer">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    CustomerModel customer = new CustomerModel();
+    List<CustomerViewModel> allcustomerList = new List<CustomerViewModel>();
+    List<CustomerViewModel> customerList = new List<CustomerViewModel>();
+    CustomerViewModel customerView = new CustomerViewModel();
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        allcustomerList = await Http.GetJsonAsync<List<CustomerViewModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomer");
+        customerList = await Http.GetJsonAsync<List<CustomerViewModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomer");
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        ///Pagination();
+    }
+    private async Task GetCustomerProfile(int customerid)
+    {
+        customerView = await Http.GetJsonAsync<CustomerViewModel>(Utility.BaseUrl + "api/Customer/GetCustomerAccountById/" + customerid);
+        //if (salesQuotationInfo.TERMS_AND_CONDITION != null && salesQuotationInfo.TERMS_AND_CONDITION != "")
+        //{
+        //    termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetSalesTermsAndConditionsByIds/" + salesQuotationInfo.TERMS_AND_CONDITION);
+        //    AppState.SalestermsConditionList = termsConditionList;
+        //}
+        //if (salesQuotationInfo.USED_PRODUCT != null)
+        //{
+        //    itemList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Sales/GetItemListByUsedProduct/" + salesQuotationInfo.USED_PRODUCT);
+        //    AppState.usedProductList = itemList;
+        //}
+
+        ////porder.REPORT_TYPE = "1";
+        //salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListById/" + poId);
+        //porder.pOrderDetailsList = purchaseOrderDetailsList;
+        AppState.customerViewModel = customerView;
+        //AppState.salesQuotationitemList = salesQuotationItemList;
+
+        await js.InvokeAsync<object>("open", "api/RDLCReport/GetCustomerProfile", "_blank");
+    }
+    public async Task SaveCustomer()
+    {
+
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        allcustomerList = customerList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (allcustomerList.Count > 0)
+        {
+            StartNumber = allcustomerList.FirstOrDefault().SL;
+            EndNumber = allcustomerList[allcustomerList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (customerList.Count > 0)
+        {
+            allcustomerList = customerList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(customerList.Count() / (decimal)pageSize);
+            StartNumber = allcustomerList.FirstOrDefault().SL;
+            EndNumber = allcustomerList[allcustomerList.Count - 1].SL;
+        }
+
+    }
+}

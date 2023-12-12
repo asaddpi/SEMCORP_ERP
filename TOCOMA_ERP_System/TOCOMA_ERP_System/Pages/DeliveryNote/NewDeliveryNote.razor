@@ -1,0 +1,982 @@
+﻿@page "/NewDeliveryNote/{woNO}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime jsruntime
+@inject NavigationManager UriHelper
+@using Blazored.Typeahead
+
+<style>
+    div section {
+        height: 30px;
+        width: 100%;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+
+        div section:hover {
+            background-color: lightseagreen;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+    .col-75 {
+        width: 84%;
+    }
+
+    .btnadd {
+        width: 55px;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="container">
+    @*<EditForm Model="@ledger">*@
+    <div class="card">
+        <div class="card-header">
+            <h4>New Delivery Note</h4>
+
+        </div>
+        <div class="testbox">
+            <div class="form">
+                <div class="row">
+                    <div class="col-25">
+                        <label>Date:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="today" value="@currentDate" class="form-control" format-value="DD MMMM YYYY" style="width:200px" @onchange="GetDate">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Customer:</label>
+                    </div>
+                    <div class="col-75" style="display: inline-block">
+                        @*<input type="text" data-toggle="modal" data-target=".bd-example-modal-lgvendor" @oninput="SupplierNameClicked" value="@supplierName" @ref="myref" />*@
+                        <input type="search" @bind="searchCustomer" @oninput="GetCustomerList" @onclick="OnClickCustomer" @ref="cusotmerInput" class="form-control" />
+                        <div class="autocom">
+                            @if (customer != null)
+                            {
+                                @foreach (var item in customer)
+                                {
+                                    if (searchCustomer == "")
+                                    {
+                                        <section style="width:100%" @onclick=@(() => selectedcustomer(item))>@item</section>
+                                    }
+                                    if (item.ToUpper().Contains(searchCustomer.ToUpper()) && searchCustomer.Length > 1)
+                                    {
+                                        if (searchCustomer != "")
+                                        {
+                                            <section style="width:100%" @onclick=@(() => selectedcustomer(item))>@item</section>
+                                        }
+                                        else
+                                        { <section></section>}
+                                    }
+
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Project:</label>
+                    </div>
+                    <div class="col-75" style="display: inline-block;">
+                        @*<input type="text" data-toggle="modal" data-target=".bd-examp le-modal-lgvendor" @oninput="SupplierNameClicked" value="@supplierName" @ref="myref" />*@
+                        <input type="search" @bind="searchproject" @oninput="GetProjectList" class="form-control" @ref="projectInput" />
+                        <div class="autocom">
+                            @if (project != null)
+                            {
+                                @foreach (var item in project)
+                                {
+                                    if (searchproject == "")
+                                    {
+                                        <section @onclick=@(() => SelectedProject(item))>@item</section>
+                                    }
+                                    if (item.ToUpper().Contains(searchproject.ToUpper()) && searchproject.Length > 1)
+                                    {
+                                        if (searchproject != "")
+                                        {
+                                            <section @onclick=@(() => SelectedProject(item))>@item</section>
+                                        }
+                                        else
+                                        { <section></section>}
+                                    }
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">WO No.:</label>
+                    </div>
+                    <div class="col-75" style="display: inline-block;">
+                        @*<input type="text" data-toggle="modal" data-target=".bd-example-modal-lgvendor" @oninput="SupplierNameClicked" value="@supplierName" @ref="myref" />*@
+                        <input type="search" @bind="searchworkOrder" @oninput="GetWorkOrderNoList" class="form-control" />
+                        <div class="autocom">
+                            @if (workOrder != null)
+                            {
+                                @foreach (var item in workOrder)
+                                {
+                                    if (searchworkOrder == "")
+                                    {
+                                        <section @onclick=@(() => SelectedWorkOrder(item))>@item</section>
+                                    }
+                                    if (item.ToUpper().Contains(searchworkOrder.ToUpper()) && searchworkOrder.Length > 1)
+                                    {
+                                        if (searchworkOrder != "")
+                                        {
+                                            <section @onclick=@(() => SelectedWorkOrder(item))>@item</section>
+                                        }
+                                        else
+                                        { <section></section>}
+                                    }
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Delivery Person:</label>
+                    </div>
+                    <div class="col-75" style="display: inline-block;">
+                        @*<input type="text" data-toggle="modal" data-target=".bd-example-modal-lgvendor" @oninput="SupplierNameClicked" value="@supplierName" @ref="myref" />*@
+                        <input type="search" @bind="searchdeliveryperson" @oninput="GetEmployeeList" @onclick="GetEmployee" class="form-control" />
+                        <div class="autocom">
+                            @if (options1 != null)
+                            {
+                                @foreach (var item in options1)
+                                {
+                                    if (searchdeliveryperson == "")
+                                    {
+                                        <section @onclick=@(() => selectedEmployee(item))>@item</section>
+                                    }
+                                    if (item.ToUpper().Contains(searchdeliveryperson.ToUpper()) && searchdeliveryperson.Length > 1)
+                                    {
+                                        if (searchdeliveryperson != "")
+                                        {
+                                            vendor_name = item;
+                                            <section @onclick=@(() => selectedEmployee(item))>@item</section>
+                                        }
+                                        else
+                                        { <section></section>}
+
+
+
+                                    }
+                                    @*}*@
+
+                                }
+
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Carrying By:</label>
+                    </div>
+                    <div class="col-75">
+                        <select class="form-control" @bind="@carryingBy">
+                            <option value=""></option>
+                            <option value="By Pickup">By Pickup</option>
+                            <option value="Truck">Truckothers</option>
+                            <option value="Courier service">courier service / Others</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Total Weight:</label>
+                    </div>
+                    <div class="col-75">                        
+                        <input type="text" @bind="@totalWaight" class="form-control" />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Delivery Time:</label>
+                    </div>
+                    <div class="col-75">
+                        
+                        <input type="text" @bind="@deliveryTime" class="form-control" />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Delivery Location:</label>
+                    </div>
+                    <div class="col-75">
+                        
+                        <input type="text" @bind="@deliveryLocation" class="form-control" />
+                    </div>
+
+                </div>
+
+                <br />
+
+
+
+
+
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="inputCity">Item</label>
+                        <input type="search" @bind="searchitem" @oninput="GetItemList" @onclick="GetItemNameList" class="form-control" @ref="itmInput" />
+                        <div class="autocom">
+                            @if (itemnameList != null)
+                            {
+                                @foreach (var item in itemnameList)
+                                {
+                                    if (searchVendor == "")
+                                    {
+                                        <section @onclick=@(() => SelectedItm(item))>@item</section>
+                                    }
+                                    if (item.ToUpper().Contains(searchitem.ToUpper()) && searchitem.Length > 1)
+                                    {
+                                        if (searchitem != "")
+                                        {
+                                            itemName = item;
+                                            <section @onclick=@(() => SelectedItm(item)) style="width:84%">@item</section>
+                                        }
+                                        else
+                                        { <section></section>}
+                                    }
+                                }
+                            }
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputState">Unit</label>
+                        <EditForm Model="@itemEntity">
+                            <InputSelect @bind-Value="@itemEntity.UNIT_ID" class="form-control">
+                                <option>--Unit--</option>
+                                @foreach (var item in unitList)
+                                {
+                                    <option value="@item.UNIT_ID">@item.UNIT_NAME</option>
+                                }
+
+                            </InputSelect>
+                        </EditForm>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <label for="inputZip">Qty</label>
+                        <input class="form-control" @bind-value="Qty" @onkeyup="DoTheThing" @ref="QtyInput" />
+                    </div>
+                    <div class="form-group col-md-1">
+                        <button class="btn btn-primary btnadd" @onclick="AddItem">Add</button>
+                    </div>
+
+                </div>
+
+
+
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <td colspan="2" style="width:75%">Item Name</td>
+                            <td style="width:10%">Unit</td>
+                            <td style="width:10%">QTY.</td>
+                            <td style="width:5%"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in deliverydetailsList)
+                        {
+                            <tr style="font-size: 14px; height:34px">
+                                <td colspan="2" style="width:75%">@item.ITEM_NAME</td>
+                                <td style="width:10%">@item.UNIT</td>
+                                <td style="width:10%">@item.QUANTITY</td>
+                                <td><a @onclick=@(() => DeleteItem(item.ITEM_NAME))><span class="oi oi-delete"></span></a></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                    @*<tr>
+                <td colspan="4" style="text-align:right">Transport cost</td>
+                <td><input type="text" @oninput="TransportClicked" @bind-value="@transport_cost" /></td>
+                <td rowspan="4"></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:right">Labour Cost</td>
+                <td><input type="text" @oninput="LabourClicked" @bind-value="@labour_cost" /></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:right">Others</td>
+                <td><input type="text" @oninput="OthersClicked" @bind-value="@others_cost" /></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:right"><b>Grand Total</b></td>
+                <td><input type="text" @bind-value="@GrandTotal" /></td>
+            </tr>*@
+                </table>
+            </div>
+
+
+        </div>
+        <div class="btn-block">
+            <button type="button" style="width:90px" class="btn btn-danger">Cancel</button>
+            <button type="submit" style="width:120px;margin-left:10px" clss="btn btn-Success" @onclick="@SaveDeliveryNote">Save</button>
+            <button type="submit" style="width:100px;margin-left:20px" class="btn btn-primary" @onclick="@SaveDeliveryNote">Print</button>
+
+        </div>
+    </div>
+    @*</EditForm>*@
+</div>
+
+
+@*--------Midal-ItemList----------*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">Item List</span>  </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <table class="table-hover">
+                    <tbody>
+
+                        @foreach (var item in itemNameList)
+                        {
+                            <tr>
+                                <td style="text-align: left; cursor: pointer" class="form-control" @onclick=@(() => SelectItem(item.ITEM_NAME)) data-dismiss="modal">@item.ITEM_NAME</td>
+                                <td style="width:25px">@item.UOM</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+@*--------Midal-Supplier----------*@
+<div class="modal fade bd-example-modal-lgvendor" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="p-2"><span class="text-uppercase">Supplier List</span>  </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tbody>
+                        @foreach (var item in vendorList)
+                        {
+                            <tr>
+                                <td style="text-align:left;cursor:pointer" class="form-control hovertable" @onclick=@(() => SelectSupplierItem(item.VENDOR_NAME)) data-dismiss="modal">@item.VENDOR_NAME</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    PurchaseOrderModel porderModel = new PurchaseOrderModel();
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+    List<UnitModel> unitList = new List<UnitModel>();
+    UnitModel unit = new UnitModel();
+    string vendor_name;
+    LedgerModel ledger = new LedgerModel();
+    List<ItemEntity> itemNameList = new List<ItemEntity>();
+    List<BranchModel> branchList = new List<BranchModel>();
+    string MyProperty;
+    List<string> itemList = new List<string>();
+    private ElementReference inputElement;
+    private ElementReference keyDownDiv;
+    string EventInfo = "";
+    private ElementReference testRef;
+    private ElementReference QtyInput;
+    private string pressedKey;
+    private VendorEntity SelectedVendor;
+    List<VendorEntity> options;
+
+    List<PurchaseOrderDetailsEntity> voucherItemList = new List<PurchaseOrderDetailsEntity>();
+    PurchaseOrderDetailsEntity itemdetails = new PurchaseOrderDetailsEntity();
+    ItemEntity itemEntity = new ItemEntity();
+    VoucherItem paymentvoucher = new VoucherItem();
+    ACC_COMPANY_VOUCHER_MODEL accCompanyVoucherModel = new ACC_COMPANY_VOUCHER_MODEL();
+    List<PurchaseOrderDetailsEntity> paymentVoucherDetails = new List<PurchaseOrderDetailsEntity>();
+    ACC_VOUCHER_MODEL voucherDetails = new ACC_VOUCHER_MODEL();
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+    List<CustomerModel> customerList = new List<CustomerModel>();
+    List<CustomerProjectModel> projectList = new List<CustomerProjectModel>();
+    DeliveryNoteMasterEntity deliverymaster = new DeliveryNoteMasterEntity();
+    List<DeliveryNoteDetailsEntity> deliverydetailsList = new List<DeliveryNoteDetailsEntity>();
+    DeliveryNoteDetailsEntity deliverydetails = new DeliveryNoteDetailsEntity();
+    List<string> workerOrderNoList = new List<string>();
+    SalesOrderViewModel salesOrderView = new SalesOrderViewModel();
+    List<string> categoryIdList = new List<string>();
+    string voucherNo;
+
+    decimal amount;
+    string KeyPressed = "";
+    public string Value { get; set; }
+    public string MyDrValue { get; set; }
+    public string MyCrValue { get; set; }
+
+    double Qty { get; set; }
+    decimal Rate { get; set; }
+    public decimal totalAmount { get; set; }
+
+    private ElementReference myref;
+    private ElementReference myDr_ref;
+    private ElementReference itmInput;
+    private ElementReference myCr_ref;
+    private ElementReference narrationref;
+    ElementReference cusotmerInput;
+    ElementReference projectInput;
+    private bool isDrDisable { get; set; }
+    private bool isCrDisable { get; set; }
+    decimal totalDebit;
+    decimal totalCredit;
+    int visibletext;
+    string BranchName;
+    string voucherDate;
+    string narration;
+    int bankStatus = 0;
+    List<string> templates = new List<string>() { "Maui", "Hawaii", "Niihau", "Kauai", "Kahoolawe" };
+    string SelectedString = "Maui";
+    string parent;
+    string chequeNo;
+    string drawnon;
+    string voucherChequedate = "";
+    string currentDate;
+    string selected_date;
+    string itemName;
+    string supplierName;
+    decimal GrandTotal;
+    decimal transport_cost;
+    decimal labour_cost;
+    decimal others_cost;
+    string unitName;
+    int unitId;
+    string carryingBy;
+    string totalWaight;
+    string deliveryTime;
+    string deliveryLocation;
+
+    //-----
+
+    List<VendorEntity>? customers;
+    string? selectedCustomerId;
+    string? selectedCustomerName;
+    string? filter;
+
+    public string searchVendor { get; set; } = "";
+    public string searchdeliveryperson { get; set; } = "";
+    public string searchCustomer { get; set; } = "";
+    public string searchworkOrder { get; set; } = "";
+    public string searchproject { get; set; } = "";
+    public string searchitem { get; set; } = "";
+
+    List<string> options1;
+    List<string> customer;
+    List<string> project;
+    List<string> workOrder;
+    List<string> itemnameList;
+    [Parameter]
+    public string woNO { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        MyProperty = "Dr";
+        onDisable(MyProperty);
+        accCompanyVoucherModel.COMP_REF_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Transection/GetVoucherNo/" + 1);
+        //await GetCountry();
+        await GetLedger();
+        //await GetBranch();
+        itemNameList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product/GetProjectItem");
+        unitList = await Http.GetJsonAsync<List<UnitModel>>(Utility.BaseUrl + "api/Setup/GetUnit");
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee/GetSOCEmployeeList");
+        customerList = await Http.GetJsonAsync<List<CustomerModel>>(Utility.BaseUrl + "api/Customer");
+        currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+        //currentDate = System.DateTime.Now.Day.ToString().PadLeft(2, '0')+"/"+ (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + System.DateTime.Now.Year ;
+        //options1 = employeeList.Select(f => f.EMPLOYEE_NAME).Distinct().ToList();
+        //customer = customerList.Select(f => f.CUSTOMER_NAME).Distinct().ToList();
+        //itemnameList = itemNameList.Select(f => f.ITEM_NAME).Distinct().ToList();
+        salesOrderView= await Http.GetJsonAsync<SalesOrderViewModel>(Utility.BaseUrl + "api/Sales/GetSalesOrderInfoByWorkOrderNO/"+ woNO);
+        searchCustomer = salesOrderView.CUSTOMER_NAME;
+        searchproject = salesOrderView.SHIPPING_PROJECT_NAME;
+        searchworkOrder = salesOrderView.PO_WO_NUMBER;
+
+        //await cusotmerInput.FocusAsync();
+        StateHasChanged();
+
+    }
+    private async Task<IEnumerable<VendorEntity>> SearchLedger(string searchText)
+    {
+        //return await Task.FromResult(vendorList.Where(x => x.VENDOR_NAME.ToLower().Contains(searchText.ToLower())).ToList());
+
+        return vendorList = vendorList.Where(x => x.VENDOR_NAME.ToLower().Contains(searchText.ToLower())).ToList();
+        //return await Task.FromResult(ledgerList);
+    }
+    public async Task selectedcustomer(string ff)
+    {
+        //searchVendor = ff;
+        searchCustomer = ff;
+        int customerid = customerList.Find(x => x.CUSTOMER_NAME == searchCustomer).CUSTOMER_ID;
+        projectList = await Http.GetJsonAsync<List<CustomerProjectModel>>(Utility.BaseUrl + "api/Customer/GetCustomerProjectList/" + customerid);
+        project = projectList.Select(f => f.SHIPPING_PROJECT_NAME).Distinct().ToList();
+        vendor_name = null;
+        customer = new List<string>();
+        await projectInput.FocusAsync();
+        StateHasChanged();
+    }
+    public async Task SelectedProject(string prj)
+    {
+        searchproject = prj;
+        project = new List<string>();
+        int customerid = customerList.Find(x => x.CUSTOMER_NAME == searchCustomer).CUSTOMER_ID;
+        int projectId = projectList.Find(x => x.SHIPPING_PROJECT_NAME == searchproject).CUSTOMER_PROJECT_ID;
+        workerOrderNoList = await Http.GetJsonAsync<List<string>>(Utility.BaseUrl + "api/Customer/GetWorkOrderNoList/" + customerid + "/" + projectId);
+
+        //workOrder= workerOrderNoList.Select(f => f).Distinct().ToList();
+        StateHasChanged();
+    }
+    private async void HandleKeyDown(KeyboardEventArgs e)
+    {
+        pressedKey = e.Key;
+        await testRef.FocusAsync();
+    }
+
+    protected async void KeyPress(KeyboardEventArgs e)
+    {
+        //letter = $"Pressed: [{e.Key}]";
+        string s = "";
+
+        await keyDownDiv.FocusAsync();
+    }
+
+    private async Task GetEmployeeList(ChangeEventArgs change)
+    {
+        searchdeliveryperson = change.Value.ToString();
+        options1 = employeeList.Select(f => f.EMPLOYEE_NAME).Distinct().ToList();
+    }
+    private async Task GetEmployee()
+    {
+        options1 = employeeList.Select(f => f.EMPLOYEE_NAME).Distinct().ToList();
+    }
+    private async Task GetItemNameList()
+    {
+        itemnameList = itemNameList.Select(f => f.ITEM_NAME).Distinct().ToList();
+    }
+
+    private async Task GetCustomerList(ChangeEventArgs change)
+    {
+        searchCustomer = change.Value.ToString();
+        customer = customerList.Select(f => f.CUSTOMER_NAME).Distinct().ToList();
+
+    }
+    private async Task GetProjectList(ChangeEventArgs change)
+    {
+        searchproject = change.Value.ToString();
+        project = projectList.Select(f => f.SHIPPING_PROJECT_NAME).Distinct().ToList();
+    }
+    private async Task GetWorkOrderNoList(ChangeEventArgs change)
+    {
+        searchworkOrder = change.Value.ToString();
+        //project = projectList.Select(f => f.SHIPPING_PROJECT_NAME).Distinct().ToList();
+        workOrder = workerOrderNoList; //workerOrderNoList.Select(f => f).Distinct().ToList();
+    }
+    private async Task OnClickCustomer()
+    {
+        customer = customerList.Select(f => f.CUSTOMER_NAME).Distinct().ToList();
+
+
+    }
+    private async Task GetItemList(ChangeEventArgs change)
+    {
+        searchitem = change.Value.ToString();
+        itemnameList = itemNameList.Select(f => f.ITEM_NAME).Distinct().ToList();
+    }
+
+    public async Task selectedEmployee(string ff)
+    {
+        //searchVendor = ff;
+        searchdeliveryperson = ff;
+        //
+        //vendor_name = null;
+        options1 = new List<string>();
+        StateHasChanged();
+    }
+    public async Task SelectedWorkOrder(string selectedWO)
+    {
+        searchworkOrder = selectedWO;
+        workOrder = new List<string>();
+        StateHasChanged();
+    }
+    public async Task SelectedItm(string param_itm)
+    {
+        itemName = param_itm;
+        searchitem = param_itm;
+        itemEntity.UNIT_ID = itemNameList.Find(x => x.ITEM_NAME == searchitem).UNIT_ID;
+        unitName = itemNameList.Find(x => x.ITEM_NAME == searchitem).UOM;
+        itemEntity.UOM = unitName;
+        itemEntity.UNIT_ID = itemEntity.UNIT_ID;
+
+        await QtyInput.FocusAsync();
+        itemnameList = new List<string>();
+
+
+        StateHasChanged();
+    }
+    async Task HandleInput(ChangeEventArgs e)
+    {
+        filter = e.Value?.ToString();
+        if (filter?.Length > 2)
+        {
+            customers = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor/GetVendorDetailsByVendorCode/" + filter);
+        }
+        else
+        {
+            customers = null;
+            selectedCustomerName = selectedCustomerId = null;
+        }
+    }
+
+    void SelectCustomer(string id)
+    {
+        selectedCustomerId = id;
+        selectedCustomerName = customers!.First(c => c.VENDOR_ID.Equals(selectedCustomerId)).VENDOR_NAME;
+        customers = null;
+    }
+    async void selectedledger(ChangeEventArgs e)
+    {
+        SelectedString = e.Value.ToString();
+        if (SelectedString == "Bank Accounts") { bankStatus = 1; }
+        else { bankStatus = 0; }
+        if (MyProperty == "Dr")
+        { await myDr_ref.FocusAsync(); }
+        else if (MyProperty == "Cr")
+        { await myCr_ref.FocusAsync(); }
+    }
+    public async Task GetBranch()
+    {
+        branchList = await Http.GetJsonAsync<List<BranchModel>>(Utility.BaseUrl + "api/Setup/GetBranchList");
+        if (branchList.Count > 0)
+        { BranchName = branchList.FirstOrDefault().BRANCH_NAME; }
+
+
+    }
+    private async Task GetLedger()
+    {
+        //ledgerList = await Http.GetJsonAsync<List<LedgerModel>>(Utility.BaseUrl + "api/Setup/GetLedger");
+    }
+    //private async Task GetCountry()
+    //{
+    //    countryList = await Http.GetJsonAsync<List<CountryModel>>(Utility.BaseUrl + "api/Setup/GetCountry");
+    //}
+    private void ItemNameClicked(ChangeEventArgs changeEventArgs)
+    {
+        itemName = changeEventArgs.Value.ToString();
+    }
+    private void SupplierNameClicked(ChangeEventArgs changeEventArgs)
+    {
+        supplierName = changeEventArgs.Value.ToString();
+    }
+    private void rateClicked(ChangeEventArgs changeEventArgs)
+    {
+        //double sum = requestItemList.Sum(x => Convert.ToDouble(x.Quantity) * Convert.ToDouble(x.Rate));
+        //finaltotal = finaltotal + Convert.ToDouble(changeEventArgs.Value.ToString());
+        if (changeEventArgs.Value.ToString() != "") { Rate = Convert.ToDecimal(changeEventArgs.Value.ToString()); }
+        else { Rate = 0; }
+        totalAmount = Convert.ToDecimal(Convert.ToDecimal(Qty) * Convert.ToDecimal(Rate));
+        //GetTotal();
+        //ADJ = Convert.ToDouble(changeEventArgs.Value.ToString());
+    }
+    private void TransportClicked(ChangeEventArgs changeEventArgs)
+    {
+        //double sum = requestItemList.Sum(x => Convert.ToDouble(x.Quantity) * Convert.ToDouble(x.Rate));
+        //finaltotal = finaltotal + Convert.ToDouble(changeEventArgs.Value.ToString());
+        if (changeEventArgs.Value.ToString() != "") { transport_cost = Convert.ToDecimal(changeEventArgs.Value.ToString()); }
+        else { transport_cost = 0; }
+        GetTotal();
+        //ADJ = Convert.ToDouble(changeEventArgs.Value.ToString());
+    }
+    private void LabourClicked(ChangeEventArgs changeEventArgs)
+    {
+        if (changeEventArgs.Value.ToString() != "") { labour_cost = Convert.ToDecimal(changeEventArgs.Value.ToString()); }
+        else { labour_cost = 0; }
+        GetTotal();
+    }
+    private void OthersClicked(ChangeEventArgs changeEventArgs)
+    {
+        if (changeEventArgs.Value.ToString() != "") { others_cost = Convert.ToDecimal(changeEventArgs.Value.ToString()); }
+        else { others_cost = 0; }
+        GetTotal();
+    }
+    private void GetTotal()
+    {
+        //if(AIT== 0 && VAT==0 && ADJ==0)
+        //{ finaltotal = requestItemList.Sum(x => Convert.ToDouble(x.Quantity) * Convert.ToDouble(x.Rate)); }
+        //finaltotal = requestItemList.Sum(x => Convert.ToDouble(x.Quantity) * Convert.ToDouble(x.Rate));
+
+        //if (Rate !="")
+        //{
+        //    totalAmount = Convert.ToDecimal(Convert.ToDecimal(Qty)* Convert.ToDecimal(Rate));
+        //}
+
+        //if (VAT != 0)
+        //{ finaltotal = finaltotal + VAT; }
+        //if (ADJ != 0)
+        //{ finaltotal = finaltotal + ADJ; }
+        //if (SeaFreight != 0)
+        //{ finaltotal = finaltotal + SeaFreight; }
+        //double inwordValue = Convert.ToDouble(finaltotal);
+        // Inwords = NumberToWords.ConvertAmount(inwordValue);
+        //else { finaltotal = requestItemList.Sum(x => Convert.ToDouble(x.Quantity) * Convert.ToDouble(x.Rate)); }
+        decimal t = voucherItemList.Sum(x => Convert.ToDecimal(x.QUANTITY) * Convert.ToDecimal(x.UNIT_PRICE));
+        GrandTotal = t + transport_cost + labour_cost + others_cost;
+
+    }
+
+
+    //private async Task<IEnumerable<LedgerModel>> KeyPressLedger(string searchText)
+    //{
+    //    //return await Task.FromResult(ledgerList.Where(x => x.LEDGER_NAME.ToLower().Contains(searchText.ToLower())).ToList());
+
+
+    //}
+
+    public async Task SaveDeliveryNote()
+    {
+
+        if (currentDate == "" || currentDate == null)
+        {
+            toastService.ShowWarning("Please Select Date.");
+            return;
+        }
+        else
+        {
+
+            try
+            {
+
+                if (selected_date == "" || selected_date == null)
+                {
+                    //porderModel.PO_DATE = Convert.ToDateTime(currentDate).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(currentDate).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(currentDate).Year;
+
+                    deliverymaster.DELIVERY_DATE = Convert.ToDateTime(currentDate); //Convert.ToDateTime(currentDate).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(currentDate).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(currentDate).Year;
+                }
+                porderModel.VOUCHER_NO = voucherNo;
+                deliverymaster.DELIVERY_PERSON = searchVendor;
+                deliverymaster.CARRING_BY = carryingBy;
+                deliverymaster.WO_NUMBER = searchworkOrder;
+                deliverymaster.DELIVERY_PERSON = searchdeliveryperson;
+                deliverymaster.WORK_NAME = searchproject;
+                deliverymaster.TOTAL_WEIGHT = totalWaight;
+                deliverymaster.DELIVERY_TIME = deliveryTime;
+                deliverymaster.DELIVERY_LOCATION = deliveryLocation;
+
+                if(categoryIdList!=null)
+                {
+                    string catIds = String.Join(",", categoryIdList);
+                    List<string> catNamelist = await Http.GetJsonAsync<List<string>>(Utility.BaseUrl + "api/Setup/GetCategoryNameListById/" + catIds);
+
+                    deliverymaster.ITEM_CATEGORY = String.Join(",", catNamelist);
+                }
+
+
+
+                deliverymaster.CUSTOMER_ID = customerList.Find(x => x.CUSTOMER_NAME == searchCustomer).CUSTOMER_ID;
+                deliverymaster.CUSTOMER_PROJECT_ID = salesOrderView.CUSTOMER_PROJECT_ID; //projectList.Find(x => x.SHIPPING_PROJECT_NAME == searchproject).CUSTOMER_PROJECT_ID;
+
+
+                if (voucherItemList != null)
+                {
+                    foreach (var item in voucherItemList)
+                    {
+                        itemdetails = new PurchaseOrderDetailsEntity();
+                        itemdetails.ITEM_NAME = item.ITEM_NAME;
+                        itemdetails.UNIT_ID = item.UNIT_ID;
+                        itemdetails.QUANTITY = item.QUANTITY;
+                        itemdetails.UNIT_PRICE = item.UNIT_PRICE;
+                        itemdetails.TOTAL_AMOUNT = item.TOTAL_AMOUNT;
+                        if (porderModel.pOrderDetailsList == null)
+                        { porderModel.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>(); }
+                        porderModel.pOrderDetailsList.Add(itemdetails);
+                    }
+                    deliverymaster.deliverlyDetailsList = deliverydetailsList;
+                    var data = await Http.PostJsonAsync<DeliveryNoteMasterEntity>(Utility.BaseUrl + "api/Purchase/AddStockOut", deliverymaster);
+                    toastService.ShowSuccess("Save Successfully!!!");
+                    UriHelper.NavigateTo("DeliveryNoteList");
+                    voucherItemList = new List<PurchaseOrderDetailsEntity>();
+                    porderModel = new PurchaseOrderModel();
+                    porderModel.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+                    voucherNo = "";
+                    GrandTotal = 0;
+                    currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+
+                }
+                else
+                {
+                    toastService.ShowWarning("No Item For Delivery!");
+                }
+            }
+            catch (Exception ex)
+            {
+                voucherItemList = new List<PurchaseOrderDetailsEntity>();
+                porderModel = new PurchaseOrderModel();
+                porderModel.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+            }
+        }
+    }
+
+    private async Task LoadPage()
+    {
+        await GetVoucherNo();
+        visibletext = 0;
+        MyProperty = "Dr";
+        totalDebit = 0;
+        totalCredit = 0;
+        onDisable(MyProperty);
+        StateHasChanged();
+    }
+    private async Task GetVoucherNo()
+    {
+        accCompanyVoucherModel.COMP_REF_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Transection/GetVoucherNo/" + 1);
+    }
+    private void Keypress(KeyboardEventArgs args)
+    {
+        string value;
+        value = args.Key;
+        itemName = value;
+
+    }
+    private void onDisable(string property)
+    {
+        if (property == "Dr")
+        {
+            this.isDrDisable = false;
+            this.isCrDisable = true;
+            MyCrValue = "";
+        }
+        else if (property == "Cr")
+        {
+            this.isCrDisable = false;
+            this.isDrDisable = true;
+        }
+
+    }
+
+    private async Task GetSelectedValue(ChangeEventArgs change)
+    {
+        if (change.Value.ToString() == "Bank Accounts") { bankStatus = 1; }
+    }
+
+    private void UnitClicked(ChangeEventArgs change)
+    {
+        unitId = Convert.ToInt32(change.Value.ToString());
+        unitName = unitList.Find(x => x.UNIT_ID == unitId).UNIT_NAME;
+    }
+    private async void DoTheThing(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key == "Enter")
+        {
+            deliverydetails = new DeliveryNoteDetailsEntity();
+            deliverydetails.ITEM_NAME = searchitem;
+            deliverydetails.ITEM_CODE = itemNameList.Find(p => p.ITEM_NAME == searchitem).ITEM_CODE;
+            if(itemEntity.UNIT_ID!=0)
+            { deliverydetails.UNIT = unitList.Find(x => x.UNIT_ID == itemEntity.UNIT_ID).UNIT_NAME; }
+
+            deliverydetails.QUANTITY =Qty;
+            deliverydetailsList.Add(deliverydetails);
+            if (searchitem != null && searchitem != "")
+            {
+                string catId = Convert.ToString(itemNameList.Find(x => x.ITEM_NAME == searchitem).CATEGORY_ID);
+                categoryIdList.Add(catId);
+            }
+            ClearItemAfterAdd();
+        }
+    }
+    private async void AddItem()
+    {
+        if (Qty != 0)
+        {
+            deliverydetails = new DeliveryNoteDetailsEntity();
+            deliverydetails.ITEM_NAME = searchitem;
+            deliverydetails.ITEM_CODE = itemNameList.Find(p => p.ITEM_NAME == searchitem).ITEM_CODE;
+            if (itemEntity.UNIT_ID != 0)
+            { deliverydetails.UNIT = unitList.Find(x => x.UNIT_ID == itemEntity.UNIT_ID).UNIT_NAME; }
+            deliverydetails.QUANTITY =Qty;
+            deliverydetailsList.Add(deliverydetails);
+            if(searchitem!=null && searchitem !="")
+            {
+                string catId = Convert.ToString(itemNameList.Find(x => x.ITEM_NAME == searchitem).CATEGORY_ID);
+                categoryIdList.Add(catId);
+            }
+
+            ClearItemAfterAdd();
+        }
+    }
+    private async void ClearItemAfterAdd()
+    {
+        searchitem = "";
+        Qty = 0;
+        itemEntity.UNIT_ID = 0;
+        await itmInput.FocusAsync();
+    }
+
+
+    private async void GetDate(ChangeEventArgs change)
+    {
+        selected_date = change.Value.ToString();
+        //porderModel.PO_DATE = Convert.ToDateTime(selected_date).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Year;
+        deliverymaster.DELIVERY_DATE = Convert.ToDateTime(selected_date); //Convert.ToDateTime(selected_date).Day.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Month.ToString().PadLeft(2, '0') + "/" + Convert.ToDateTime(selected_date).Year;
+    }
+
+
+    private void SelectItem(string item)
+    {
+        itemName = item;
+
+    }
+    private void SelectSupplierItem(string item)
+    {
+        supplierName = item;
+
+    }
+    public async void DeleteItem(string item)
+    {
+        var itemToRemove = deliverydetailsList.Single(r => r.ITEM_NAME == item);
+        deliverydetailsList.Remove(itemToRemove);
+        GetTotal();
+
+
+
+        StateHasChanged();
+    }
+}

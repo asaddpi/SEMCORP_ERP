@@ -1,0 +1,185 @@
+﻿@page "/ItemList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+
+
+<div class="card">
+    <div class="card-header">
+        Materials List &nbsp;
+        <a href="NewProduct">New Item</a>
+    </div>
+
+    
+
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Code</td>
+                        <td>Item</td>
+                        <td>Category</td>
+                        <td>Short</td>
+                        <td>Details</td>
+                        <td>Image</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (AllitemList != null)
+                    {
+                        foreach (var item in AllitemList)
+                        {
+                            try
+                            {
+                                <tr>
+                                    <td style="text-align:center"><a href="EditItem/@item.ITEM_CODE"><span class="oi oi-pencil"></span></a></td>
+                                    <td><a href="ItemDetails/@item.ITEM_CODE">@item.ITEM_CODE</a></td>
+                                    <td>@item.ITEM_NAME</td>
+                                    <td>@item.CATEGORY_NAME</td>
+                                    @if (item.SHORT_DESCRIPTION != null)
+                                    {
+                                        <td>
+                                            @((MarkupString)@item.SHORT_DESCRIPTION)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @if (item.LONG_DESCRIPTION != null)
+                                    {
+                                        <td>
+                                            @((MarkupString)@item.LONG_DESCRIPTION)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+
+
+                                    <td>
+                                        <img style="width:100px;height:100px" src="@item.ITEM_IMAGE" />
+                                    </td>
+                                </tr>
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@*<div class="card" style="height:100%">
+        <div class="card-header">
+            Item List &nbsp;
+            <a href="NewProduct">New Item</a>
+
+
+
+
+            <div style="float:right">
+                <label>@StartNumber-@EndNumber of @itemList.Count()</label> <a style="color:Highlight"><i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i></a>&nbsp;&nbsp;<a style="color:Highlight"><i class='bi bi-arrow-right-circle' style="font-size:30px;margin-right:10px" @onclick="@(e => NavigatTo("next"))"></i></a>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Code</th>
+                    <td>Item</td>
+                    <td>Category</td>
+                    <td>Short</td>
+                    <td>Details</td>
+                    <td>Image</td>
+                </tr>
+
+            </thead>
+            <tbody>
+                @if (AllitemList != null)
+                {
+                    foreach (var item in AllitemList)
+                    {
+                        <tr>
+                            <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg"><span class="oi oi-pencil"></span></a></td>
+                            <td style="width:150px"><a href="ItemDetails/@item.ITEM_CODE">@item.ITEM_CODE</a></td>
+                            <td>@item.ITEM_NAME</td>
+                            <td>@item.CATEGORY_NAME</td>
+                            <td>@((MarkupString)@item.SHORT_DESCRIPTION)</td>
+                            <td>@((MarkupString)@item.LONG_DESCRIPTION)</td>
+                            <td><img style="width:100px;height:100px" src="@item.ITEM_IMAGE" /></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>*@
+
+@code {
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    bool checkStatus = false;
+    int iOption = 0;
+    List<ItemViewModel> AllitemList = new List<ItemViewModel>();
+    List<ItemViewModel> itemList = new List<ItemViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllitemList = await Http.GetJsonAsync<List<ItemViewModel>>(Utility.BaseUrl + "api/Product");
+        itemList = await Http.GetJsonAsync<List<ItemViewModel>>(Utility.BaseUrl + "api/Product");
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        //Pagination();
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AllitemList = itemList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (itemList.Count > 0)
+        {
+            StartNumber = AllitemList.FirstOrDefault().SL;
+            EndNumber = AllitemList[AllitemList.Count - 1].SL;
+        }
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (itemList.Count > 0)
+        {
+            AllitemList = itemList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(itemList.Count() / (decimal)pageSize);
+            StartNumber = AllitemList.FirstOrDefault().SL;
+            EndNumber = AllitemList[AllitemList.Count - 1].SL;
+        }
+    }
+}

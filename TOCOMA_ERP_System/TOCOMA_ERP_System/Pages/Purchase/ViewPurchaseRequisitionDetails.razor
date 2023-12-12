@@ -1,0 +1,305 @@
+﻿@page "/ViewPurchaseRequisitionDetails/{requisition_no}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+<style>
+    fieldset {
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: center;
+    }
+
+    tr th {
+        text-align: center;
+    }
+</style>
+<!--<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">PURCHASE REQUISITION DETAILS</span>  </h4>
+    <div class="newRequsitionForm-content">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Requisition NO:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUISITION_NO</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Requester:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUESTED_BY</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Department:</label></div>
+                        <div class="col-md-7">@requisitionDetails.DEPARTMENT_NAME</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Request Date:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUEST_DATE</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Require Date:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUIRED_DATE</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Priority:</label></div>
+                        <div class="col-md-7">@requisitionDetails.PRIORITY</div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>General Purpose of Requisition*:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUISITION_PURPOSE</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-5" style="background-color:steelblue;color:white"><label>Requisition Total:</label></div>
+                        <div class="col-md-7">@requisitionDetails.REQUISITION_TOTAL</div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-5">
+                    <div class="addRequisitionItems">
+                        <h5> Requisition Items</h5>
+                        <table class="table table-striped">
+                            <thead style="background-color:steelblue;color:white">
+                                <tr>
+                                    <td scope="col" width="70%">Item</td>
+                                    <td scope="col">Quantity</td>
+                                    <td scope="col">Rate</td>
+                                    <td scope="col">Amount</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tableitem in requestItemList)
+                                {
+                                    double itemTotal = Convert.ToDouble(tableitem.Rate) * Convert.ToDouble(tableitem.Quantity);
+                                    <tr>
+                                        <td scope="col">@tableitem.ITEM_NAME</td>
+                                        <td scope="col">@tableitem.Quantity</td>
+                                        <td scope="col">@tableitem.Rate</td>
+                                        <td scope="col">@itemTotal</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="3" style="text-align:right"> Total</td>
+                                    <td>@requisitionDetails.REQUISITION_TOTAL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4 border-top" style="padding:20px 0 20px">
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-5"></div>
+
+
+                        <div class="col-6">
+                            <label>Actions:</label>&nbsp;
+                            <select @bind="@requisitionDetails.STATUS">
+                                <option value=""></option>
+                                <option>Open</option>
+                                <option>Approved</option>
+                                <option>Cancel</option>
+                            </select>-->
+@*<button class="btn btn-info">Approved</button>*@
+<!--<button @onclick=@(() => ChangeStatus(requisitionDetails.REQUISITION_NO,requisitionDetails.STATUS)) class="btn btn-info">Submit</button>
+                            <label>@message</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-5"></div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>-->
+@*//-----------------------*@
+
+<div class="dashboard-details">
+    <div class="container-fluid">
+        @*<a href="ManageRequisition"><i class='bi bi-arrow-left-circle' style="font-size:30px"></i></a>*@
+        <fieldset>
+            <div style="padding-top:10px;padding-left:10px">
+                <p style="font-size:15px;font-weight:bold">Requisition NO : @requisitionDetails.REQUISITION_NO</p> <label style="float:right;margin-right:230px">@requisitionDetails.ENTRYDATE</label>
+                <p><b>Requester:  </b> @requisitionDetails.REQUESTED_BY</p>
+                <p><b>Request Department :   </b> @requisitionDetails.REQUEST_DEPARTMENT</p>
+                <p><b>Request Receive Department :   </b> @requisitionDetails.REQUEST_RECEIVE_DEPARTMENT</p>
+                <p><b>Request Date:   </b> @requisitionDetails.REQUEST_DATE</p>
+                <p><b>Require Date:   </b> @requisitionDetails.REQUIRED_DATE</p>
+                <p><b>Priority:   </b> @requisitionDetails.PRIORITY</p>
+                <p><b>Purpose of Requisition:   </b> @requisitionDetails.REQUISITION_PURPOSE</p>
+
+                <br />
+                <label>Item Details</label>
+                <table style="width:50%">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>UOM</th>
+                        <th>Rate</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tbody>
+                        @foreach (var tableitem in requestItemList)
+                        {
+                            double itemTotal = Convert.ToDouble(tableitem.Rate) * Convert.ToDouble(tableitem.Quantity);
+                            <tr>
+                                <td scope="col">@tableitem.ITEM_NAME</td>
+                                <td scope="col">@tableitem.Quantity</td>
+                                <td scope="col">@tableitem.UOM</td>
+                                <td scope="col">@tableitem.Rate</td>
+                                <td scope="col">@itemTotal</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4" style="text-align:right"><b>Total</b></td>
+                            <td><b>@requisition_Total</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+
+                <label>Others</label>
+                <table style="width:50%">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>UOM</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                    </tr>
+                    <tbody>
+                        @foreach (var others in othersDetails)
+                        {
+                            decimal total = 0;
+                            if (others.RATE != null || others.RATE != 0)
+                            { total = Convert.ToDecimal(others.QUANTITY) * Convert.ToDecimal(others.RATE); }
+
+                            <tr>
+                                <td scope="col">@others.OTHERS_ITEM</td>
+                                <td scope="col">@others.QUANTITY</td>
+                                <td scope="col">@others.UNIT</td>
+                                <td scope="col">@others.RATE</td>
+                                <td scope="col">@total</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4" style="text-align:right"><b>Total</b></td>
+                            <td><b>@others_Total</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <br />
+
+                <table width="55%" style="margin-bottom:100px">                    
+                    <tr>
+                        <td style="width:27%">Total</td>
+                        <td style="width:7%;font-weight:bold">@GrandTotal</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="width:27%;text-align:left;font-weight:bold">In Words(BDT)  : @Inwords</td>
+                    </tr>
+                </table>
+            </div>
+
+        </fieldset>
+        @if (department == "Admin & HR")
+        {
+            <div class="col-6" style="margin-bottom:150px">
+                <label>Actions:</label>&nbsp;
+                <select @bind="@requisitionDetails.STATUS">
+                    <option value=""></option>
+                    <option>Open</option>
+                    <option>Approved</option>
+                    <option>Cancel</option>
+                </select>
+
+                @*<button class="btn btn-info">Approved</button>*@
+                <button @onclick=@(() => ChangeStatus(requisitionDetails.REQUISITION_NO,requisitionDetails.STATUS)) class="btn btn-info">Submit</button>
+                <label>@message</label>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string requisition_no { get; set; }
+    PurchaseRequisitionViewEntity requisitionDetails = new PurchaseRequisitionViewEntity();
+    List<PurchaseRequisitionOthersModel> othersDetails = new List<PurchaseRequisitionOthersModel>();
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    string message;
+    string department = "";
+    double otherstotal;
+    decimal others_Total;
+    decimal requisition_Total;
+    decimal GrandTotal;
+    string Inwords;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetRequisitionDetails();
+        department = await sessionStorage.GetItemAsync<string>("session_employeeDepartment");
+    }
+    public async Task GetRequisitionDetails()
+    {
+        requisitionDetails = await Http.GetJsonAsync<PurchaseRequisitionViewEntity>(Utility.BaseUrl + "api/Purchase/GetPurchaseRequisitionInfoByNo/" + requisition_no);
+        requestItemList = await Http.GetJsonAsync<List<OrderItemEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+        othersDetails = await Http.GetJsonAsync<List<PurchaseRequisitionOthersModel>>(Utility.BaseUrl + "api/Purchase/GetRequisitionOthersItemDetailsByReqNo/" + requisition_no);
+        requisition_Total= Convert.ToDecimal(String.Format("{0:0.00}", requisitionDetails.REQUISITION_TOTAL));
+
+        foreach (var item in othersDetails)
+        {
+            otherstotal += item.QUANTITY * item.RATE;
+        }
+        others_Total = Convert.ToDecimal(String.Format("{0:0.00}", otherstotal));
+
+        GrandTotal = requisition_Total + others_Total;
+        double inwordValue = Convert.ToDouble(GrandTotal);
+        Inwords = NumberToWords.ConvertAmount(inwordValue);
+    }
+    private async void ChangeStatus(string ReqNo, string Status)
+    {
+        PurchaseRequisitionEntity p = new PurchaseRequisitionEntity();
+        p.REQUISITION_NO = ReqNo;
+        p.STATUS = Status;
+
+        await Http.PutJsonAsync<PurchaseRequisitionEntity>(Utility.BaseUrl + "api/Purchase/UpdateRequisitionStatus", p);
+        if (Status == "Approved")
+        { toastService.ShowSuccess("Requisition Approved"); }
+        else if (Status == "Cancel")
+        {
+            toastService.ShowError("Requisition Cancel");
+        }
+
+    }
+}

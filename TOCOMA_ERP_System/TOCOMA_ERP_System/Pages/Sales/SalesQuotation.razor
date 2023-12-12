@@ -1,0 +1,2411 @@
+﻿@page "/SalesQuotation"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager UriHelper
+<style>
+
+
+
+    table tr td {
+        border: none;
+    }
+
+    ul li {
+        list-style: none;
+    }
+    /*.container {
+        width: 100%;
+    }*/
+
+    .progressbar {
+        counter-reset: step;
+    }
+
+        .progressbar li {
+            list-style: none;
+            display: inline-block;
+            width: 18%;
+            height: 100%;
+            position: relative;
+            text-align: center;
+            cursor: pointer;
+            z-index: 9;
+        }
+
+            .progressbar li:before {
+                content: counter(step);
+                counter-increment: step;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                border: 1px solid #ddd;
+                border-radius: 100%;
+                display: block;
+                text-align: center;
+                margin: 0 auto 10px auto;
+                background-color: #fff;
+            }
+
+            .progressbar li:after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                background-color: #ddd;
+                top: 15px;
+                left: -50%;
+                z-index: -1;
+            }
+
+            .progressbar li:first-child:after {
+                content: none;
+            }
+
+            .progressbar li.active {
+                color: green;
+            }
+
+                .progressbar li.active:before {
+                    border-color: green;
+                }
+
+                .progressbar li.active + li:after {
+                    background-color: green;
+                }
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h4>Quotation</h4>
+
+        </div>
+        <br />
+        <div class="container">
+            <ul class="progressbar">
+                <li class="@isActive1" @onclick="tab_1_Clicked">General Information</li>
+                <li class="@isActive2" @onclick="tab_2_Clicked">Service List</li>
+                <li class="@isActive3" @onclick="tab_3_Clicked">Application / Working Method</li>
+                <li class="@isActive4" @onclick="tab_4_Clicked">Terms & Condition</li>
+
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <div class="testbox">
+                <div class="tablearea">
+                    @if (tabPosition == 1)
+                    {
+                        <EditForm Model="@salesQuotation" OnValidSubmit="@SaveSalesQuotation" style="margin-left:5px">
+
+                            <h5><span style="color:red;font-size:18px">*</span> General Information </h5>
+                            <hr />
+                            @*<div class="form-row">
+                                    <div class="form-group col-md-8">
+                                        <label for="inputAddress">Quotation Type</label>
+
+                                        <select @onchange="Quotation_Type_Clicked" class="form-control">
+                                            <option value="Q-MSA">QUOTATION - Material Supply & Apply</option>
+                                            <option value="Q">QUOTATION</option>
+                                            <option value="QA">QUOTATION (Air Shipment)</option>
+                                            <option value="Q-MSAI">QUOTATION - Material Supply & Application Installation</option>
+                                            <option value="QD">QUOTATION (Direct Import)</option>
+                                        </select>
+                                    </div>
+                                </div>*@
+
+
+
+                            <div class="form-row">
+                                @*<div class="form-group col-md-4">
+                                        <label for="inputCity">Quotation No.</label>
+                                        <InputText @bind-Value="@salesQuotation.QUOTATION_NO" class="form-control"></InputText>
+                                    </div>*@
+                                <div class="form-group col-md-3">
+                                    <label for="inputState">Quotation Date</label>
+                                    <input type="text" required id="datepicker_planstart" autocomplete="off" @bind-value="@quotation_date" placeholder="dd/mm/yy" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputZip">Valid Up to</label>
+                                    <input type="text" id="datepicker_actualstart" @bind-value="@validupto_date" autocomplete="off" placeholder="dd/mm/yy" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputCity">Incoterm</label>
+                                    <InputSelect @bind-Value="@salesQuotation.INCOTERM" class="form-control">
+                                        <option value=""></option>
+                                        @foreach (var incoterm in incotermList)
+                                            {
+                                            <option value="@incoterm.INCOTERM_NAME">@incoterm.INCOTERM_NAME</option>
+                                            }
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputState">Payment Terms</label>&nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-paymentTerm"><span class="oi oi-pencil"></span></a>
+                                    <InputSelect @bind-Value="@salesQuotation.PAYMENT_TERMS" class="form-control">
+                                        <option value=""></option>
+                                        @foreach (var item in paymentTermList)
+                                            {
+                                            <option value="@item.PAYMENT_TERM">@item.PAYMENT_TERM</option>
+                                            }
+                                    </InputSelect>
+                                </div>
+                                @*<div class="form-group col-md-4">
+                                        <label for="inputZip">Expected Delivery Date</label> &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-expecteddate"><span class="oi oi-pencil"></span></a>
+                                        <InputSelect @bind-Value="@salesQuotation.EXPECTED_DELIVERY_DATE" class="form-control">
+                                            <option value=""></option>
+                                            @foreach (var expected in deliveryDateList)
+                                                {
+                                                <option value="@expected.EXPECTED_DELIVERY_DATE">@expected.EXPECTED_DELIVERY_DATE</option>
+                                                }
+                                        </InputSelect>
+                                    </div>*@
+                            </div>
+                            <div class="form-row">
+
+                                @*<div class="form-group col-md-4">
+                                        <label for="inputState">Ship Vai</label> &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-shipvia"><span class="oi oi-pencil"></span></a>
+                                        <InputSelect @bind-Value="@salesQuotation.SHIP_VIA" class="form-control">
+                                            <option value=""></option>
+                                            @foreach (var shipvia in shipVialist)
+                                                {
+                                                <option value="@shipvia.SHIP_VIA_NAME">@shipvia.SHIP_VIA_NAME</option>
+                                                }
+                                        </InputSelect>
+                                    </div>*@
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="inputZip">Sales Person</label>
+                                    <select @onchange="SalesPerson_Clicked" class="form-control">
+                                        <option value="">--Select Employee--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputCity">Phone No.</label>
+                                    <InputText @bind-Value="@salesQuotation.PHONE_NO" class="form-control"></InputText>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputZip">Submitted to</label> &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-customer"><span class="oi oi-pencil"></span></a>
+                                    <select @onchange="Customer_Clicked" class="form-control">
+                                        <option value="">--Select Customer--</option>
+                                        @foreach (var customer in customerList)
+                                        {
+                                            <option value="@customer.CUSTOMER_ID">@customer.CUSTOMER_NAME</option>
+                                        }
+                                    </select>
+
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputZip">Attention</label>
+                                    <InputText @bind-Value="@customer.CONTACT_PERSON_NAME" class="form-control" style="background-color:lightgray"></InputText>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+
+                                <div class="form-group col-md-3">
+                                    <label for="inputCity">Contact</label>
+                                    <InputText @bind-Value="@customer.CONTACT_PERSON_PHONE" class="form-control" style="background-color:lightgray"></InputText>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputState">Email</label>
+                                    <InputText @bind-Value="@customer.CONTACT_PERSON_EMAIL" class="form-control" style="background-color:lightgray"></InputText>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputCity">Inquery Date</label>
+                                    <input type="text" id="date_1" autocomplete="off" @bind-value="@inqueryDT" placeholder="dd/mm/yy" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="inputState">Ship to</label>
+                                    <InputText @bind-Value="@customer.SHIPPING_ADDRESS" class="form-control" style="background-color:lightgray"></InputText>
+                                </div>
+                            </div>
+
+
+
+                        </EditForm>
+
+                    }
+                    @if (tabPosition == 2)
+                    {
+                        <h5><span style="color:red;font-size:18px">*</span> Service List </h5>
+                        <div class="form-group">
+                            <label for="inputCity">Service</label>
+                            <input type="text" @onchange="@GetUnitOfMesure" list="txtSearch" value="@itemname" class="form-control" />
+                            <datalist id="txtSearch">
+                                @foreach (var product in serviceList)
+                                {
+                                    <option>@product.SERVICE_NAME</option>
+                                }
+                            </datalist>
+                            @*<button class="btn btn-primary btn-sm" style="width:50px;margin-top:33px" @onclick=@(() => AddItem())>Add</button>*@
+                        </div>
+                        <div class="form-group">
+                            <label for="inputCity">Description</label>
+                            <BlazoredTextEditor @ref="@itemDescription">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+                                    @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="inputCity">Estimate QTY.</label>
+                                <input type="number" @bind-value="@q" id="quantity" class="form-control" autocomplete="off" style="text-align:right" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputState">Unit of Measure</label>
+                                <input type="text" @bind-value="@uom" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputZip">Unit Charge (BDT)</label>
+                                <input type="text" @oninput="UnitPriceCLicked" @bind-value="@unitPrice" class="form-control" style="text-align:right" />
+                            </div>
+                            @*<div class="form-group col-md-1">
+                                    <label for="inputZip">AIT</label>
+                                    <input type="text" @oninput="AITCLicked" @bind-value="@ait" id="quantity" class="form-control" style="background-color:lightgray" />
+                                </div>*@
+                            @*<div class="form-group col-md-1">
+                                    <label for="inputZip">VAT</label>
+                                    <input type="text" @oninput="VATCLicked" @bind-value="@vat" class="form-control" style="background-color:lightgray" />
+                                </div>*@
+                            <div class="form-group col-md-3">
+                                <label for="inputZip">Approx. Total Amount</label>
+                                <input type="text" @bind-value="@totalUnitPrice" class="form-control" style="text-align:right" />
+
+                            </div>
+                            <div class="form-group col-md-1">
+                                <button class="btn btn-primary btn-sm" style="width:50px;margin-top:33px" @onclick=@(() => AddItem())>Add</button>
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Estimate QTY.</th>
+                                    <th>UOM</th>
+                                    <th>Unit Charge (BDT)</th>
+                                    <th>Approx. Total Amount(BDT)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var salesItem in salesItemList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @salesItem.SERVICE_NAME<br />
+                                            @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+
+                                        </td>
+                                        <td>@salesItem.ORDER_QUANTITY</td>
+                                        <td>@salesItem.UOM</td>
+                                        <td>@salesItem.UNIT_PRICE</td>
+                                        @*<td>@salesItem.AIT</td>
+                                            <td>@salesItem.VAT</td>*@
+                                        <td>@salesItem.TOTAL_PRICE</td>
+                                        <td><a @onclick=@(() => EditItem(salesItem.ITEM_NAME))><span class="oi oi-pencil"></span></a>&nbsp; &nbsp;<a @onclick=@(() => DeleteItem(salesItem.ITEM_NAME))><span class="oi oi-delete"></span></a></td>
+                                    </tr>
+                                }
+                            </tbody>
+
+
+
+                        </table>
+
+                        <form>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Approx. Untaxable Amount</label>
+                                <div class="col-sm-2">
+                                    <input class="input" type="text" style="text-align:right" @bind="@untaxableAmount">
+                                    <span class="underline"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Mobilization Cost(if)</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="inputEmail3" style="text-align:right" @bind="@mobilizationCost" @oninput="MobilizationCost_Click">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-1 col-form-label">TAX(%)</label>
+                                <div class="col-sm-1">
+                                    <input type="number" id="inputEmail3" placeholder="%" autocomplete="off" style="text-align:right" @oninput="TaxClick">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="inputEmail3" style="text-align:right" @bind="@taxAmount">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-1 col-form-label">VAT(%)</label>
+                                <div class="col-sm-1">
+                                    <input type="number" id="inputEmail3" placeholder="%" autocomplete="off" style="text-align:right" @oninput="VATClick">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="inputEmail3" style="text-align:right" @bind="@vatAmount">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Other Cost(if)</label>
+                                <div class="col-sm-2">
+                                    <input class="input" type="text" style="text-align:right" @bind="@otherCost" @oninput="Other_Cost_CLick">
+                                    <span class="underline"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-1 col-form-label">Discount()</label>
+                                <div class="col-sm-1">
+                                    <input type="text" id="inputEmail3" placeholder="%" autocomplete="off" style="text-align:right" @oninput="DiscountClick">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="inputEmail3" style="text-align:right" @bind="@discountAmount" @oninput="Discount_Taka_Click">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-8 col-form-label"></label>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Approx. Total</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="inputEmail3" style="text-align:right" @bind="GrandTotal">
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <label for="inputZip"><b>Approx.Total Amount (In Words)BDT:</b> @Inwords</label>
+                        <hr />
+                        @*<br />
+
+                            <h5><span style="color:red;font-size:18px">*</span> Others Cost </h5>
+                            <div class="form-row">
+                                <div class="form-group col-md-7">
+                                    <label for="inputCity">Item</label>
+                                    <input type="text" @bind-value="@chartItemName" id="quantity" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="inputZip">%</label>
+                                    <input type="number" @oninput="ChartParchentCLicked" @bind-value="@chartItemDiscount" class="form-control" />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="inputZip">Amount</label>
+                                    <input type="number" @bind-value="@chartAmountTotal" class="form-control" />
+
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <button class="btn btn-primary btn-sm" style="width:50px;margin-top:33px" @onclick=@(() => AddPaymentChartItem())>Add</button>
+                                </div>
+                            </div>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="65%">Item</td>
+                                        <td width="10%">Parchent</td>
+                                        <td width="10%">Amount</td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var Item in quotationamountchart)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Item.ITEM_NAME<br />
+                                            </td>
+                                            <td>@Item.PARCHENT</td>
+                                            <td>@Item.AMOUNT</td>
+
+                                            <td><a @onclick=@(() => EditChartItem(Item.ITEM_NAME))><span class="oi oi-pencil"></span></a>&nbsp; &nbsp;<a @onclick=@(() => DeleteItem(Item.ITEM_NAME))><span class="oi oi-delete"></span></a></td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="2">Total</td>
+                                        <td>@chartGrandTotal</td>
+                                    </tr>
+                                </tbody>
+                            </table>*@
+                    }
+                    @if (tabPosition == 3)
+                    {
+                        <h5><span style="color:red;font-size:18px">*</span> Application / Working Method (reference) : </h5>
+                        <div class="form-group">
+                            <BlazoredTextEditor @ref="@workingMethod">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+                                    @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                        </div>
+                        <div class="form-group">
+                            <h5><span style="color:red;font-size:18px">*</span> Product Will be Used </h5>
+                            <select @onchange="Product_Clicked" class="form-control">
+                                <option value="">--Select Product--</option>
+                                @foreach (var product in productList)
+                                {
+                                    <option value="@product.ITEM_ID">@product.ITEM_NAME</option>
+                                }
+                            </select>
+                            <br />
+                            @foreach (var item in selectedProduct)
+                            {
+                                <table>
+                                    <tr>
+                                        <td style="width:27px"><a @onclick=@(() => CancelSelectedProduct(item.ITEM_NAME))><span class="oi oi-delete"></span></a></td>
+                                        <td><label>@item.ITEM_NAME</label></td>
+                                    </tr>
+                                </table>
+
+
+                            }
+                        </div>
+                    }
+                    @if (tabPosition == 4)
+                    {
+                        <h5><span style="color:red;font-size:18px">*</span> Terms & Condition </h5>
+
+                        <br />
+                        <div class="form-group">
+                            <a href="#" data-toggle="modal" data-target=".bd-example-modal-xl-alltermsconditions">All</a> &nbsp; &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-termsconditions"><span class="oi oi-pencil"></span>New</a>
+                            <br />
+                            <div>
+                                @foreach (var item in selectedtermsConditionList)
+                                {
+                                    <table>
+                                        <tr>
+                                            <td style="width:27px"><a @onclick=@(() => DeleteTermsConditions(item.SALES_TERMS_CONDITION_ID))><span class="oi oi-delete"></span></a></td>
+                                            <td><label>@item.TERMS_AND_CONDITIONS</label></td>
+                                        </tr>
+                                    </table>
+                                    @*<input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" />  <br />*@
+                                }
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="card-footer text-muted" style="text-align:center">
+                            <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+                            <button class="btn btn-success" style="width:100px" @onclick="SaveSalesQuotation">Save</button>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <!--<table width="55%" style="margin-bottom:100px">-->
+            @*<tr>
+                    <td style="width:27%">Sub Total</td>
+                    <td style="width:7%">@requisitionTotal</td>
+                </tr>
+                <tr>
+                    <td style="width:27%">LC Amount</td>
+                    <td style="width:7%"><input type="text" @oninput="LC_Amount_Clicked" /></td>
+                </tr>
+                <tr>
+                    <td style="width:27%">LC Commission</td>
+                    <td style="width:7%"><input type="text" @oninput="LC_Commission_Clicked" /></td>
+                </tr>
+                <tr>
+                    <td style="width:27%">Insurance</td>
+                    <td style="width:7%"><input type="text" @oninput="Insurance_Clicked" /></td>
+                </tr>*@
+
+            <!--<tr>
+                    <td style="width:27%">Total</td>
+                    <td style="width:7%">@GrandTotal</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="width:27%;text-align:left">In Words(BDT)  : @Inwords</td>
+                </tr>
+            </table>-->
+
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+@*//--------------Modal Item Description-----*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> ITEM DESCRIPTION</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <BlazoredTextEditor @ref="@itemDescription">
+                    <ToolbarContent>
+                        <select class="ql-header">
+                            <option selected=""></option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                            <option value="4"></option>
+                            <option value="5"></option>
+                        </select>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                    <EditorContent>
+                        @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+
+                    </EditorContent>
+                </BlazoredTextEditor>
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>*@
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick=@(() => AddItem())>Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*//--------------New Customer Entry-----*@
+<div class="modal fade bd-example-modal-lg-customer" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> ADD CUSTOMER</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@customer">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+
+                                <th style="width:400px">Customer Name</th>
+                                <th colspan="3">Corporate Address</th>
+                            </tr>
+                            <tr>
+                                <td><InputText @bind-Value="@customer.CUSTOMER_NAME" class="form-control"></InputText></td>
+                                <td colspan="3"><InputTextArea @bind-Value="@customer.CORPORATE_ADDRESS" class="form-control"></InputTextArea></td>
+                            </tr>
+                            <tr>
+                                <th>Customer Type</th>
+                                <th>Contact Person Name</th>
+                                <th>Designation</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <InputSelect @bind-Value="@customer.CUSTOMER_TYPE_ID" class="form-control">
+                                        <option value="">--Select Type--</option>
+                                        @foreach (var type in customerType)
+                                        {
+                                            <option value="@type.CUSTOMER_TYPE_ID">@type.CUSTOMER_TYPE</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_NAME" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_DESIGNATION" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_PHONE" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_EMAIL" class="form-control"></InputText></td>
+                            </tr>
+                        </thead>
+                    </table>
+                </EditForm>
+
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>*@
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick=@(() => AddCustomer())>Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*-------------Payment Term Modal-----------*@
+<div class="modal fade bd-example-modal-lg-paymentTerm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@paymentTerm">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW PAYMENT TERM</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Payment Term:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@paymentTerm.PAYMENT_TERM" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SavePaymentTerm())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*-------------Incoterm Modal-----------*@
+<div class="modal fade bd-example-modal-lg-incoterm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@incoterm">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW INCOTERM</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Incoterm:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@incoterm.INCOTERM_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveIncoterm())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*-------------Ship Via Modal-----------*@
+<div class="modal fade bd-example-modal-lg-shipvia" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@shipVia">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> SHIP VIA</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>SHIP VIA:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@shipVia.SHIP_VIA_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveShipVia())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+@*-------------Expected delivery date Modal-----------*@
+<div class="modal fade bd-example-modal-lg-expecteddate" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@expectedDelivery">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW EXPECTED DELIVERY DATE</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Expected Delivery Date:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@expectedDelivery.EXPECTED_DELIVERY_DATE" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveExpectedDeliveryDate())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*-------------Terms & Conditions Modal-----------*@
+<div class="modal fade bd-example-modal-lg-termsconditions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@termsconditions">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW TERMS & CONDITIONS</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>INSTRUCTION:</label></div>
+                                            <div class="col-md-6"><InputTextArea @bind-Value="@termsconditions.TERMS_AND_CONDITIONS" style="width:400px" cols="30" rows="3"></InputTextArea></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveTermsConditions())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@*-------------ALL Terms & Conditions Modal-----------*@
+<div class="modal fade bd-example-modal-xl-alltermsconditions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="">
+
+            <div class="modal-header">
+                <h4 class="p-2"><span class="text-uppercase"> TERMS & CONDITIONS</span>  </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="col-md-12" style="display:flex">
+                <div class="col-md-1">
+                    <a style="color:Highlight;width:20px" @onclick=@(() => EditItem())><span class="oi oi-pencil"></span></a>&nbsp;
+                    <a><span class="oi oi-trash" style="color:red;width:20px" @onclick=@(() => DeleteTermsCondition())></span></a>
+                </div>
+
+                <div class="col-md-2">
+                    <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @termsCondition.Count()</label>
+                    <a style="color:Highlight;">
+                        <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+                    </a>
+                    <a style="color:Highlight">
+                        <i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+                    </a>
+                </div>
+            </div>
+
+
+
+            <div class="modal-body">
+                @*<InputTextArea @bind-Value="@termsconditions.TERMS_AND_CONDITIONS" style="width:400px" cols="30" rows="3"></InputTextArea>&nbsp;*@
+                @*<a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-expecteddate"><span class="oi oi-pencil"></span></a>&nbsp;
+                    <a @onclick=@(() => DeleteItem(salesItem.ITEM_NAME))><span class="oi oi-delete"></span></a>*@
+                @if (editfieldsetareastatus == 1)
+                {
+                    <fieldset style="border: 1px solid lightgray">
+                        <legend>Edit Terms & Condition</legend>
+                        <textarea @bind="@termsconditions.TERMS_AND_CONDITIONS"></textarea>
+                        <button class="btn btn-success" style="width:90px;float:right;margin-right:12px;margin-bottom:20px" @onclick="EditTermsCondition">Edit</button>
+                    </fieldset>
+
+
+                    <br />
+                }
+
+                <input type="search" placeholder="search.." @oninput="SearchCondition" />
+                <br />
+                <br />
+
+                @foreach (var item in typeList)
+                {
+                    @*<div class="col-md-12" style="display:flex">
+                            <div class="col-md-1"><input type="checkbox"  @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" /></div>
+                            <div class="col-md-11" style="margin-right:5px;padding:5px">@item.TERMS_AND_CONDITIONS</div>
+                        </div>*@
+                    <ul class="">
+                        <li class="" style="gap: 10px">
+                            <b>@item.TERMS_CONDITION_TYPE</b>
+                            @if (item.TermsConditionList != null)
+                            {
+                                @foreach (var i in item.TermsConditionList)
+                                {
+                                    <ul class="" style="display:flex; flex-direction:column;">
+                                        <li class="" style="display:flex; gap:10px; align-items:flex-start; justify-content:flex-start">
+                                            <input type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(i.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" style="display:flex; width:20px; margin-top:3px " />
+                                            @i.TERMS_AND_CONDITIONS
+                                        </li>
+                                    </ul>
+                                }
+                            }
+
+
+                        </li>
+
+                    </ul>
+                    <!--<div class="col-md-12" style="display:flex">-->
+                    @*<div class="col-md-1"><input type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" /></div>*@
+                    <!--<div class="col-md-11" style="margin-right:5px;padding:5px">@item.TERMS_CONDITION_TYPE</div>
+
+
+                    </div>-->
+
+
+                }
+                @*@foreach (var item in termsConditionList)
+                        {
+
+                            <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                            if (terms_And_Conditions_No != null && terms_And_Conditions_No != "")
+                            {
+                                if (terms_And_Conditions_No.Contains(Convert.ToString(item.SALES_TERMS_CONDITION_ID)))
+                                {<input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" checked="@item.IsChecked" /> <label>@item.TERMS_AND_CONDITIONS</label><br />}
+                            else
+                            {
+                                <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                            }
+                        }
+
+                    }*@
+            </div>
+            <div class="modal-footer">
+                @*<div>
+                        <button style="width:100px" data-dismiss="modal">Close</button>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" @onclick="GetSelectedTerms">Add</button>
+                    </div>*@
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    private List<PurchaseRequisitionEntity> Customers { get; set; }
+    PurchaseRequisitionEntity purchaseRequisition = new PurchaseRequisitionEntity();
+    SalesQuotationModel salesQuotation = new SalesQuotationModel();
+    SalesItemDetailsModel salesItem = new SalesItemDetailsModel();
+    List<SalesItemDetailsModel> salesItemList = new List<SalesItemDetailsModel>();
+    List<SalesQuotationAmountChartModel> quotationamountchart = new List<SalesQuotationAmountChartModel>();
+    SalesQuotationAmountChartModel chartModel = new SalesQuotationAmountChartModel();
+    List<SalesItemDetailsModel> itemList = new List<SalesItemDetailsModel>();
+    List<PurchaseRequisitionDetailsEntity> requisitionDetailsEntities = new List<PurchaseRequisitionDetailsEntity>();
+    PurchaseRequisitionDetailsEntity details = new PurchaseRequisitionDetailsEntity();
+    PurchaseRequisitionOthersModel reqOthers = new PurchaseRequisitionOthersModel();
+    List<PurchaseRequisitionOthersModel> reqOthersList = new List<PurchaseRequisitionOthersModel>();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    List<ServiceEntity> serviceList = new List<ServiceEntity>();
+    ItemEntity itm = new ItemEntity();
+    private ItemEntity SelectedArticle;
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    List<OthersRequisitionItemsModel> othersItemList = new List<OthersRequisitionItemsModel>();
+    OthersRequisitionItemsModel othersItem = new OthersRequisitionItemsModel();
+    List<CustomerTypeModel> customerType = new List<CustomerTypeModel>();
+    CustomerModel customer = new CustomerModel();
+    List<CustomerModel> customerList = new List<CustomerModel>();
+    PaymentTermModel paymentTerm = new PaymentTermModel();
+    InCoTermModel incoterm = new InCoTermModel();
+    List<PaymentTermModel> paymentTermList = new List<PaymentTermModel>();
+    List<InCoTermModel> incotermList = new List<InCoTermModel>();
+    List<ShipViaModel> shipVialist = new List<ShipViaModel>();
+    ShipViaModel shipVia = new ShipViaModel();
+    List<ExpectedDeliveryDateModel> deliveryDateList = new List<ExpectedDeliveryDateModel>();
+    ExpectedDeliveryDateModel expectedDelivery = new ExpectedDeliveryDateModel();
+    List<TermsConditionTypeEntity> typeList = new List<TermsConditionTypeEntity>();
+    List<ItemEntity> selectedProduct = new List<ItemEntity>();
+
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> termsCondition = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> AlltermsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> selectedtermsConditionList = new List<PurchaseTermsConditionsModel>();
+    PurchaseTermsConditionsModel termsconditions = new PurchaseTermsConditionsModel();
+    string searchitem = "";
+    OrderItemEntity orderitem;
+    OrderItemEntity order_itm = null;
+    BlazoredTextEditor itemDescription;
+    BlazoredTextEditor workingMethod;
+    string terms_And_Conditions_No;
+    string q = "";
+    decimal unitPrice = 0;
+    decimal ait = 5;
+    double vat = 7.5;
+    string itemname = "";
+    double requisitionTotal = 0;
+    decimal salesSubTotal = 0;
+    string uom;
+    decimal totalUnitPrice = (decimal)0.00;
+    decimal ait_in_Parcent = 0;
+    decimal VAT_with_Price_and_AIT = 0;
+    string Ship_TO;
+    string errorMessage;
+    double othersSubTotal = 0;
+    //DateTime request_date = System.DateTime.Now;
+    string quotation_date;
+    string validupto_date;
+    string inqueryDT;
+    int tablerow;
+    string selected_department;
+    int selected_department_Id;
+    string cheque_Date;
+    bool checked_cheque;
+    decimal GrandTotal;
+    decimal LC_AMOUNT;
+    decimal LC_COMMISSION;
+    decimal INSURANCE;
+    string Inwords;
+    string othersItemName;
+    string othersitemQuantity;
+    string OthersitemRate;
+    string qutNo;
+    protected bool REQ_IS_DISABLE { get; set; }
+    private string value { get; set; }
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+    int termsconditionId;
+    int editfieldsetareastatus = 0;
+    string companyShortForm = "";
+    string customerCode;
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    string selectedProductIds;
+    int tabPosition;
+    string isActive1;
+    string isActive2;
+    string isActive3;
+    string isActive4;
+    string working_Method;
+    string chartItemName;
+    double chartItemDiscount;
+    double chartAmountTotal;
+    double chartGrandTotal;
+    double untaxableAmount;
+    double mobilizationCost;
+    double taxRate;
+    double taxAmount;
+    double vatAmount;
+    double vatRate;
+    double otherCost;
+    decimal discountRate;
+    decimal discountAmount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tablerow = 1;
+        tabPosition = 1;
+        //itemname = itemname + "_" + tablerow;
+        await DepartmentList();
+        await GetItemList();
+        await GetCustomer();
+        await GetCustomerType();
+
+
+        //await GetReqNo();
+        paymentTermList = await Http.GetJsonAsync<List<PaymentTermModel>>(Utility.BaseUrl + "api/Setup/GetPaymentTerm");
+        incotermList = await Http.GetJsonAsync<List<InCoTermModel>>(Utility.BaseUrl + "api/Setup/GetIncoTerm");
+        shipVialist = await Http.GetJsonAsync<List<ShipViaModel>>(Utility.BaseUrl + "api/Setup/GetShipVia");
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee");
+        deliveryDateList = await Http.GetJsonAsync<List<ExpectedDeliveryDateModel>>(Utility.BaseUrl + "api/Setup/GetExpectedDeliveryDate");
+        typeList = await Http.GetJsonAsync<List<TermsConditionTypeEntity>>(Utility.BaseUrl + "api/Setup/GetTermsConditionType");
+
+
+        termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+        termsCondition = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+        AlltermsConditionList = termsConditionList;//await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+        salesQuotation.QUOTATION_TYPE = "Q";
+        await JSRuntime.InvokeVoidAsync("JsInteropDatepicker");
+        Pagination();
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AlltermsConditionList = termsCondition.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (AlltermsConditionList.Count > 0)
+        {
+            StartNumber = AlltermsConditionList.FirstOrDefault().SL;
+            EndNumber = AlltermsConditionList[AlltermsConditionList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 10;
+        if (termsCondition.Count > 0)
+        {
+            AlltermsConditionList = termsCondition.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(termsCondition.Count() / (decimal)pageSize);
+            StartNumber = AlltermsConditionList.FirstOrDefault().SL;
+            EndNumber = AlltermsConditionList[AlltermsConditionList.Count - 1].SL;
+        }
+
+    }
+    private async Task GetItemList()
+    {
+        //productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+        serviceList = await Http.GetJsonAsync<List<ServiceEntity>>(Utility.BaseUrl + "api/Setup/GetServiceList");
+    }
+    private async Task GetCustomer()
+    {
+        customerList = await Http.GetJsonAsync<List<CustomerModel>>(Utility.BaseUrl + "api/Customer");
+    }
+    private async Task GetCustomerType()
+    {
+        customerType = await Http.GetJsonAsync<List<CustomerTypeModel>>(Utility.BaseUrl + "api/Customer/GetCustomerType");
+    }
+    //public async Task GetReqNo()
+    //{
+    //    //var reqNo = await Http.GetJsonAsync<RequisitionNo>(Utility.BaseUrl + "api/Purchase/GetReqNo");
+    //    reqNo = await Http.GetStringAsync(Utility.BaseUrl + "api/Purchase/GetReqNo");
+    //    purchaseRequisition.REQUISITION_NO = Convert.ToString(reqNo);
+
+    //    REQ_IS_DISABLE = true;
+    //    StateHasChanged();
+    //}
+
+    private async Task<IEnumerable<ItemEntity>> SearchArticles(string searchText)
+    {
+        searchitem = searchText;
+        return await Task.FromResult(productList.Where(x => x.ITEM_NAME.ToLower().Contains(searchText.ToLower())));
+    }
+    private async Task DepartmentList()
+    {
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+
+    }
+    private async Task tab_1_Clicked()
+    {
+        tabPosition = 1;
+        isActive1 = "active";
+        //await GetWorkingMethod();
+    }
+    private async Task tab_2_Clicked()
+    {
+        tabPosition = 2;
+        isActive1 = "active";
+        //await GetWorkingMethod();
+    }
+    private async Task tab_3_Clicked()
+    {
+        tabPosition = 3;
+        isActive2 = "active";
+        //await GetWorkingMethod();
+    }
+    private async Task tab_4_Clicked()
+    {
+        tabPosition = 4;
+        isActive3 = "active";
+        await GetWorkingMethod();
+
+    }
+    private async Task GetWorkingMethod()
+    {
+        if (workingMethod != null)
+        { working_Method = await this.workingMethod.GetHTML(); }
+
+
+    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await JSRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    //}
+    private void Add()
+    {
+        tablerow = tablerow + 1;
+        itemname = itemname + "_" + tablerow;
+        StateHasChanged();
+    }
+    protected async Task AddItem()
+    {
+        if (IsValidation_Table_Item() != true)
+        {
+            bool alreadyExists = productList.Any(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim());
+            order_itm = new OrderItemEntity();
+            salesItem = new SalesItemDetailsModel();
+            if (itemname != "" && itemname != null)
+            {                //List<ItemEntity> list = new List<ItemEntity>();
+                             //ItemEntity item = new ItemEntity();
+                             //item.ITEM_ID = productList.Find(x => x.ITEM_NAME == itemname).ITEM_ID;
+                             ////var item = productList.Find(x => x.ITEM_NAME== itemname);
+                             //int Id= productList.Find(x => x.ITEM_NAME == itemname).ITEM_ID;
+                salesItem.SERVICE_NAME = itemname;
+                salesItem.SERVICE_CODE = serviceList.Find(x => x.SERVICE_NAME == itemname).SERVICE_CODE;
+                //salesItem.SERVICE_NAME=serviceList.Find(x => x.SERVICE_NAME.ToString().Trim() == itemname.ToString().Trim()).ITEM_ID;
+                //salesItem.ITEM_ID = productList.Find(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).ITEM_ID;
+
+            }
+            else { }
+
+            if (q != null && q != "")
+            { salesItem.ORDER_QUANTITY = Convert.ToDouble(q); }
+
+            salesItem.UNIT_PRICE = unitPrice;
+            salesItem.UOM = uom; //productList.Find(x => x.ITEM_NAME == itemname).UOM;
+                                 //if (itemname != "" && itemname != null)
+                                 //{
+                                 //    salesItem.PACK_SIZE = productList.Find(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).PACK_SIZE;
+                                 //}
+
+            salesItem.AIT = ait_in_Parcent;//Convert.ToDouble(ait);
+            salesItem.VAT = VAT_with_Price_and_AIT; //Convert.ToDouble(vat);
+            salesItem.ITEM_DESCRIPTION = await this.itemDescription.GetHTML();
+
+
+            //if (alreadyExists == true)
+            //{
+            //    order_itm.ITEM_ID = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).ITEM_ID;
+            //    order_itm.PACK_SIZE = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).PACK_SIZE;
+            //    order_itm.UOM = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).UOM;
+            //}
+            //else
+            //{
+            //    order_itm.ITEM_ID = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Purchase/GetItemId/" + itemname);
+            //}
+
+            salesItem.TOTAL_PRICE = Convert.ToDecimal(totalUnitPrice); //Convert.ToDouble(salesItem.ORDER_QUANTITY) * Convert.ToDouble(salesItem.UNIT_PRICE);
+            salesSubTotal += salesItem.TOTAL_PRICE;
+            salesItemList.Add(salesItem);
+
+            chartModel = new SalesQuotationAmountChartModel();
+            chartModel.ITEM_NAME = "Sub-Total";
+            chartModel.PARCHENT = 0;
+            chartModel.AMOUNT = Convert.ToDouble(salesSubTotal);
+            if (!quotationamountchart.Exists(x => x.ITEM_NAME == "Sub-Total"))
+            {
+                quotationamountchart.Add(chartModel);
+            }
+            else
+            {
+                quotationamountchart.Where(w => w.ITEM_NAME == chartModel.ITEM_NAME).ToList().ForEach(s => s.ITEM_NAME = chartModel.ITEM_NAME);
+                quotationamountchart.Where(w => w.ITEM_NAME == chartModel.ITEM_NAME).ToList().ForEach(s => s.PARCHENT = chartModel.PARCHENT);
+                quotationamountchart.Where(w => w.ITEM_NAME == chartModel.ITEM_NAME).ToList().ForEach(s => s.AMOUNT = chartModel.AMOUNT);
+            }
+            double total = quotationamountchart.Sum(x => Convert.ToDouble(x.AMOUNT));
+            chartGrandTotal = total;
+            untaxableAmount = salesItemList.Sum(x => Convert.ToDouble(x.TOTAL_PRICE));
+            GrandTotal = Convert.ToDecimal(untaxableAmount);
+
+
+            //q = "";
+            //r = "";
+            //itemname = "";
+            TotalCalculation();
+            salesItem = new SalesItemDetailsModel();
+            itemname = "";
+            q = "";
+            unitPrice = 0;
+            uom = "";
+            totalUnitPrice = 0;
+            //ait = 0;
+            //vat = 0;
+            editfieldsetareastatus = 0;
+            itemDescription.LoadHTMLContent("");
+        }
+
+
+    }
+    protected async Task AddPaymentChartItem()
+    {
+        chartModel = new SalesQuotationAmountChartModel();
+        chartModel.ITEM_NAME = chartItemName;
+        chartModel.PARCHENT = chartItemDiscount;
+        chartModel.AMOUNT = chartAmountTotal;
+        // quotationamountchart.Add(chartModel);
+        if (!quotationamountchart.Exists(x => x.ITEM_NAME == chartItemName))
+        {
+            quotationamountchart.Add(chartModel);
+        }
+        else
+        {
+            quotationamountchart.Where(w => w.ITEM_NAME == chartItemName).ToList().ForEach(s => s.ITEM_NAME = chartItemName);
+            quotationamountchart.Where(w => w.ITEM_NAME == chartItemName).ToList().ForEach(s => s.PARCHENT = chartItemDiscount);
+            quotationamountchart.Where(w => w.ITEM_NAME == chartItemName).ToList().ForEach(s => s.AMOUNT = chartAmountTotal);
+        }
+
+        double total = quotationamountchart.Sum(x => Convert.ToDouble(x.AMOUNT));
+        chartGrandTotal = total;
+        chartItemName = "";
+        chartItemDiscount = 0;
+        chartAmountTotal = 0;
+    }
+
+    public async void EditChartItem(string item)
+    {
+        chartItemName = quotationamountchart.Single(r => r.ITEM_NAME == item).ITEM_NAME;
+        chartItemDiscount = quotationamountchart.Single(r => r.ITEM_NAME == item).PARCHENT;
+        chartAmountTotal = quotationamountchart.Single(r => r.ITEM_NAME == item).AMOUNT;
+        //if (requestItemList.Count > 0)
+        //{
+        //    salesSubTotal = 0;
+        //    foreach (var _oitem in requestItemList)
+        //    {
+        //        salesSubTotal += Convert.ToDecimal(_oitem.Total);
+        //    }
+        //}
+        //else { salesSubTotal = 0; }
+        //TotalCalculation();
+        StateHasChanged();
+    }
+    protected async Task AddOthersItem()
+    {
+        othersItem = new OthersRequisitionItemsModel();
+        othersItem.OTHERS_ITEM = othersItemName;
+        if (othersitemQuantity != null && othersitemQuantity != "")
+        { othersItem.QUANTITY = Convert.ToDouble(othersitemQuantity); }
+        else { othersItem.QUANTITY = 0; }
+
+        othersItem.RATE = Convert.ToDouble(OthersitemRate);
+        if (othersitemQuantity != null && othersitemQuantity != "" && othersitemQuantity != "0") { othersItem.TOTAL = Convert.ToDouble(othersitemQuantity) * Convert.ToDouble(OthersitemRate); }
+        else { othersItem.TOTAL = Convert.ToDouble(OthersitemRate); }
+
+        othersSubTotal += othersItem.TOTAL;
+        othersItemList.Add(othersItem);
+        othersItemName = "";
+        othersitemQuantity = "";
+        OthersitemRate = "";
+        TotalCalculation();
+    }
+    public async void DeleteOthersItem(string item)
+    {
+        var itemToRemove = othersItemList.Single(r => r.OTHERS_ITEM == item);
+        othersItemList.Remove(itemToRemove);
+        if (othersItemList.Count > 0)
+        {
+            othersSubTotal = 0;
+            foreach (var _oitem in othersItemList)
+            {
+                othersSubTotal += _oitem.TOTAL;
+            }
+        }
+        else { othersSubTotal = 0; }
+
+        TotalCalculation();
+        StateHasChanged();
+    }
+    //--------------
+    public async void DeleteItem(string item)
+    {
+        var itemToRemove = salesItemList.Single(r => r.ITEM_NAME == item);
+        salesItemList.Remove(itemToRemove);
+        if (salesItemList.Count > 0)
+        {
+            salesSubTotal = 0;
+            foreach (var _oitem in salesItemList)
+            {
+                salesSubTotal += _oitem.TOTAL_PRICE;
+            }
+        }
+        else { salesSubTotal = 0; }
+
+        TotalCalculation();
+        StateHasChanged();
+    }
+    public async void EditItem(string item)
+    {
+        itemname = salesItemList.Single(r => r.ITEM_NAME == item).ITEM_NAME;
+        q = Convert.ToString(salesItemList.Single(r => r.ITEM_NAME == item).ORDER_QUANTITY);
+        unitPrice = Convert.ToDecimal(salesItemList.Single(r => r.ITEM_NAME == item).UNIT_PRICE);
+        uom = Convert.ToString(salesItemList.Single(r => r.ITEM_NAME == item).UOM);
+        totalUnitPrice = Convert.ToDecimal(salesItemList.Single(r => r.ITEM_NAME == item).TOTAL_PRICE);
+        itemDescription.LoadHTMLContent(salesItemList.Single(r => r.ITEM_NAME == item).ITEM_DESCRIPTION);
+        var itemToRemove = salesItemList.Single(r => r.ITEM_NAME == item);
+        salesItemList.Remove(itemToRemove);
+        if (requestItemList.Count > 0)
+        {
+            salesSubTotal = 0;
+            foreach (var _oitem in requestItemList)
+            {
+                salesSubTotal += Convert.ToDecimal(_oitem.Total);
+            }
+        }
+        else { salesSubTotal = 0; }
+        TotalCalculation();
+        StateHasChanged();
+    }
+    //
+    public async void EditOthersItem(string item)
+    {
+        othersItemName = othersItemList.Single(r => r.OTHERS_ITEM == item).OTHERS_ITEM;
+        othersitemQuantity = Convert.ToString(othersItemList.Single(r => r.OTHERS_ITEM == item).QUANTITY);
+        OthersitemRate = Convert.ToString(othersItemList.Single(r => r.OTHERS_ITEM == item).RATE);
+        var itemToRemove = othersItemList.Single(r => r.OTHERS_ITEM == item);
+        othersItemList.Remove(itemToRemove);
+        if (othersItemList.Count > 0)
+        {
+            othersSubTotal = 0;
+            foreach (var _oitem in othersItemList)
+            {
+                othersSubTotal += _oitem.TOTAL;
+            }
+        }
+        else { othersSubTotal = 0; }
+        TotalCalculation();
+        StateHasChanged();
+    }
+
+    public async Task GetQutNo()
+    {
+        string prefix = "";
+        prefix = companyShortForm;
+        //string C = salesQuotation.CUSTOMER_NAME;
+        //var firstChars = C.Split(' ').Select(s => s[0]);
+        //foreach(var p in firstChars)
+        //{
+        //    prefix += p;
+        //}
+        qutNo = await Http.GetStringAsync(Utility.BaseUrl + "api/Sales/GetQutNo/" + prefix);
+        salesQuotation.QUOTATION_NO = qutNo;
+    }
+    public async Task SaveSalesQuotation()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+
+                DateTime INQDate;
+                DateTime QUODate = new DateTime();
+                DateTime VALIDUPDate = new DateTime();
+                if (quotation_date != null)
+                { QUODate = DateTime.ParseExact(quotation_date, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); }
+                if (validupto_date != null)
+                { VALIDUPDate = DateTime.ParseExact(validupto_date, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); }
+
+
+                if (inqueryDT != null) { INQDate = DateTime.ParseExact(inqueryDT, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); }
+                else
+                {
+                    inqueryDT = "01/01/1900";
+                    INQDate = DateTime.ParseExact(inqueryDT, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+
+
+
+                salesQuotation.QUOTATION_DATE = QUODate; //Convert.ToDateTime(quotation_date);
+                salesQuotation.VALID_UP_TO_DATE = VALIDUPDate; //Convert.ToDateTime(validupto_date);
+                salesQuotation.INQUERY_DATE = INQDate;//Convert.ToDateTime(inqueryDT);
+
+                salesQuotation.SALES_TOTAL = Convert.ToDouble(GrandTotal);
+                salesQuotation.REG_BY = await sessionStorage.GetItemAsync<string>("session_employeeLoginId");
+                //string code = salesQuotation.QUOTATION_NO.Replace("/", "-");
+                //salesQuotation.QUOTATION_NO = code;
+                salesQuotation.TERMS_AND_CONDITION = terms_And_Conditions_No;
+                //await GetQutNo();
+                salesQuotation.QUOTATION_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Sales/GetQutNo");
+                salesQuotation.STATUS = "Submitted";
+                salesQuotation.USED_PRODUCT = selectedProductIds;
+                salesQuotation.MOBILIZATION_COST = mobilizationCost;
+                salesQuotation.TAX_RATE = taxRate;
+                salesQuotation.TAX_AMOUNT = taxAmount;
+                salesQuotation.VAT_RATE = vatRate;
+                salesQuotation.VAT_AMOUNT = vatAmount;
+                salesQuotation.OTHER_COST = otherCost;
+                salesQuotation.UNTAXABLE_AMOUNT = untaxableAmount;
+                salesQuotation.DISCOUNT_RATE = Convert.ToDouble(discountRate);
+                salesQuotation.DISCOUNT_AMOUNT = Convert.ToDouble(discountAmount);
+                salesQuotation.IN_WORD = Inwords;
+
+
+
+                if (working_Method != null || working_Method != "")
+                {
+                    salesQuotation.WORKING_METHOD = working_Method;
+                }
+                salesQuotation.chartList = quotationamountchart;
+                var data = await Http.PostJsonAsync<SalesQuotationModel>(Utility.BaseUrl + "api/Sales", salesQuotation);
+                var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Sales/GetSalesQuotationId/" + salesQuotation.QUOTATION_NO);
+                foreach (var item in salesItemList)
+                {
+                    salesItem = new SalesItemDetailsModel();
+                    salesItem.SALES_QUOTATION_ID = id;
+                    salesItem.QUOTATION_NO = salesQuotation.QUOTATION_NO;
+                    salesItem.SERVICE_CODE = item.SERVICE_CODE;
+                    salesItem.SERVICE_NAME = item.SERVICE_NAME;
+                    salesItem.ITEM_ID = item.ITEM_ID;
+                    salesItem.ITEM_DESCRIPTION = item.ITEM_DESCRIPTION;
+                    salesItem.ORDER_QUANTITY = item.ORDER_QUANTITY;
+                    salesItem.UOM = item.UOM;
+                    salesItem.PACK_SIZE = item.PACK_SIZE;
+                    salesItem.UNIT_PRICE = item.UNIT_PRICE;
+                    salesItem.AIT = item.AIT;
+                    salesItem.VAT = item.VAT;
+                    salesItem.TOTAL_PRICE = item.TOTAL_PRICE;
+
+                    itemList.Add(salesItem);
+                }
+                var salesitem_details = await Http.PostJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/AddSalesQuotationDetails", itemList);
+                //foreach (var othersItem in othersItemList)
+                //{
+                //    reqOthers = new PurchaseRequisitionOthersModel();
+                //    reqOthers.PURCHASE_REQUISITION_ID = id;
+                //    reqOthers.REQUISITION_NO = purchaseRequisition.REQUISITION_NO;
+                //    reqOthers.OTHERS_ITEM = othersItem.OTHERS_ITEM;
+                //    reqOthers.QUANTITY = othersItem.QUANTITY;
+                //    reqOthers.RATE = othersItem.RATE;
+                //    reqOthersList.Add(reqOthers);
+                //}
+                //var requisition_Others = await Http.PostJsonAsync<List<PurchaseRequisitionOthersModel>>(Utility.BaseUrl + "api/Purchase/AddPurchaseRequisitionOthers", reqOthersList);
+                toastService.ShowSuccess("Insert Successfully!!!");
+                salesItem = new SalesItemDetailsModel();
+                salesQuotation = new SalesQuotationModel();
+                companyShortForm = "";
+                UriHelper.NavigateTo("/QuotationList");
+
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+
+        }
+    }
+    public async void DeleteTermsConditions(int Id)
+    {
+        var itemToRemove = selectedtermsConditionList.Single(r => r.SALES_TERMS_CONDITION_ID == Id);
+        selectedtermsConditionList.Remove(itemToRemove);
+
+        string termsId = Convert.ToString(Id);
+        //terms_And_Conditions_No = terms_And_Conditions_No.Replace(termsId, string.Empty);
+        var l = terms_And_Conditions_No.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        l.Remove(termsId);
+        terms_And_Conditions_No = string.Join(",", l);
+    }
+    private bool IsValidation_Table_Item()
+    {
+        bool flag = false;
+        //if (itemname == "" || itemname == string.Empty || itemname == null)
+        //{
+        //    toastService.ShowWarning("Please Select Item!");
+        //    flag = true;
+        //}
+        ////if (q == "" || q == string.Empty || q == null)
+        ////{
+        ////    toastService.ShowWarning("Quantity Field is Empty!");
+        ////    flag = true;
+        ////}
+        if (unitPrice == 0)
+        {
+            toastService.ShowWarning("Unit Price Field is Empty!");
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (salesQuotation.VALID_UP_TO_DATE == null)
+        {
+            toastService.ShowWarning("Please Select Valid Up to date!");
+            flag = true;
+        }
+        else if (salesQuotation.CUSTOMER_ID == null && salesQuotation.SALES_QUOTATION_ID == 0)
+        {
+            toastService.ShowWarning("Please Select Customer!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    //private void ClearData()
+    //{
+    //    purchaseRequisition.REQUISITION_NO = "";
+    //    purchaseRequisition.REQUESTED_BY = "";
+    //    purchaseRequisition.REQUEST_DATE = System.DateTime.Now;
+    //    purchaseRequisition.REQUIRED_DATE = System.DateTime.Now;
+    //    purchaseRequisition.REQUEST_FOR = "";
+    //    purchaseRequisition.REQUISITION_PURPOSE = "";
+    //    requestItemList = null;
+
+    //}
+    private async Task Requesst_Receive_Dept_Click(ChangeEventArgs changeEventArgs)
+    {
+
+        selected_department_Id = Convert.ToInt32(changeEventArgs.Value);
+        selected_department = departmentList.Find(x => x.DEPARTMENT_ID == selected_department_Id).DEPARTMENT_NAME;
+        StateHasChanged();
+    }
+    private async Task LC_Amount_Clicked(ChangeEventArgs lcAmount)
+    {
+        if (lcAmount.Value.ToString() != "0" && lcAmount.Value.ToString() != null && lcAmount.Value.ToString() != "")
+        {
+            LC_AMOUNT = Convert.ToDecimal(lcAmount.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            LC_AMOUNT = 0;
+            TotalCalculation();
+        }
+    }
+
+    private async Task MobilizationCost_Click(ChangeEventArgs mobilazioncost)
+    {
+        if (mobilazioncost.Value != "" && mobilazioncost != null)
+        {
+            mobilizationCost = Convert.ToDouble(mobilazioncost.Value);
+        }
+        else { mobilizationCost = 0; }
+        TotalCalculation();
+    }
+    private async Task TaxClick(ChangeEventArgs tax)
+    {
+        if (untaxableAmount != 0 && untaxableAmount != null)
+        {
+            if (tax.Value != "" && tax.Value != null)
+            {
+                taxRate = Convert.ToDouble(tax.Value);
+                taxAmount = untaxableAmount * Convert.ToDouble(tax.Value.ToString()) / 100;
+            }
+            else
+            {
+                taxRate = 0;
+                taxAmount = 0;
+            }
+
+            TotalCalculation();
+        }
+    }
+    private async Task VATClick(ChangeEventArgs vat)
+    {
+        if (untaxableAmount != 0 && untaxableAmount != null)
+        {
+            if (vat.Value != "" && vat.Value != null)
+            {
+                vatRate = Convert.ToDouble(vat.Value);
+                double t = untaxableAmount + taxAmount;
+                vatAmount = t * Convert.ToDouble(vat.Value.ToString()) / 100;
+            }
+            else
+            {
+                vatRate = 0;
+                vatAmount = 0;
+            }
+
+            TotalCalculation();
+        }
+    }
+    private async Task Other_Cost_CLick(ChangeEventArgs othersCost)
+    {
+        if (untaxableAmount != 0 && untaxableAmount != null)
+        {
+            if (othersCost.Value != "" && othersCost != null)
+            {
+                otherCost = Convert.ToDouble(othersCost.Value);
+            }
+
+            TotalCalculation();
+        }
+    }
+
+    private async Task DiscountClick(ChangeEventArgs discount)
+    {
+        if (discount.Value != "" && discount != null)
+        {
+            discountRate = Convert.ToDecimal(discount.Value);
+            discountAmount = GrandTotal * Convert.ToDecimal(discount.Value.ToString()) / 100;
+        }
+        else
+        {
+            discountRate = 0;
+            discountAmount = 0;
+        }
+
+        TotalCalculation();
+    }
+    private async Task Discount_Taka_Click(ChangeEventArgs discount_taka)
+    {
+        if (discount_taka.Value != "" && discount_taka != null)
+        {
+            discountAmount = Convert.ToDecimal(discount_taka.Value);
+        }
+        else
+        {
+            discountAmount = 0;
+        }
+        TotalCalculation();
+    }
+
+
+    public async Task SavePaymentTerm()
+    {
+
+        if (IsValidation_PaymentTerm() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<DeliveryModeModel>(Utility.BaseUrl + "api/Setup/AddPaymentTerm", paymentTerm);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        paymentTermList = await Http.GetJsonAsync<List<PaymentTermModel>>(Utility.BaseUrl + "api/Setup/GetPaymentTerm");
+    }
+    private bool IsValidation_PaymentTerm()
+    {
+        bool flag = false;
+        if (paymentTerm.PAYMENT_TERM == "" || paymentTerm.PAYMENT_TERM == string.Empty || paymentTerm.PAYMENT_TERM == null)
+        {
+            toastService.ShowWarning("Payment Term Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    //------------
+    public async Task SaveIncoterm()
+    {
+        if (IsValidation_Incoterm() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<InCoTermModel>(Utility.BaseUrl + "api/Setup/AddIncoterm", incoterm);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        incotermList = await Http.GetJsonAsync<List<InCoTermModel>>(Utility.BaseUrl + "api/Setup/GetIncoTerm");
+    }
+    private bool IsValidation_Incoterm()
+    {
+        bool flag = false;
+        if (incoterm.INCOTERM_NAME == "" || incoterm.INCOTERM_NAME == string.Empty || incoterm.INCOTERM_NAME == null)
+        {
+            toastService.ShowWarning("Incoterm Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    //---
+    public async Task SaveShipVia()
+    {
+        if (IsValidation_ShipVia() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<ShipViaModel>(Utility.BaseUrl + "api/Setup/AddShipVia", shipVia);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        shipVialist = await Http.GetJsonAsync<List<ShipViaModel>>(Utility.BaseUrl + "api/Setup/GetShipVia");
+    }
+    private bool IsValidation_ShipVia()
+    {
+        bool flag = false;
+        if (shipVia.SHIP_VIA_NAME == "" || shipVia.SHIP_VIA_NAME == string.Empty || shipVia.SHIP_VIA_NAME == null)
+        {
+            toastService.ShowWarning("Ship Via Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    //------
+    public async Task SaveExpectedDeliveryDate()
+    {
+        if (IsValidation_ExpectedDeliveryDate() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<ExpectedDeliveryDateModel>(Utility.BaseUrl + "api/Setup/AddExpectedDeliveryDate", expectedDelivery);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        deliveryDateList = await Http.GetJsonAsync<List<ExpectedDeliveryDateModel>>(Utility.BaseUrl + "api/Setup/GetExpectedDeliveryDate");
+    }
+    private bool IsValidation_ExpectedDeliveryDate()
+    {
+        bool flag = false;
+        if (expectedDelivery.EXPECTED_DELIVERY_DATE == "" || expectedDelivery.EXPECTED_DELIVERY_DATE == string.Empty || expectedDelivery.EXPECTED_DELIVERY_DATE == null)
+        {
+            toastService.ShowWarning("Expected Delivery Date Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async Task LC_Commission_Clicked(ChangeEventArgs lcCommission)
+    {
+        if (lcCommission.Value.ToString() != "0" && lcCommission.Value.ToString() != null && lcCommission.Value.ToString() != "")
+        {
+            LC_COMMISSION = Convert.ToDecimal(lcCommission.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            LC_COMMISSION = 0;
+            TotalCalculation();
+        }
+
+    }
+    private async Task Insurance_Clicked(ChangeEventArgs Insurance)
+    {
+        if (Insurance.Value.ToString() != "0" && Insurance != null && Insurance.Value.ToString() != "")
+        {
+            INSURANCE = Convert.ToDecimal(Insurance.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            INSURANCE = 0;
+            TotalCalculation();
+        }
+
+    }
+
+    async void PaymentMode_ChequeClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            checked_cheque = true;
+            purchaseRequisition.PAYMENT_MODE = "Cheque";
+        }
+        else
+        {
+            checked_cheque = false;
+            cheque_Date = "";
+            purchaseRequisition.PAYMENT_MODE = "";
+        }
+        StateHasChanged();
+    }
+    //PaymentMode_PayorderClicked(
+    //PaymentMode_TTClicked( event
+    //PaymentMode_InAdvanceClicked
+    //PaymentMode_OthersClicked(e
+    async void PaymentMode_CashClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Cash"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+
+    }
+    async void PaymentMode_PayorderClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Payorder"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_TTClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "TT"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_InAdvanceClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "InAdvance"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_OthersClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Others"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void SalesPerson_Clicked(ChangeEventArgs eventArgs)
+    {
+        string id = eventArgs.Value.ToString();
+        if (employeeList != null)
+        {
+            salesQuotation.SALES_PERSON = employeeList.Find(x => x.EMPLOYEE_ID == id).EMPLOYEE_NAME;
+            salesQuotation.PHONE_NO = "+88" + employeeList.Find(x => x.EMPLOYEE_ID == id).MOBILE;
+        }
+    }
+    async void Customer_Clicked(ChangeEventArgs eventArgs)
+    {
+        salesQuotation.CUSTOMER_ID = Convert.ToInt32(eventArgs.Value.ToString());
+        if (customerList != null && salesQuotation.CUSTOMER_ID != null)
+        { salesQuotation.CUSTOMER_NAME = customerList.Find(x => x.CUSTOMER_ID == salesQuotation.CUSTOMER_ID).CUSTOMER_NAME; }
+
+        await GetCustomerData(salesQuotation.CUSTOMER_ID);
+
+    }
+    public List<string> checkedProductIds { get; set; } = new List<string>();
+    async void Product_Clicked(ChangeEventArgs eventArgs)
+    {
+
+        ItemEntity selecteditem = new ItemEntity();
+        int id = Convert.ToInt32(eventArgs.Value);
+        selecteditem.ITEM_NAME = productList.Find(x => x.ITEM_ID == id).ITEM_NAME;
+        selecteditem.SHORT_DESCRIPTION = productList.Find(x => x.ITEM_ID == id).SHORT_DESCRIPTION;
+        selecteditem.ITEM_ID = productList.Find(x => x.ITEM_ID == id).ITEM_ID;
+        string Ids = Convert.ToString(selecteditem.ITEM_ID);
+
+        selectedProduct.Add(selecteditem);
+        checkedProductIds.Add(Ids);
+        selectedProductIds = string.Join(",", checkedProductIds);
+        StateHasChanged();
+    }
+    private void CancelSelectedProduct(string file)
+    {
+        string Id = Convert.ToString(selectedProduct.Find(x => x.ITEM_NAME == file).ITEM_ID);
+        var itemToRemove = selectedProduct.Single(r => r.ITEM_NAME == file);
+        selectedProduct.Remove(itemToRemove);
+
+        string termsId = Convert.ToString(Id);
+        //terms_And_Conditions_No = terms_And_Conditions_No.Replace(termsId, string.Empty);
+        var l = selectedProductIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        l.Remove(termsId);
+        selectedProductIds = string.Join(",", l);
+
+
+        ////int index = selectedProduct.FindIndex(item.ITEM_NAME);
+        //int index = selectedProduct.FindIndex(a => a.ITEM_NAME==file);
+        //selectedProduct.RemoveAt(index);
+
+
+        //string termsId = Convert.ToString(selectedProduct.Find(x=>x.ITEM_NAME==file).ITEM_ID);
+        ////terms_And_Conditions_No = terms_And_Conditions_No.Replace(termsId, string.Empty);
+        //var l = selectedProductIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        //l.Remove(termsId);
+        //selectedProductIds = string.Join(",", l);
+    }
+    private async Task GetCustomerData(int customerId)
+    {
+        customer = await Http.GetJsonAsync<CustomerModel>(Utility.BaseUrl + "api/Customer/GetCustomerData/" + customerId);
+        StateHasChanged();
+    }
+    private void TotalCalculation()
+    {
+        //if (requisitionTotal != 0 || requisitionTotal != null)
+        //{ GrandTotal = Convert.ToDecimal(requisitionTotal); }
+        //if(LC_AMOUNT!=0||LC_AMOUNT!=null)
+        //{ GrandTotal= }
+
+        decimal Total = Convert.ToDecimal(untaxableAmount) + Convert.ToDecimal(mobilizationCost) + Convert.ToDecimal(taxAmount) + Convert.ToDecimal(vatAmount) + Convert.ToDecimal(otherCost);
+        GrandTotal = Total - discountAmount;
+        double inwordValue = Convert.ToDouble(GrandTotal);
+        Inwords = NumberToWords.ConvertAmount(inwordValue);
+    }
+    private Task OnValueChanged(int value)
+    {
+        // Assign the selected value to the Model
+        purchaseRequisition.REQUEST_RECEIVE_DEPARTMENT_ID = Convert.ToInt32(value);
+        return Task.CompletedTask;
+    }
+    //private async Task ReceiveDepartmentClicked(ChangeEventArgs changeEvent)
+    //{
+    //    int changeId = Convert.ToInt32(changeEvent.Value.ToString());
+    //    purchaseRequisition.REQUEST_RECEIVE_DEPARTMENT_ID = changeId;
+    //    string dName = departmentList.Find(x => x.DEPARTMENT_ID == changeId).DEPARTMENT_NAME;
+    //    if (dName == "Accounts & Finance")
+    //    {
+    //        reqNo = reqNo + "AF";
+    //        purchaseRequisition.REQUISITION_NO = reqNo;
+    //    }
+    //}
+    private async Task UnitPriceCLicked(ChangeEventArgs change)
+    {
+        if (change.Value != "") { unitPrice = Convert.ToDecimal(change.Value); }
+        else { unitPrice = 0; }
+
+        Calculation();
+    }
+    private async Task AITCLicked(ChangeEventArgs change)
+    {
+        if (change.Value != "")
+        {
+            ait = Convert.ToDecimal(change.Value);
+        }
+        else { ait = 0; }
+        Calculation();
+    }
+    private async Task VATCLicked(ChangeEventArgs change)
+    {
+        if (change.Value != "")
+        {
+            vat = Convert.ToDouble(Convert.ToDecimal(change.Value));
+        }
+        else { vat = 0; }
+        Calculation();
+    }
+    private async Task ChartParchentCLicked(ChangeEventArgs change)
+    {
+        if (change.Value != "")
+        {
+            chartAmountTotal = (Convert.ToDouble(salesSubTotal) * Convert.ToDouble(change.Value)) / 100;
+        }
+        else { vat = 0; }
+        Calculation();
+    }
+
+
+
+    private void Calculation()
+    {
+        //decimal total = unitPrice * Convert.ToDecimal(q);
+
+        //decimal AIT = (unitPrice * ait) / 100;
+        //ait_in_Parcent = Convert.ToDecimal(String.Format("{0:0.00}", AIT));
+        //decimal unitPriceAndAit = unitPrice + ait_in_Parcent;
+        //decimal p = (unitPriceAndAit * Convert.ToDecimal(vat)) / 100;
+        //VAT_with_Price_and_AIT = Convert.ToDecimal(String.Format("{0:0.00}", p));
+        //decimal tUnitPrice = unitPrice + ait_in_Parcent + p;
+        if (q != null && q != "")
+        {
+            totalUnitPrice = Convert.ToDecimal(q) * unitPrice;
+        }
+        else
+        {
+            totalUnitPrice = unitPrice * 0;
+        }
+
+        StateHasChanged();
+    }
+    private void Calculation_bkp()
+    {
+        //decimal total = unitPrice * Convert.ToDecimal(q);
+
+        decimal AIT = (unitPrice * ait) / 100;
+        ait_in_Parcent = Convert.ToDecimal(String.Format("{0:0.00}", AIT));
+        decimal unitPriceAndAit = unitPrice + ait_in_Parcent;
+        decimal p = (unitPriceAndAit * Convert.ToDecimal(vat)) / 100;
+        VAT_with_Price_and_AIT = Convert.ToDecimal(String.Format("{0:0.00}", p));
+        decimal tUnitPrice = unitPrice + ait_in_Parcent + p;
+        totalUnitPrice = Convert.ToDecimal(String.Format("{0:0.00}", tUnitPrice));
+        StateHasChanged();
+    }
+    private void Calculation1111()
+    {
+        decimal total = unitPrice * Convert.ToDecimal(q);
+
+        decimal AIT = (total * ait) / 100;
+        ait_in_Parcent = Convert.ToDecimal(String.Format("{0:0.00}", AIT));
+        decimal unitPriceAndAit = total + ait_in_Parcent;
+        decimal p = (unitPriceAndAit * Convert.ToDecimal(vat)) / 100;
+        VAT_with_Price_and_AIT = Convert.ToDecimal(String.Format("{0:0.00}", p));
+        decimal tUnitPrice = total + ait_in_Parcent + p;
+        totalUnitPrice = Convert.ToDecimal(String.Format("{0:0.00}", tUnitPrice));
+        StateHasChanged();
+    }
+
+    public async Task AddCustomer()
+    {
+        if (IsCustomerValidation() != true)
+        {
+            try
+            {
+                customerCode = await Http.GetStringAsync(Utility.BaseUrl + "api/Customer/GetCustomerCode/" + "C");
+                customer.CUSTOMER_CODE = customerCode;
+                var data = await Http.PostJsonAsync<CustomerModel>(Utility.BaseUrl + "api/Customer", customer);
+
+                toastService.ShowSuccess("Customer Create Successfully!!!");
+                await GetCustomer();
+                customer = new CustomerModel();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+    }
+    private bool IsCustomerValidation()
+    {
+        bool flag = false;
+        if (customer.CUSTOMER_NAME == "" || customer.CUSTOMER_NAME == string.Empty || customer.CUSTOMER_NAME == null)
+        {
+            toastService.ShowWarning("Customer Name cannot be empty!");
+            flag = true;
+        }
+
+
+        return flag;
+    }
+    private async Task Quotation_Type_Clicked(ChangeEventArgs changeEvent)
+    {
+        salesQuotation.QUOTATION_TYPE = changeEvent.Value.ToString();
+    }
+    public List<string> checkedOtherTermsIds { get; set; } = new List<string>();
+    async void OtherTermsClicked(string termsConditionids, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!checkedOtherTermsIds.Contains(termsConditionids))
+            {
+                checkedOtherTermsIds.Add(termsConditionids);
+                termsconditionId = Convert.ToInt32(termsConditionids);
+
+            }
+        }
+        else
+        {
+            if (checkedOtherTermsIds.Contains(termsConditionids))
+            {
+                checkedOtherTermsIds.Remove(termsConditionids);
+            }
+        }
+        terms_And_Conditions_No = String.Join(",", checkedOtherTermsIds);
+
+        await GetSelectedTerms();
+        StateHasChanged();
+    }
+    public async Task GetSelectedTerms()
+    {
+        int[] nums = Array.ConvertAll(terms_And_Conditions_No.Split(','), int.Parse);
+        PurchaseTermsConditionsModel tcon = new PurchaseTermsConditionsModel();
+        foreach (var item in nums)
+        {
+            tcon = new PurchaseTermsConditionsModel();
+            tcon.PURCHASE_TERMS_CONDITION_ID = 0;
+            tcon.SALES_TERMS_CONDITION_ID = termsCondition.Find(x => x.SALES_TERMS_CONDITION_ID == item).SALES_TERMS_CONDITION_ID;
+            tcon.SL = 0;
+            tcon.TERMS_AND_CONDITIONS = termsCondition.Find(x => x.SALES_TERMS_CONDITION_ID == item).TERMS_AND_CONDITIONS;
+
+
+            if (!selectedtermsConditionList.Exists(x => x.SALES_TERMS_CONDITION_ID == item))
+            {
+
+                selectedtermsConditionList.Add(tcon);
+
+            }
+            else
+            {
+                selectedtermsConditionList.Where(w => w.SALES_TERMS_CONDITION_ID == item).ToList().ForEach(s => s.SALES_TERMS_CONDITION_ID = tcon.SALES_TERMS_CONDITION_ID);
+                selectedtermsConditionList.Where(w => w.SALES_TERMS_CONDITION_ID == item).ToList().ForEach(s => s.TERMS_AND_CONDITIONS = tcon.TERMS_AND_CONDITIONS);
+            }
+
+        }
+    }
+    private async Task EditItem()
+    {
+
+        if (termsconditionId != 0)
+        {
+            editfieldsetareastatus = 1;
+            termsconditions.TERMS_AND_CONDITIONS = termsConditionList.Find(x => x.SALES_TERMS_CONDITION_ID == termsconditionId).TERMS_AND_CONDITIONS;
+        }
+
+    }
+    private async Task DeleteTermsCondition()
+    {
+        if (termsconditionId != 0)
+        {
+            if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+                return;
+
+            await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteTermsConditions/" + termsconditionId);
+            await GetAllTermsCondition();
+        }
+
+
+    }
+    public async Task SaveTermsConditions()
+    {
+
+        if (IsValidation_TermsConditions() != true)
+        {
+            try
+            {
+                termsconditions.POSITION = 1;
+                var data = await Http.PostJsonAsync<PurchaseTermsConditionsModel>(Utility.BaseUrl + "api/Setup/AddSalesTermsConditions", termsconditions);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        AlltermsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+        termsconditions.TERMS_AND_CONDITIONS = "";
+        termsConditionList = AlltermsConditionList;
+        StateHasChanged();
+    }
+    public async Task EditTermsCondition()
+    {
+
+        if (IsValidation_TermsConditions() != true)
+        {
+            try
+            {
+                termsconditions.SALES_TERMS_CONDITION_ID = termsconditionId;
+                var data = await Http.PutJsonAsync<PurchaseTermsConditionsModel>(Utility.BaseUrl + "api/Setup/UpdateSalesTermsConditions", termsconditions);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        await GetAllTermsCondition();
+        termsconditions.TERMS_AND_CONDITIONS = "";
+        editfieldsetareastatus = 0;
+    }
+
+    private bool IsValidation_TermsConditions()
+    {
+        bool flag = false;
+        if (termsconditions.TERMS_AND_CONDITIONS == "" || termsconditions.TERMS_AND_CONDITIONS == string.Empty || termsconditions.TERMS_AND_CONDITIONS == null)
+        {
+            toastService.ShowWarning("Terms & Condition Field Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    //private async Task GetUnitOfMesure(string item)
+    //{
+
+    //}
+    private void GetUnitOfMesure(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        value = (string)args.Value;
+        itemname = value;
+        if (itemname != null && itemname != "")
+        {
+            bool itm = productList.Exists(x => x.ITEM_NAME.Trim() == value.Trim());
+            if (itm == true)
+            { uom = productList.Find(x => x.ITEM_NAME.Trim() == value.Trim()).UOM; }
+
+            //unitPrice = Convert.ToDecimal(productList.Find(x => x.ITEM_NAME == value).ITEM_SALE_PRICE);
+        }
+
+
+    }
+    private async Task SearchCondition(ChangeEventArgs changeEvent)
+    {
+        string value = changeEvent.Value.ToString();
+        if (value != "")
+        { AlltermsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditionsBySearch/" + value); }
+        else { await GetAllTermsCondition(); }
+
+
+    }
+    private async Task GetAllTermsCondition()
+    {
+        AlltermsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+        Pagination();
+    }
+}

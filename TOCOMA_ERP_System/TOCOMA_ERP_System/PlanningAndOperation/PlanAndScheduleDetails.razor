@@ -1,0 +1,95 @@
+﻿
+@page "/PlanAndScheduleDetails/{Id}"
+@layout CustomLayout
+@inject HttpClient Http
+
+<style>
+    fieldset {        
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: center;
+    }
+
+    tr th {
+        text-align: center;
+    }
+</style>
+<div class="dashboard-details">
+    <div class="container-fluid">
+        <a href="PlanningWorkScheduleList"><i class='bi bi-arrow-left-circle' style="font-size:30px"></i></a>
+        <fieldset>
+            <div style="padding-top:10px;padding-left:10px">
+                <p style="font-size:15px;font-weight:bold">Assign By : @planandOperationView.TASK_ASSIGN_BY</p> <label style="float:right;margin-right:230px">@planandOperationView.ENTRYDATE</label>
+                <p><b>Assign to :   </b> @planandOperationView.TASK_ASSIGN_TO</p>
+                <p><b>Department :   </b> @planandOperationView.DEPARTMENT_NAME</p>
+                <b>Description</b>
+                <p>@((MarkupString)@planandOperationView.TASK_DESCRIPTION)</p>
+                <br />
+                <table style="width:50%">
+                    <tr>
+                        <th colspan="2">Start Date</th>
+                        <th colspan="2">Completed Date</th>
+                        <th colspan="2">Duration</th>
+
+                    </tr>
+                    <tr>
+                        <td>Planned</td>
+                        <td>Actual</td>
+                        <td>Planned</td>
+                        <td>Actual</td>
+                        <td>Planned</td>
+                        <td>Actual</td>
+                    </tr>
+                    <tbody>
+                        <tr>
+                            <td>@planandOperationView.PLANNED_START_DATE</td>
+                            <td>@planandOperationView.ACTUAL_START_DATE</td>
+                            <td>@planandOperationView.PLANNED_COMPLETION_DATE</td>
+                            <td>@planandOperationView.ACTUAL_COMPLETION_DATE</td>
+                            <td>@planandOperationView.PLANNED_DURATION</td>
+                            <td>@planandOperationView.ACTUAL_DURATION</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p><b>Action :   </b> @((MarkupString)@planandOperationView.ACTIVITIES)</p>
+                <p><b>Status :  </b> @planandOperationView.STATUS</p>
+                <p><b>Comments :  </b> @((MarkupString)@planandOperationView.COMMENTS)</p>
+            </div>
+            
+        </fieldset>
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+    PlanandOperationViewModel planandOperationView = new PlanandOperationViewModel();
+    PlanAndOperationModel planAndOperation = new PlanAndOperationModel();
+    protected override async Task OnInitializedAsync()
+    {
+        planandOperationView = await Http.GetJsonAsync<PlanandOperationViewModel>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkScheduleViewById/" + Id);
+        //planAndOperation = await Http.GetJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkScheduleById/" + Id);
+    }
+
+}

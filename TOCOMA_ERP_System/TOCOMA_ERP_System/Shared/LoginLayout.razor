@@ -1,0 +1,13 @@
+﻿@inherits LayoutComponentBase
+@*@using System.Security.Claims
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject NavigationManager _navigationManager;*@
+@Body
+@*@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        _navigationManager.NavigateTo("/login", false);
+    }
+}*@
+

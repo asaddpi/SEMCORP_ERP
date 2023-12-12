@@ -1,0 +1,199 @@
+﻿@page "/ChartOfAccounts"
+@inject HttpClient Http
+@layout CustomLayout
+
+<style>
+
+    .tree {
+        position: relative;
+        background: white;
+        margin-top: 20px;
+        padding: 30px;
+        font-family: "Roboto Mono", monospace;
+        font-size: 0.85rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+    }
+
+        .tree span {
+            font-size: 13px;
+            font-style: italic;
+            letter-spacing: 0.4px;
+            color: #a8a8a8;
+        }
+
+        .tree .fa-folder-open, .tree .fa-folder {
+            color: #007bff;
+        }
+
+        .tree .fa-html5 {
+            color: #f21f10;
+        }
+
+        .tree ul {
+            padding-left: 5px;
+            list-style: none;
+        }
+
+            .tree ul li {
+                position: relative;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-left: 15px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+                .tree ul li:before {
+                    position: absolute;
+                    top: 15px;
+                    left: 0;
+                    width: 10px;
+                    height: 1px;
+                    margin: auto;
+                    content: "";
+                    background-color: #666;
+                }
+
+                .tree ul li:after {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 1px;
+                    height: 100%;
+                    content: "";
+                    background-color: #666;
+                }
+
+                .tree ul li:last-child:after {
+                    height: 15px;
+                }
+
+            .tree ul a {
+                cursor: pointer;
+            }
+
+                .tree ul a:hover {
+                    text-decoration: none;
+                }
+
+    .teal-color {
+        color: teal;
+        font-size: 20px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header" style="text-align:center;font-size:20px">Chart of Accounts</div>
+    <div class="container">
+        <div class="tree">
+            <ul>
+                @foreach (var item in parentList1)
+                {
+                    <li>
+                        <i class="fa fa-folder-open"></i> @item.Item
+                        @foreach (var subitem in item.parentGrouplist)
+                        {
+                            <ul>
+                                <li>
+                                    <i class="fa fa-folder-open"></i> @subitem.GR_NAME
+                                    @foreach (var child in subitem.childList)
+                                    {
+                                        <ul>
+                                            <li>
+                                                <i class="fa fa-file-text"></i> @child.LEDGER_NAME
+                                            </li>
+                                        </ul>
+                                    }
+                                </li>
+                            </ul>
+                        }
+                    </li>
+                }                
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    List<LG_Group> ledgerGroupList = new List<LG_Group>();
+    LG_Group lg_group = new LG_Group();
+    List<string> accountHead = new List<string>();
+    List<AccountsHead> parentList = new List<AccountsHead>();
+    AccountsHead parent = new AccountsHead();
+    List<AccountsHead> parentList1 = new List<AccountsHead>();
+    List<LedgerChild> ledgerList = new List<LedgerChild>();
+    List<LedgerChild> lgrList = new List<LedgerChild>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<AccountsHead> parentList = new List<AccountsHead>
+    {
+                new AccountsHead { Item = "Assets" },
+                new AccountsHead { Item = "Liabilities" },
+                new AccountsHead { Item = "Income" },
+                new AccountsHead { Item = "Expenses" }
+        };
+
+
+        ledgerGroupList = await Http.GetJsonAsync<List<LG_Group>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+        ledgerList = await Http.GetJsonAsync<List<LedgerChild>>(Utility.BaseUrl + "api/Setup/GetLedger");
+
+        foreach (var item in parentList)
+        {            
+            foreach (var group in ledgerGroupList)
+            {
+                if ((group.GR_PARENT == "Assets" || group.GR_PARENT == "Current Assets") && item.Item == "Assets")
+                {
+                    if (item.parentGrouplist == null)
+                    { item.parentGrouplist = new List<LG_Group>(); }
+                    item.parentGrouplist.Add(group);
+                }
+                else if ((group.GR_PARENT == "Liabilities" || group.GR_PARENT == "Current Liabilities") && item.Item == "Liabilities")
+                {
+                    if (item.parentGrouplist == null)
+                    { item.parentGrouplist = new List<LG_Group>(); }
+                    item.parentGrouplist.Add(group);
+                }
+                else if (group.GR_PARENT == "Income" && item.Item == "Income")
+                {
+                    if (item.parentGrouplist == null)
+                    { item.parentGrouplist = new List<LG_Group>(); }
+                    item.parentGrouplist.Add(group);
+                }
+                else if (group.GR_PARENT == "Expenses" && item.Item == "Expenses")
+                {
+                    if (item.parentGrouplist == null)
+                    { item.parentGrouplist = new List<LG_Group>(); }
+                    item.parentGrouplist.Add(group);
+                }                
+            }
+
+            foreach (var group in item.parentGrouplist)
+            {
+                foreach (var child in ledgerList)
+                {
+                    if (group.GR_NAME == child.LEDGER_PARENT_GROUP)
+                    {
+                        if (group.childList == null)
+                        { group.childList = new List<LedgerChild>(); }
+                        group.childList.Add(child);
+                        lgrList = group.childList;
+                    }
+                }
+            }            
+            parent = new AccountsHead();
+            lg_group = new LG_Group();
+            parent.Item = item.Item;
+            parent.parentGrouplist = item.parentGrouplist;
+            parent.Childlist = lgrList;
+            parentList1.Add(parent);
+            item.parentGrouplist = new List<LG_Group>();
+            lgrList = new List<LedgerChild>();
+        }
+    }
+}

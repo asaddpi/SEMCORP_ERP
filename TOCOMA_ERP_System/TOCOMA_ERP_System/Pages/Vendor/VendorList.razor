@@ -1,0 +1,66 @@
+﻿@page "/VendorList"
+@layout CustomLayout
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+
+<div class="card">
+    <div class="card-header">
+        Vendor List &nbsp;
+        <a href="AddVendor">New Vendor</a>
+    </div>
+
+
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <td>Vendor Code</td>
+                        <td>Vendor Name</td>
+                        <td>Contact No</td>
+                        <td>Email</td>
+                        <td>Fax</td>
+                        <td>Vendor Type</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (vendorList != null)
+                    {
+                        foreach (var item in vendorList)
+                        {
+                            <tr>
+                                <td style="text-align:center"><a href="EditVendor/@item.VENDOR_CODE"><span class="oi oi-pencil"></span></a></td>
+                                <td style="text-align:center"><a href="VendorDetailsView/@item.VENDOR_CODE">@item.VENDOR_CODE</a></td>
+                                <td>@item.VENDOR_NAME</td>
+                                <td>@item.CONTACT_NO</td>
+                                <td>@item.EMAIL</td>
+                                <td>@item.FAX</td>
+                                <td>@item.VENDOR_TYPE_STATUS</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@code {
+List<VendorEntity> vendorList = new List<VendorEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVendorList();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetVendorList()
+    {
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+    }
+}

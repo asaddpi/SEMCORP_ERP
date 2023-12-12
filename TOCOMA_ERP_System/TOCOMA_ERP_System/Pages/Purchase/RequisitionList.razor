@@ -1,0 +1,63 @@
+﻿@page "/RequisitionList"
+@layout CustomLayout
+@inject HttpClient Http
+
+
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">REQUISITION LIST</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <form action="">
+            <div class="container-fluid">
+
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped">
+                        <thead style="background-color:steelblue;color:white">
+                            <tr>
+                                <td scope="col"></td>
+                                <td scope="col">Requisition No.</td>
+                                <td scope="col">Requester</td>
+                                <td scope="col">Request Department</td>
+                                <td scope="col">Requisition Title</td>
+                                <td scope="col">Request Date</td>
+                                <td scope="col">Requisition Total</td>
+                                <td scope="col">Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (requisitionList != null)
+                            {
+                                foreach (var item in requisitionList)
+                                {
+                                    <tr>
+                                        <td scope="col"><a href="PurchaseOrder/@item.REQUISITION_NO">NEW PO</a></td>
+                                        <td><a href="ViewPurchaseRequisitionDetails/@item.REQUISITION_NO">@item.REQUISITION_NO</a></td>
+                                        <td scope="col">@item.REQUESTED_BY</td>
+                                        <td scope="col">@item.DEPARTMENT_NAME</td>
+                                        <td scope="col">@item.REQUEST_FOR</td>
+                                        <td scope="col">@item.REQUEST_DATE</td>
+                                        <td scope="col">@item.REQUISITION_TOTAL</td>
+                                        <td scope="col">@item.STATUS</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@code {
+    List<PurchaseRequisitionViewEntity> requisitionList = new List<PurchaseRequisitionViewEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPurchaseRequisition();
+    }
+    private async Task GetPurchaseRequisition()
+    {
+        requisitionList = await Http.GetJsonAsync<List<PurchaseRequisitionViewEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseRequisitionList");
+    }
+}

@@ -1,0 +1,165 @@
+﻿@page "/QuotationDetails/{Id}"
+@layout CustomLayout
+@inject HttpClient Http
+
+<style>
+    fieldset {
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: left;
+    }
+
+    tr th {
+        text-align: left;
+        background-color: LightGray;
+        font-size: 15px;
+        width:10%
+    }
+</style>
+<div class="dashboard-details">
+    <div class="container-fluid" style="margin-bottom:200px">
+        <a href="QuotationList"><i class='bi bi-arrow-left-circle' style="font-size:30px"></i></a>
+        <label for="submitbutton" class="btn btn-success">Download Quotation</label>
+        <form action="Excel/SalesQuotation" method="post" style="display:none">
+            <button type="submit" id="submitbutton"></button>
+        </form>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        Quotation Info
+
+                    </div>
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Quotation Type</th>
+                                <td>@salesQuotationInfo.QUOTATION_TYPE</td>
+                                <th>Quotation No</th>
+                                <td>@salesQuotationInfo.QUOTATION_NO</td>
+                                <th>Quotation Date</th>
+                                <td>@salesQuotationInfo.QUOTATION_DATE</td>
+                            </tr>
+                            <tr>
+
+                                <th>Valid Up To</th>
+                                <td>@salesQuotationInfo.VALID_UP_TO_DATE</td>
+                                <th>Incoterm</th>
+                                <td>@salesQuotationInfo.INCOTERM</td>
+                                <th>Ship Via</th>
+                                <td>@salesQuotationInfo.SHIP_VIA</td>
+                            </tr>
+                            <tr>
+                                <th>Sales Person</th>
+                                <td>@salesQuotationInfo.SALES_PERSON</td>
+                                <th>Phone No.</th>
+                                <td>@salesQuotationInfo.PHONE_NO</td>
+                                <th>Payment Terms</th>
+                                <td>@salesQuotationInfo.PAYMENT_TERMS</td>
+
+
+                            </tr>
+                            <tr>
+                                <th>Attn.</th>
+                                <td>@salesQuotationInfo.CONTACT_PERSON_NAME</td>
+                                <th>Contact</th>
+                                <td>@salesQuotationInfo.CONTACT_PERSON_PHONE</td>
+                                <th>Email</th>
+                                <td>@salesQuotationInfo.CONTACT_PERSON_EMAIL</td>
+                            </tr>
+                            <tr>
+                                <th>Expected Delivery Date</th>
+                                <td>@salesQuotationInfo.EXPECTED_DELIVERY_DATE</td>
+                                <th>Submitted To</th>
+                                <td>
+                                    @salesQuotationInfo.CUSTOMER_NAME<br />
+                                    @salesQuotationInfo.CORPORATE_ADDRESS
+                                </td>
+                                <th>Ship To</th>
+                                <td>@salesQuotationInfo.SHIPPING_ADDRESS</td>
+
+                            </tr>
+
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+            <hr />
+        </div>
+        <br />
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width:27%;background-color:gainsboro">Item <br />Description</th>
+                    <th style="width:7%;background-color:gainsboro">Minimum<br />Order<br />Quantity</th>
+                    <th style="width:7%;background-color:gainsboro">Unit<br />Of<br />Measure</th>
+                    <th style="width:7%;background-color:gainsboro">Unit Price</th>
+
+                    <th style="width:7%;background-color:gainsboro">AIT(%)</th>
+                    <th style="width:7%;background-color:gainsboro">VAT(%)</th>
+                    <th style="width:7%;background-color:gainsboro">Unit Price<br />Including VAT/TAX</th>
+
+                </tr>
+            </thead>
+
+
+            <tbody>
+                @if (salesQuotationItemList != null)
+                {
+                    foreach (var item in salesQuotationItemList)
+                    {
+                        <tr>
+                            <td>@item.ITEM_NAME<br>@((MarkupString)@item.ITEM_DESCRIPTION)</td>
+                            <td>@item.ORDER_QUANTITY</td>
+                            <td>@item.UOM</td>
+                            <td>@item.UNIT_PRICE</td>
+                            <td>@item.AIT</td>
+                            <td>@item.VAT</td>
+                            <td>@item.TOTAL_PRICE</td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    protected override async Task OnInitializedAsync()
+    {
+        salesQuotationInfo = await Http.GetJsonAsync<SalesQuotationView>(Utility.BaseUrl + "api/Sales/GetsalesQuotationInfoById/" + Id);
+        salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListById/" + Id);
+
+        AppState.salesQuotation = salesQuotationInfo;
+        AppState.salesQuotationitemList = salesQuotationItemList;
+    }
+
+}

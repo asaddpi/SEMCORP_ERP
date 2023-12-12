@@ -1,0 +1,880 @@
+﻿@page "/EditVendor/{vendorcode}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager UriHelper
+
+<div class="card">
+    <div class="card-header">
+        <h3>Update Vendor</h3>
+    </div>
+
+    <br />
+    <EditForm Model="@vendor" style="height:20%;margin-left:10px">
+
+        <fieldset class="fieldset_color p-4">
+            <legend class="w-auto">Vendor Details</legend>
+
+            <div class="row">
+                <div class="col-md-2"><label>Vendor Code:</label></div>
+                <div class="col-md-2">
+                    <InputText @bind-Value="@vendor.VENDOR_CODE" maxlength="20"></InputText>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Company Name:</label></div>
+                <div class="col-md-4">
+                    <InputText @bind-Value="@vendor.VENDOR_NAME" maxlength="120"></InputText>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Registerd Address:</label></div>
+                <div class="col-md-4"><InputTextArea @bind-Value="@vendor.REGISTERED_ADDRESS" class="col-md-10" name="" id="" cols="30" rows="3" maxlength="250"></InputTextArea></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Factory Address:</label></div>
+                <div class="col-md-4"><InputTextArea @bind-Value="@vendor.FACTORY_ADDRESS" class="col-md-10" name="" id="" cols="30" rows="3"></InputTextArea></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Attention/Contact Person Name:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.CONTACT_PERSON_NAME" maxlength="50"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Designation:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.CONTACT_PERSON_DESIGNATION" maxlength="50"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Contact NO:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.CONTACT_NO" maxlength="50"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Email:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.EMAIL" maxlength="50"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>FAX:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.FAX" maxlength="50"></InputText></div>
+            </div>
+            <br />
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Select Vendor Type :</label></div>
+                <div class="col-md-8">
+                    <input style="width:20px" type="checkbox" checked="@isLocalCheck" @onchange="eventArgs => { CheckboxLocal(eventArgs.Value); }" />&nbsp;<label>Local</label>
+                    <input style="width:20px" type="checkbox" checked="@isIntCheck" @onchange="eventArgs => { CheckboxInternational(eventArgs.Value); }" />&nbsp;<label>International</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <br />
+        <fieldset class="border p-4">
+            <legend class="w-auto">Contact Details</legend>
+            <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-contact" style="font-size:18px;text-decoration:none">AddContact &nbsp;<span class="oi oi-pencil"></span></a>
+            <table width="70%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Dept.</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>WeChat</th>
+                        <th>WhatsApp</th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in customerContactList)
+                    {
+                        <tr>
+                            <td>@item.NAME</td>
+                            <td>@item.DESIGNATION</td>
+                            <td>@item.DEPARTMENT_NAME</td>
+                            <td>@item.MOBILE</td>
+                            <td>@item.EMAIL</td>
+                            <td>@item.WECHAT</td>
+                            <td>@item.WHATSAPP</td>
+                            <td scope="col" width="60px" style="text-align:center;color:Highlight"><a @onclick=@(() => EditItem(item.CUSTOMER_CONTACT_ID)) data-toggle="modal" data-target=".bd-example-modal-lg-contact"><span class="oi oi-pencil"></span></a></td>
+                            <td scope="col" width="60px" style="text-align:center;color:red"><a @onclick=@(() => DeleteItem(item.CUSTOMER_CONTACT_ID))><span class="oi oi-trash"></span></a></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<div class="row">
+                    <div class="col-md-2"><label>Sales:</label></div>
+                    <div class="col-md-8">
+                        <table>
+                            <tr>
+                                <td>
+                                    <InputText @bind-Value="@vendor.NAME_SALES" placeholder="name" maxlength="100"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.PHONE_SALES" placeholder="phone" maxlength="30"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.EMAIL_SALES" placeholder="email" maxlength="30"></InputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>*@
+            @*<div class="row">
+                    <div class="col-md-2">
+                        <label>Technical Support:</label>
+                    </div>
+
+                    <div class="col-md-7">
+                        <table>
+                            <tr>
+                                <td>
+                                    <InputText @bind-Value="@vendor.NAME_TECHNICAL_SUPPORT" placeholder="name" maxlength="100"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.PHONE_TECHNICAL_SUPPORT" placeholder="phone" maxlength="30"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.EMAIL_TECHNICAL_SUPPORT" placeholder="email" maxlength="30"></InputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>*@
+            @*<div class="row">
+                    <div class="col-md-2">
+                        <label>Finance:</label>
+                    </div>
+
+                    <div class="col-md-7">
+                        <table>
+                            <tr>
+                                <td>
+                                    <InputText @bind-Value="@vendor.NAME_FINANCE" placeholder="name" maxlength="100"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.PHONE_FINANCE" placeholder="phone" maxlength="30"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.EMAIL_FINANCE" placeholder="email" maxlength="30"></InputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>*@
+            @*<div class="row">
+                    <div class="col-md-2">
+                        <label>Others 1:</label>
+                    </div>
+
+                    <div class="col-md-7">
+                        <table>
+                            <tr>
+                                <td>
+                                    <InputText @bind-Value="@vendor.NAME_OTHERS1" placeholder="name" maxlength="100"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.PHONE_OTHERS1" placeholder="phone" maxlength="30"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.EMAIL_OTHERS1" placeholder="email" maxlength="30"></InputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>*@
+            @*<div class="row">
+                    <div class="col-md-2">
+                        <label>Others 2:</label>
+                    </div>
+
+                    <div class="col-md-7">
+                        <table>
+                            <tr>
+                                <td>
+                                    <InputText @bind-Value="@vendor.NAME_OTHERS2" placeholder="name" maxlength="100"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.PHONE_OTHERS2" placeholder="phone" maxlength="30"></InputText>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="@vendor.EMAIL_OTHERS2" placeholder="email" maxlength="30"></InputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>*@
+        </fieldset>
+        <fieldset class="border p-4">
+            <legend class="w-auto">Company Details</legend>
+            <div class="row">
+                <div class="col-md-2"><label>Year of Incorporation:</label></div>
+                <div class="col-md-2">
+                    <InputText @bind-Value="@vendor.YEAR_OF_INCORPORATION" maxlength="10"></InputText>
+
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Nature Of Business:</label></div>
+                <div class="col-md-7">
+                    <InputSelect name="" id="" style="width:220px" @bind-Value="@vendor.NATURE_OF_BUSINESS">
+                        <option value=""></option>
+                        <option value="Manufacturer">Manufacturer</option>
+                        <option value="Trader">Trader</option>
+                        <option value="Authorized Dealer">Authorized Dealer</option>
+                        <option value="Agent">Agent</option>
+                        <option value="Customes">Customes</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Mode Of Company:</label></div>
+                <div class="col-md-7">
+                    <InputSelect name="" id="" style="width:220px" @bind-Value="@vendor.MODE_OF_COMPANY">
+                        <option value=""></option>
+                        <option value="Maltinational">Maltinational</option>
+                        <option value="Export/Import">Export/Import</option>
+                        <option value="Local">Local</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Type Of Business:</label></div>
+                <div class="col-md-7">
+                    <InputSelect name="" id="" style="width:220px" @bind-Value="@vendor.TYPE_OF_BUSINESS">
+                        <option value=""></option>
+                        <option value="Sole Proprietor">Sole Proprietor</option>
+                        <option value="Partnership">Partnership</option>
+                        <option value="Public Limited">Public Limited</option>
+                        <option value="Private Limited">Private Limited</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Type Of Supply:</label></div>
+                <div class="col-md-7">
+                    <InputSelect name="" id="" style="width:220px" @bind-Value="@vendor.TYPE_OF_SUPPLY">
+                        <option value=""></option>
+                        <option value="Interior">Interior</option>
+                        <option value="Consumable">Consumable</option>
+                        <option value="Chemicals">Chemicals</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Printing & Stationeries">Printing & Stationeries</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Spare Part">Spare Part</option>
+                        <option value="Others">Others</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Type Of Payments:</label></div>
+                <div class="col-md-7">
+                    <InputSelect name="" id="" style="width:220px" @bind-Value="@vendor.TYPE_OF_PAYMENTS">
+                        <option value=""></option>
+                        <option value="Payment Term (Default)">Payment Term (Default)</option>
+                        <option value="LC/TT/CHQ">LC/TT/CHQ</option>
+                        <option value="Incoterms (Default)">Incoterms (Default)</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"><label>Annual Turnover:</label></div>
+                <div class="col-md-2"><InputNumber @bind-Value="@vendor.ANNUAL_TURNOVER"></InputNumber></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Directors:</label>
+
+                </div>
+
+                <div class="col-md-7">
+                    <table>
+                        <tr>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS1" maxlength="100"></InputText>
+                            </td>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS2" maxlength="100"></InputText>
+                            </td>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS3" maxlength="100"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS4" maxlength="100"></InputText>
+                            </td>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS5" maxlength="100"></InputText>
+                            </td>
+                            <td>
+
+                                <InputText @bind-Value="@vendor.DIRECTORS6" maxlength="100"></InputText>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Clients:</label>
+                </div>
+                <div class="col-md-7">
+                    <table>
+                        <tr>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_1" maxlength="100"></InputText>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_2" maxlength="100"></InputText>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_3" maxlength="100"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_4" maxlength="100"></InputText>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_5" maxlength="100"></InputText>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.VENDOR_CLIENT_6" maxlength="100"></InputText>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset class="border p-4">
+            <legend class="w-auto">Bank Details</legend>
+            <div class="row">
+                <div class="col-md-2"><label>Name Of the Bank:</label></div>
+                <div class="col-md-4">
+                    <select class="form-control" value="@vendor.BANK_ID" @onchange="SelectedBank">
+                        <option value="">--Select Bank--</option>
+                        @foreach (var bank in bankList)
+                        {
+                            <option value="@bank.BANK_ID">@bank.BANK_NAME</option>
+                        }
+                    </select>
+                    @*<select @bind="@branch.BANK_ID" @oninput="SelectedBank">
+                            <option value="">--Select Bank--</option>
+                            @foreach (var bank in bankList)
+                            {
+                                <option value="@bank.BANK_ID">@bank.BANK_NAME</option>
+                            }
+                        </select>*@
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Name of the Branch:</label></div>
+                <div class="col-md-4">
+                    <select class="form-control" value="@vendor.BANK_BRANCH_ID" @onchange="SelectedBranch">
+                        <option value="">--Select Branch--</option>
+                        @if (branchList != null)
+                        {
+                            @foreach (var branch in branchList)
+                            {
+                                <option value="@branch.BANK_BRANCH_ID">@branch.BRANCH_NAME</option>
+                            }
+                        }
+                    </select>
+
+                    @*<select @bind="@branch.BANK_ID" @oninput="SelectedBranch">
+                            <option value="">--Select Branch--</option>
+                            @foreach (var branch in branchList)
+                            {
+                                <option value="@branch.BANK_BRANCH_ID">@branch.BRANCH_NAME</option>
+                            }
+                        </select>*@
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Bank Operating Country:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.BANK_OPERATING_COUNTRY" maxlength="100"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Bank Key/Routing Number:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.BANK_KEY_ROUTING_NUMBER" readonly maxlength="10"></InputText></div>
+            </div>
+
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Branch Address:</label></div>
+                <div class="col-md-4"><InputTextArea @bind-Value="@vendor.BRANCH_ADDRESS" readonly style="width:400px" id="" cols="30" rows="3" maxlength="250"></InputTextArea></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Postal Code:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.POSTAL_CODE" readonly maxlength="6"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>SWIFT Code:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.SWIFT_CODE" readonly maxlength="10"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Account Number:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.ACCOUNT_NUMBER" maxlength="30"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Account Currency:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.ACCOUNT_CURRENCY" maxlength="5"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Benificiary Name:</label></div>
+                <div class="col-md-4"><InputText @bind-Value="@vendor.BENIFICIARY_NAME" maxlength="150"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Credit Period:</label></div>
+                <div class="col-md-2"><InputText @bind-Value="@vendor.CREDIT_PERIOD" maxlength="20"></InputText></div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-2"><label>Credit Limit:</label></div>
+                <div class="col-md-2"><InputNumber @bind-Value="@vendor.CREDIT_LIMIT"></InputNumber></div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border p-4">
+            <legend class="w-auto">DocumentRequired</legend>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <table width="60%">
+                        <tr>
+                            <td>Incorporation Certificate:</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Incorporation_Certificate_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Incorporation_Certificate_No(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.INCORPORATION_CERTIFICATE_NUMBER" placeholder="number" maxlength="20"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Company Profile/Brochur :</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Company_Profile_Brochur_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Company_Profile_Brochur_No(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.COMPANY_PROFILE_BROCHUR_NUMBER" placeholder="number" maxlength="20"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Trade License :</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Trade_License_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Trade_License_No(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.TRADE_LICENSE_NUMBER" placeholder="number" maxlength="20"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TIN Certificate :</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { TIN_Certificate_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { TIN_Certificate_No(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.TIN_CERTIFICATE_NUMBER" placeholder="number"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>VAT Registration Certificate :</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { VAT_Registration_Certificate_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { VAT_Registration_Certificate_No(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.VAT_REGISTRATION_CERTIFICATE_NUMBER" placeholder="number" maxlength="20"></InputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Environment Clearance Certificate :</td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Environment_Clearance_Certificate_Yes(eventArgs.Value); }">
+                                <label>Yes</label>
+                            </td>
+                            <td>
+                                <input style="width:20px" type="checkbox" @onchange="eventArgs => { Environment_Clearance_Certificate_Yes(eventArgs.Value); }">
+                                <label>No</label>
+                            </td>
+                            <td>
+                                <InputText @bind-Value="@vendor.ENVIRONMENT_CLEARANCE_CERTIFICATE_NUMBER" placeholder="number" maxlength="20"></InputText>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+        </fieldset>
+
+
+
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <button type="submit" @onclick="SaveVendor" class="btn btn-info" style="width:120px;margin-right:10px">Update</button>
+                <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+            </div>
+        </div>
+
+    </EditForm>
+
+
+</div>
+
+
+@*----Contact  Modal-----------*@
+
+
+<div class="modal fade bd-example-modal-lg-contact" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@customerContact">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">ADD CONTACT</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Name:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Designation:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.DESIGNATION" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Department:</label></div>
+                                            <div class="col-md-5">
+                                                <InputSelect @bind-Value="@customerContact.DEPARTMENT_ID" style="width:400px">
+                                                    <option value=""></option>
+                                                    @foreach (var department in departmentList)
+                                                    {
+                                                        <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                                    }
+                                                </InputSelect>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Mobile:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.MOBILE" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Email:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.EMAIL" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>WeChat:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.WECHAT" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-7"><label>Whatsapp:</label></div>
+                                            <div class="col-md-5"><InputText @bind-Value="@customerContact.WHATSAPP" style="width:400px"></InputText></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => AddCustomerContact())>@btnAdd</button>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-danger" data-dismiss="modal" @onclick="close">Cancel</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    BankBranchModel branch = new BankBranchModel();
+    List<BankModel> bankList = new List<BankModel>();
+    List<BankBranchModel> branchList = new List<BankBranchModel>();
+    List<CustomerContactModel> customerContactList = new List<CustomerContactModel>();
+    CustomerContactModel customerContact = new CustomerContactModel();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    CustomerContactModel customerContactModel = new CustomerContactModel();
+    List<CustomerContactModel> ContactList = new List<CustomerContactModel>();
+    VendorEntity vendor = new VendorEntity();
+    [Parameter]
+    public string vendorcode { get; set; }
+    public bool isLocalCheck { get; set; }
+    public bool isIntCheck { get; set; }
+    protected bool ETD_1st_Date_CheckStatus { get; set; }
+    string btnAdd;
+    int vendorContactId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBankList();
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+        vendor = await Http.GetJsonAsync<VendorEntity>(Utility.BaseUrl + "api/Vendor/GetVendorDetailsByVendorCode/" + vendorcode);
+
+        branchList = await Http.GetJsonAsync<List<BankBranchModel>>(Utility.BaseUrl + "api/Bank/GetBranchList/" + vendor.BANK_ID);
+        vendor.BANK_KEY_ROUTING_NUMBER = branchList.Find(x => x.BANK_ID == vendor.BANK_ID).ROUTING_NUMBER;
+        vendor.BRANCH_ADDRESS= branchList.Find(x => x.BANK_ID == vendor.BANK_ID).BRANCH_ADDRESS;
+        vendor.POSTAL_CODE= branchList.Find(x => x.BANK_ID == vendor.BANK_ID).POSTAL_CODE;
+        vendor.SWIFT_CODE= branchList.Find(x => x.BANK_ID == vendor.BANK_ID).SWIFT_CODE;
+
+        customerContactList = await Http.GetJsonAsync<List<CustomerContactModel>>(Utility.BaseUrl + "api/Vendor/GetVendorContactDetailsCode/" + vendorcode);
+        if (vendor.VENDOR_TYPE_STATUS == "Local")
+        { isLocalCheck = true; }
+        else if (vendor.VENDOR_TYPE_STATUS == "International")
+        { isIntCheck = true; }
+        btnAdd = "ADD";
+
+    }
+
+    private async Task GetBankList()
+    {
+        bankList = await Http.GetJsonAsync<List<BankModel>>(Utility.BaseUrl + "api/Bank");
+    }
+    protected async Task SelectedBank(ChangeEventArgs changeEvent)
+    {
+        int bankId = Convert.ToInt32(changeEvent.Value.ToString());
+        vendor.BANK_ID = bankId;
+        branchList = await Http.GetJsonAsync<List<BankBranchModel>>(Utility.BaseUrl + "api/Bank/GetBranchList/" + bankId);
+        StateHasChanged();
+    }
+    protected async Task SelectedBranch(ChangeEventArgs branchevent)
+    {
+        int branchId = Convert.ToInt32(branchevent.Value.ToString());
+        vendor.BANK_BRANCH_ID = branchId;
+        branch = await Http.GetJsonAsync<BankBranchModel>(Utility.BaseUrl + "api/Bank/GetBranchInfo/" + branchId);
+        vendor.BANK_KEY_ROUTING_NUMBER = branch.ROUTING_NUMBER;
+        vendor.BRANCH_ADDRESS = branch.BRANCH_ADDRESS;
+        vendor.POSTAL_CODE = branch.POSTAL_CODE;
+        vendor.SWIFT_CODE = branch.SWIFT_CODE;
+        StateHasChanged();
+    }
+    public async Task SaveVendor()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                var data = await Http.PutJsonAsync<VendorEntity>(Utility.BaseUrl + "api/Vendor", vendor);
+                foreach (var item in customerContactList)
+                {
+                    customerContactModel = new CustomerContactModel();
+                    customerContactModel.CUSTOMER_VENDOR_CODE = vendor.VENDOR_CODE;
+                    customerContactModel.CUSTOMER_CONTACT_ID = item.CUSTOMER_CONTACT_ID;
+                    customerContactModel.NAME = item.NAME;
+                    customerContactModel.DESIGNATION = item.DESIGNATION;
+                    customerContactModel.DEPARTMENT_ID = item.DEPARTMENT_ID;
+                    customerContactModel.MOBILE = item.MOBILE;
+                    customerContactModel.EMAIL = item.EMAIL;
+                    customerContactModel.WECHAT = item.WECHAT;
+                    customerContactModel.WHATSAPP = item.WHATSAPP;
+                    customerContactModel.TYPE = item.TYPE;
+
+                    ContactList.Add(customerContactModel);
+                }
+
+                var customercontact = await Http.PutJsonAsync<List<CustomerContactModel>>(Utility.BaseUrl + "api/Customer/UpdateCustomerContact", ContactList);
+                toastService.ShowSuccess("Update Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+                ContactList = new List<CustomerContactModel>();
+            }
+
+        }
+    }
+    private void close()
+    {
+        btnAdd = "ADD";
+        customerContact = new CustomerContactModel();
+    }
+    private async Task Cancel()
+    {
+        vendor = new VendorEntity();
+        UriHelper.NavigateTo("VendorList");
+
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (vendor.VENDOR_NAME == "" || vendor.VENDOR_NAME == string.Empty || vendor.VENDOR_NAME == null)
+        {
+            toastService.ShowWarning("Vendor Name is empty!");
+            flag = true;
+        }
+        else if (vendor.REGISTERED_ADDRESS == "" || vendor.REGISTERED_ADDRESS == string.Empty || vendor.REGISTERED_ADDRESS == null)
+        {
+            toastService.ShowWarning("Register Address field is Empty!");
+            flag = true;
+        }
+
+
+        return flag;
+    }
+    async void Incorporation_Certificate_Yes(object checkedValue)
+    {
+        vendor.INCORPORATION_CERTIFICATE_STATUS = "Yes";
+    }
+    async void Incorporation_Certificate_No(object checkedValue)
+    {
+        vendor.INCORPORATION_CERTIFICATE_STATUS = "No";
+    }
+
+    async void Company_Profile_Brochur_Yes(object checkedValue)
+    {
+        vendor.COMPANY_PROFILE_BROCHUR_STATUS = "Yes";
+    }
+    async void Company_Profile_Brochur_No(object checkedValue)
+    {
+        vendor.COMPANY_PROFILE_BROCHUR_STATUS = "No";
+    }
+    async void Trade_License_Yes(object checkedValue)
+    {
+        vendor.TRADE_LICENSE_STATUS = "Yes";
+    }
+    async void Trade_License_No(object checkedValue)
+    {
+        vendor.TRADE_LICENSE_STATUS = "No";
+    }
+    async void TIN_Certificate_Yes(object checkedValue)
+    {
+        vendor.TIN_CERTIFICATE_STATUS = "Yes";
+    }
+    async void TIN_Certificate_No(object checkedValue)
+    {
+        vendor.TIN_CERTIFICATE_STATUS = "No";
+    }
+    async void VAT_Registration_Certificate_Yes(object checkedValue)
+    {
+        vendor.VAT_REGISTRATION_CERTIFICATE_STATUS = "Yes";
+    }
+    async void VAT_Registration_Certificate_No(object checkedValue)
+    {
+        vendor.VAT_REGISTRATION_CERTIFICATE_STATUS = "No";
+    }
+    async void Environment_Clearance_Certificate_Yes(object checkedValue)
+    {
+        vendor.ENVIRONMENT_CLEARANCE_CERTIFICATE_STATUS = "Yes";
+    }
+    async void Environment_Clearance_Certificate_No(object checkedValue)
+    {
+        vendor.ENVIRONMENT_CLEARANCE_CERTIFICATE_STATUS = "No";
+    }
+    async void CheckboxLocal(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            vendor.VENDOR_TYPE_STATUS = "Local";
+        }
+    }
+    async void CheckboxInternational(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            vendor.VENDOR_TYPE_STATUS = "International";
+        }
+    }
+    public async Task EditItem(int Id)
+    {
+        btnAdd = "EDIT";
+        vendorContactId = Id;
+        customerContact.NAME = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).NAME;
+        customerContact.DESIGNATION = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).DESIGNATION;
+        customerContact.DEPARTMENT_ID = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).DEPARTMENT_ID;
+        customerContact.MOBILE = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).MOBILE;
+        customerContact.EMAIL = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).EMAIL;
+        customerContact.WECHAT = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).WECHAT;
+        customerContact.WHATSAPP = customerContactList.Find(x => x.CUSTOMER_CONTACT_ID == Id).WHATSAPP;
+    }
+    public async Task AddCustomerContact()
+    {
+        if (btnAdd == "ADD")
+        {
+            customerContactModel = new CustomerContactModel();
+            customerContactModel.CUSTOMER_VENDOR_CODE = customerContact.CUSTOMER_VENDOR_CODE;
+            customerContactModel.CUSTOMER_CONTACT_ID = vendorContactId;
+            customerContactModel.NAME = customerContact.NAME;
+            customerContactModel.DESIGNATION = customerContact.DESIGNATION;
+            customerContactModel.DEPARTMENT_ID = customerContact.DEPARTMENT_ID;
+            customerContactModel.DEPARTMENT_NAME = departmentList.Find(x => x.DEPARTMENT_ID == customerContact.DEPARTMENT_ID).DEPARTMENT_NAME;
+            customerContactModel.MOBILE = customerContact.MOBILE;
+            customerContactModel.EMAIL = customerContact.EMAIL;
+            customerContactModel.WECHAT = customerContact.WECHAT;
+            customerContactModel.WHATSAPP = customerContact.WHATSAPP;
+            customerContactModel.TYPE = "V";
+
+            customerContactList.Add(customerContactModel);
+        }
+        else if (btnAdd == "EDIT")
+        {
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.NAME = Convert.ToString(customerContact.NAME));
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.DESIGNATION = customerContact.DESIGNATION);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.DEPARTMENT_ID = customerContact.DEPARTMENT_ID);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.DEPARTMENT_NAME = customerContact.DEPARTMENT_NAME);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.MOBILE = customerContact.MOBILE);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.EMAIL = customerContact.EMAIL);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.WECHAT = customerContact.WECHAT);
+            customerContactList.Where(w => w.CUSTOMER_CONTACT_ID == vendorContactId).ToList().ForEach(s => s.WHATSAPP = customerContact.WHATSAPP);
+        }
+
+        StateHasChanged();
+        close();
+
+
+    }
+    public async Task DeleteItem(int code)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Vendor/DeleteVendorContact/" + code);
+        var itemToRemove = customerContactList.Single(r => r.CUSTOMER_CONTACT_ID == code);
+        customerContactList.Remove(itemToRemove);
+    }
+
+
+
+}

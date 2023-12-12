@@ -1,0 +1,64 @@
+﻿@page "/ManageVendor"
+@layout CustomLayout
+@inject HttpClient Http
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">VENDOR LIST</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <form action="">
+            <div class="container-fluid">
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped">
+                        <thead style="background-color:steelblue;color:white">
+                            <tr>
+                                <td scope="col"></td>
+                                <td scope="col"></td>
+                                <td scope="col">Vendor Code</td>
+                                <td scope="col">Vendor Name</td>
+                                <td scope="col">Contact No</td>
+                                <td scope="col">Email</td>
+                                <td scope="col">Fax</td>
+                                <td scope="col">Vendor Type</td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (vendorList != null)
+                            {
+                                foreach (var item in vendorList)
+                                {
+                                    <tr>
+                                        <td scope="col"><a href="EditVendor/@item.VENDOR_ID">UPDATE VENDOR</a></td>
+                                        <td scope="col"><a href="VendorDetailsView/@item.VENDOR_CODE">VIEW DETAILS</a></td>
+                                        <td scope="col">@item.VENDOR_CODE</td>
+                                        <td scope="col">@item.VENDOR_NAME</td>
+                                        <td scope="col">@item.CONTACT_NO</td>
+                                        <td scope="col">@item.EMAIL</td>
+                                        <td scope="col">@item.FAX</td>
+                                        <td scope="col">@item.VENDOR_TYPE_STATUS</td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@code {
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVendorList();
+    }
+    private async Task GetVendorList()
+    {
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+    }
+
+}
+

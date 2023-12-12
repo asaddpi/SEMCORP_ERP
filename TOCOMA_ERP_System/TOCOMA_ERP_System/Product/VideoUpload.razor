@@ -1,0 +1,60 @@
+﻿@page "/VideoUpload"
+@using System.IO
+@inject IWebHostEnvironment env
+
+
+<h1>Blazor Server File Upload</h1>
+
+<h3>@Message</h3>
+
+<InputFile OnChange="OnInputFileChange" multiple />
+<br />
+
+@foreach (var itmImage in itemimageUrls)
+{
+    @*<img src="@itmImage" />*@
+    <p>@itmImage</p>
+}
+
+
+
+
+@code {
+    string Message = "No file(s) selected";
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    List<string> itemimageUrls = new List<string>();
+    private async void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles.Count} file(s) selected";
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            Stream stream = file.OpenReadStream();
+            var path = $"{env.WebRootPath}\\{file.Name}";
+            FileStream fs = File.Create(path);
+            await stream.CopyToAsync(fs);
+            stream.Close();
+            fs.Close();
+            itemimageUrls.Add(file.Name);
+        }
+        Message = $"{selectedFiles.Count} file(s) uploaded on server";
+        this.StateHasChanged();
+    }
+    //private async Task SelectItemImage(InputFileChangeEventArgs e)
+    //{
+    //    selectedFiles = e.GetMultipleFiles();
+
+    //    foreach (var imageFile in selectedFiles)
+    //    {
+    //        var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+    //        var buffer = new byte[resizedImage.Size];
+    //        await resizedImage.OpenReadStream().ReadAsync(buffer);
+    //        var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+    //        itemimageUrls.Add(imgData);
+
+    //    }
+    //    this.StateHasChanged();
+    //}
+
+}

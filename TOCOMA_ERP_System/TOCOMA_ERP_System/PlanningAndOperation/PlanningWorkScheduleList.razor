@@ -1,0 +1,904 @@
+﻿@page "/PlanningWorkScheduleList"
+@inject HttpClient Http
+@layout CustomLayout
+@inject NavigationManager UriHelper
+@*@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;*@
+@*@inject ProtectedSessionStorage storage*@
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@*@inject IJSRuntime JSRuntime*@
+@inject SessionState state
+@inject IToastService toastService
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject IWebHostEnvironment webhost
+@using AspNetCore.Reporting
+@using System.Reflection
+@*@using Tocoma_ERP_System.Controller*@
+@using Microsoft.AspNetCore.Mvc;
+@using System.Data
+@using System.Text;
+@*@inject SessionData sessionData*@
+@inject ProtectedLocalStorage ProtectedLocalStore
+@inject SessionData sessionData
+@*@inject AppState appState*@
+@inject PlanAndWorkScheduleService planAndWorkService
+@*@inject Abc1Controller abcController*@
+@using System.Text.Json
+<style>
+    .scroll {
+        overflow-x: auto;
+        white-space: normal;
+    }
+
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: center;
+    }
+
+    tr th {
+        text-align: center;
+    }
+
+    [data-href] {
+        cursor: pointer;
+    }
+
+
+    a#test:hover {
+        /*background: #0000ff;*/
+        cursor: pointer;
+        color: Highlight;
+        text-decoration: underline;
+    }
+    
+</style>
+
+
+
+<div class="dashboard-details">
+
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <br />
+            <div>
+                <a id="test" style="color: Highlight " class="col-md-4" @onclick="PlanAndWorkScheduleReport" target="_blank">Generate Pdf<img src="images/pdf.png" style="width:30px;height:30px" /></a>
+                <button class="col-md-4" data-toggle="modal" data-target=".bd-example-modal-lg" @onclick="SaveMode" style="width:80px;height:35px">New</button>
+                <input type="search" style="width:30%;float:right" class="form-control" placeholder="Search by task description or department.." name="search" autocomplete="off" @oninput="GetSearchItem">
+            </div>
+            
+            <br />
+            <div class="search-container">
+
+                
+
+                @*<a @onclick="() => DownloadContent()" target="_blank">Print</a>*@
+                @*<a @onclick="PlanAndWork" target="_blank">Print</a>*@
+                @*<a @onclick="PlanAndWorkScheduleReport" target="_blank">Print</a>*@
+
+            </div>
+            
+            <br />
+
+
+            <div style="text-align:center">
+                <label style="font-size:20px;font-weight:bold">TOCOMA Limited</label><br />
+                <label style="font-size:15px;font-weight:bold">Planning and Work Schedule</label><br />
+            </div>
+
+
+            <div style="float:right">
+                <label>@StartNumber-@EndNumber of @listPlanOperation.Count()</label> <a style="color:Highlight"><i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i></a>&nbsp;&nbsp;<a style="color:Highlight"><i class='bi bi-arrow-right-circle' style="font-size:30px;margin-right:10px" @onclick="@(e => NavigatTo("next"))"></i></a>
+            </div>
+
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th style="width:3%"></th>
+                        <th style="width:3%"></th>
+                        <th>SL</th>
+                        <th style="width:10%">Assign To </th>
+                        <th style="width:75%">Task Description</th>
+                        <th style="width:5%">Status</th>
+                        <th style="width:7%">Entry Date</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (planAndOperationList != null)
+                    {
+                        foreach (var item in planAndOperationList)
+                        {
+                            //href = "EditAssignWork/@item.ID"
+                    <tr>
+                        <td style="width:3%;text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" @onclick=@(() => EditPlanAndWork(item.ID))><span class="oi oi-pencil"></span></a></td>
+                        <td style="width:3%;text-align:center"><a @onclick=@(() => DeletePlanAndWork(item.ID))><span class="oi oi-trash"></span></a></td>
+                        <td>@item.SL</td>
+
+                        <td style="cursor:pointer;width:10%" onclick="window.location='PlanAndScheduleDetails/@item.ID';">@item.TASK_ASSIGN_TO , @item.DEPARTMENT_NAME</td>
+                        <td style="cursor: pointer;width:75%; text-align: left" onclick="window.location='PlanAndScheduleDetails/@item.ID';">@((MarkupString)@item.TASK_DESCRIPTION)</td>
+                        <td style="cursor: pointer;width:5%; text-align: left" onclick="window.location='PlanAndScheduleDetails/@item.ID';">@item.STATUS)</td>
+                        <td style="cursor: pointer;width:7%; text-align: left" onclick="window.location='PlanAndScheduleDetails/@item.ID';">@item.ENTRYDATE</td>
+
+                    </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            @*<br />
+        <div style="float:right">
+            <button type="button" class="btn btn-secondary" @onclick="@(e => NavigatTo("prev"))">Prev</button>
+            @for (int i = 0; i < TotalPage; i++)
+            {
+                var pageNumber = i;
+                <button  class="btn @(Currentpage==pageNumber? "btn-dark":"btn-info")"
+                        @onclick="@(e => UpdateList(pageNumber))">
+                    @(i+1)
+                </button>
+            }
+            <button style="background-color:white;color:black" type="button" class="btn btn-secondary" @onclick="@(e => NavigatTo("next"))">Next</button>
+        </div>*@
+
+            <br />
+        </div>
+    </div>
+</div>
+
+@*---------------Modal----------*@
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> PLANNING & WORK SCHEDULE</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" @onclick="SetHTML" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="planAndOperation">
+                    <table class="table">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td style="width:43%">Task Description</td>
+                                <td style="width:19%">Department</td>
+                                <td style="width:19%">Assign To</td>
+                                <td style="width:19%">Assign By</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td style="background-color:white;width:43%">
+                                    @*<InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.TASK_DESCRIPTION" style="width:203px" cols="30" rows="2" placeholder="task description.."></InputTextArea>*@
+                                    <BlazoredTextEditor @ref="@taskDescription">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+                                            @((MarkupString)@planAndOperation.TASK_DESCRIPTION)
+
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+                                </td>
+                                <td style="width:19%">
+                                    <InputSelect @bind-Value="@planAndOperation.DEPARTMENT_ID" style="height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var department in departmentList)
+                                        {
+                                            <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td style="width:19%">
+                                    <InputSelect @bind-Value="@planAndOperation.TASK_ASSIGN_TO" style="height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td style="width:19%">
+                                    <InputSelect @bind-Value="@planAndOperation.TASK_ASSIGN_BY" style="height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td scope="col" colspan="2">Start Date</td>
+                                <td scope="col" colspan="2">Completion Date</td>
+                            </tr>
+                            <tr>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input style="width:120px" type="text" id="datepicker_planstart" autocomplete="off" @bind-value="@planAndOperation.PLANNED_START_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualstart" autocomplete="off" @bind-value="@planAndOperation.ACTUAL_START_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_plansdone" autocomplete="off" @bind-value="@planAndOperation.PLANNED_COMPLETION_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualdone" autocomplete="off" @bind-value="@planAndOperation.ACTUAL_COMPLETION_DATE" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+
+                                @*<td scope="col" style="width:4%">Duration</td>*@
+                                <td scope="col" style="width:43%">Action</td>
+                                <td scope="col" style="width:10%">Status</td>
+                                <td scope="col" style="width:19%">Remarks</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @*<td style="width:4%"></td>*@
+                                <td style="background-color:white;width:43%">
+                                    @*<InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.ACTIVITIES" style="width:auto" cols="30" rows="2" placeholder="action.."></InputTextArea>*@
+                                    <BlazoredTextEditor @ref="@action">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+                                            @((MarkupString)@planAndOperation.ACTIVITIES)
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+                                </td>
+                                <td style="width:10%">
+                                    <InputSelect @bind-Value="@planAndOperation.STATUS_ID" style="height:28px">
+                                        <option value="0">Pending</option>
+                                        @foreach (var status in statusList)
+                                        {
+                                            <option value="@status.STATUS_ID">@status.STATUS</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td style="background-color:white;width:43%">
+                                    <BlazoredTextEditor @ref="@remarks">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+                                            @((MarkupString)@planAndOperation.COMMENTS)
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </EditForm>
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>*@
+                <div>
+                    <button @onclick="Save" class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px">@btnText</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    List<PlanandOperationViewModel> planAndOperationList = new List<PlanandOperationViewModel>();
+    List<PlanandOperationViewModel> listPlanOperation = new List<PlanandOperationViewModel>();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    List<PlanAndWorkScheduleStatusModel> statusList = new List<PlanAndWorkScheduleStatusModel>();
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+    string itemname = "";
+    int empId = 0;
+    int departId = 0;
+    int roleId = 0;
+    int statusId = 0;
+    int departmentId = 0;
+    int planandworkId;
+    BlazoredTextEditor taskDescription;
+    BlazoredTextEditor action;
+    BlazoredTextEditor remarks;
+    PlanAndOperationModel planAndOperation = new PlanAndOperationModel();
+    string QuillContent;//= "<p>This is My Comments</p><p>					 Asaduzzaman</p><p>Work on progress</p><p>   				 Dola Barua</p>";
+    int plan_duration;
+    int actual_duration;
+    private string strSavedContent = "";
+    private string EditorHTMLContent;
+    private string EditorContent;
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+    private string value { get; set; }
+    private System.Data.DataTable dt;
+    //private readonly RdlcReportController rdlcreport;
+    SessionData session;
+    string btnText;
+    SessionDataArea PlanSessionData { get; set; }
+    private const string planAndWorkSchedule = "planAndWorkList";
+    List<PlanandOperationViewModel> plan = new List<PlanandOperationViewModel>();
+    string myname;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await notify.InvokeAsync();
+
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+        //var employeeId = await storage.GetAsync<int>("session_employeeId");
+
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee");
+        //var departmentId = await storage.GetAsync<int>("session_employeeDepartmentId");//await sessionStorage.GetItemAsync<string>("ID")
+        //await sessionStorage.GetItemAsync<string>("ID")
+        //departId = Convert.ToInt32(departmentId);
+        //departId = state.Department_Id;
+        //departId = await sessionStorage.GetItemAsync<int>("session_employeeDepartmentId");
+        statusList = await Http.GetJsonAsync<List<PlanAndWorkScheduleStatusModel>>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkStatus");
+        roleId = 1;//await sessionStorage.GetItemAsync<int>("session_userRoleId");
+
+        await GetDataOnLoad();
+        Pagination();
+
+    }
+    private async Task GetDataOnLoad()
+    {
+        if (roleId != 1)
+        {
+
+            planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + departId);
+            listPlanOperation = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + departId);
+        }
+        else
+        {
+            planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySuperAdmin");
+            listPlanOperation = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySuperAdmin");
+        }
+        GetDataForPrint();
+    }
+    public async void SetHTML()
+    {
+        string QuillContent = "<p>This is My Comments</p><p>					 Asaduzzaman</p><p>Work on progress</p><p>   				 Dola Barua</p>";
+
+
+
+        await this.taskDescription.LoadHTMLContent(QuillContent);
+        StateHasChanged();
+    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+
+    //    await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    //    //departId = await sessionStorage.GetItemAsync<int>("session_employeeDepartmentId");
+    //    StateHasChanged();
+    //    //await notify.InvokeAsync();
+    //}
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        departId = await sessionStorage.GetItemAsync<int>("session_employeeDepartmentId");//await sessionStorage.GetItemAsync<string>("ID")
+    //                                                                                          //departId = Convert.ToInt32(departmentId);
+    //        planAndOperation = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + departId);
+    //        //var employeeId = await storage.GetAsync<int>("session_employeeId");
+    //        //var departmentId = await storage.GetAsync<int>("session_employeeDepartmentId");
+    //        //empId = employeeId.Value;
+    //        //departId = departmentId.Value;
+    //        //planAndOperation = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + empId + "/" + departId);
+    //        StateHasChanged();
+    //    }
+    //}
+    public void RedirectToAssignWork()
+    {
+        UriHelper.NavigateTo("/AssignWork");
+    }
+
+    protected async void DepartmentClicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        departmentId = Convert.ToInt32(changeEventArgs.Value.ToString());
+        //await GetSearchItem();
+        this.StateHasChanged();
+    }
+    protected async void StatusClicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        statusId = Convert.ToInt32(changeEventArgs.Value.ToString());
+        //await GetSearchItem( );
+        this.StateHasChanged();
+    }
+
+    private async Task GetSearchItem(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        value = (string)args.Value;
+        string param = "";
+        string WhereCondition = "";
+        if (value != "")
+        {
+            if (param != "")
+            {
+                if (roleId != 1)
+                { param = param + " AND PS.TASK_DESCRIPTION LIKE '%" + value + "%'  AND PS.DEPARTMENT_ID=" + departId + " OR D.DEPARTMENT_NAME LIKE '%" + value + "%' AND PS.DEPARTMENT_ID=" + departId + " "; }
+                else { param = param + " AND PS.TASK_DESCRIPTION LIKE '%" + value + "%'  OR D.DEPARTMENT_NAME LIKE '%" + value + "%'"; }
+
+            }
+            else
+            {
+                //param = param + "  PS.TASK_DESCRIPTION LIKE '%" + value + "%'  OR D.DEPARTMENT_NAME LIKE '%" + value + "%'";
+
+                if (roleId != 1)
+                { param = param + "  PS.TASK_DESCRIPTION LIKE '%" + value + "%'  AND PS.DEPARTMENT_ID=" + departId + " OR D.DEPARTMENT_NAME LIKE '%" + value + "%' AND PS.DEPARTMENT_ID=" + departId + " "; }
+                else { param = param + "  PS.TASK_DESCRIPTION LIKE '%" + value + "%'  OR D.DEPARTMENT_NAME LIKE '%" + value + "%'"; }
+            }
+        }
+        if (departmentId != 0)
+        {
+            if (param != "")
+            {
+                param = param + " AND PS.DEPARTMENT_ID=" + departmentId + "";
+            }
+            else
+            {
+                param = param + "  PS.DEPARTMENT_ID=" + departmentId + "";
+            }
+        }
+        if (statusId != 0)
+        {
+            if (param != "")
+            {
+                param = param + " AND S.STATUS_ID=" + statusId + "";
+            }
+            else
+            {
+                param = param + "  S.STATUS_ID=" + statusId + "";
+            }
+        }
+
+        if (param != "")
+        {
+            //if (roleId != 1)
+            //{ WhereCondition = "WHERE " + param + " AND D.DEPARTMENT_ID = "+ departId + ""; }
+            //else { WhereCondition = "WHERE " + param; }
+            WhereCondition = "WHERE " + param;
+
+            planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySearchOption/" + WhereCondition);
+            listPlanOperation = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySearchOption/" + WhereCondition);
+            GetDataForPrint();
+        }
+        else
+        {
+            await GetDataOnLoad();
+        }
+
+
+        Pagination();
+        StateHasChanged();
+    }
+    private void GetDataForPrint()
+    {
+        AppState.GetPlanList = listPlanOperation;
+    }
+    private async Task EditPlanAndWork(int Id)
+    {
+        planandworkId = Id;
+        btnText = "Update";
+        planAndOperation = await Http.GetJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkScheduleById/" + Id);
+        QuillContent = planAndOperation.TASK_DESCRIPTION;
+        await this.taskDescription.LoadHTMLContent(QuillContent);
+        await this.action.LoadHTMLContent(planAndOperation.ACTIVITIES);
+        await this.remarks.LoadHTMLContent(planAndOperation.COMMENTS);
+        StateHasChanged();
+    }
+    private async Task DeletePlanAndWork(int Id)
+    {
+        if (!await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeletePlanAndWorkScheduleById/" + Id);
+        await GetDataOnLoad();
+        Pagination();
+    }
+    public async Task Save()
+    {
+        if (IsValidation() != true)
+        {
+            if (btnText == "Save")
+            {
+                try
+                {
+
+                    //ACTUAL_COMPLETION_DATE = Convert.ToDateTime(changeEvent.Value.ToString());
+                    //days = (ACTUAL_COMPLETION_DATE - ACTUAL_START_DATE).Days;
+
+                    //planAndOperation.PLANNED_START_DATE = Convert.ToDateTime(date); //PLANNED_START_DATE;
+
+                    //planAndOperation.ACTUAL_START_DATE = ACTUAL_START_DATE;
+                    //planAndOperation.PLANNED_COMPLETION_DATE = PLANNED_COMPLETION_DATE;
+                    //planAndOperation.ACTUAL_COMPLETION_DATE = ACTUAL_COMPLETION_DATE;
+                    int reg_by = await sessionStorage.GetItemAsync<int>("session_userId");
+                    string employee = await sessionStorage.GetItemAsync<string>("session_employeeName");
+                    planAndOperation.REG_BY = reg_by;
+                    if (planAndOperation.PLANNED_COMPLETION_DATE != null && planAndOperation.PLANNED_START_DATE != null)
+                    {
+                        plan_duration = (Convert.ToDateTime(planAndOperation.PLANNED_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.PLANNED_START_DATE)).Days;
+                        planAndOperation.PLANNED_DURATION = Convert.ToString(plan_duration);
+                    }
+                    else { planAndOperation.PLANNED_DURATION = ""; }
+                    if (planAndOperation.ACTUAL_COMPLETION_DATE != null && planAndOperation.ACTUAL_START_DATE != null)
+                    {
+                        actual_duration = (Convert.ToDateTime(planAndOperation.ACTUAL_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.ACTUAL_START_DATE)).Days;
+                        planAndOperation.ACTUAL_DURATION = Convert.ToString(actual_duration);
+                    }
+                    else { planAndOperation.ACTUAL_DURATION = ""; }
+                    planAndOperation.TASK_DESCRIPTION = await this.taskDescription.GetHTML();
+                    planAndOperation.ACTIVITIES = await this.action.GetHTML();
+                    planAndOperation.COMMENTS = await this.remarks.GetHTML();
+                    if (planAndOperation.STATUS_ID == 0) { planAndOperation.STATUS_ID = 1; }
+
+
+                    var data = await Http.PostJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/AddPlanAndWorkSchedule", planAndOperation);
+                    toastService.ShowSuccess("Save Successfully!!");
+                    //ClearData();
+                    GetPlanAndWorkScheduleList(roleId);
+                    planAndOperation = new PlanAndOperationModel();
+                }
+                catch (Exception EX)
+                { }
+            }
+            else if (btnText == "Update")
+            {
+                try
+                {
+
+                    //planAndOperation.PLANNED_START_DATE = PLANNED_START_DATE;
+                    //planAndOperation.ACTUAL_START_DATE = ACTUAL_START_DATE;
+                    //planAndOperation.PLANNED_COMPLETION_DATE = PLANNED_COMPLETION_DATE;
+                    //planAndOperation.ACTUAL_COMPLETION_DATE = ACTUAL_COMPLETION_DATE;
+                    //var reg_by = await storage.GetAsync<int>("session_employeeId");
+                    planAndOperation.UPD_BY = await sessionStorage.GetItemAsync<int>("session_userId");
+                    //days = (ACTUAL_COMPLETION_DATE - ACTUAL_START_DATE).Days;
+
+                    if (planAndOperation.PLANNED_COMPLETION_DATE != null && planAndOperation.PLANNED_START_DATE != null)
+                    {
+                        plan_duration = (Convert.ToDateTime(planAndOperation.PLANNED_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.PLANNED_START_DATE)).Days;
+                        planAndOperation.PLANNED_DURATION = Convert.ToString(plan_duration);
+                    }
+                    else { planAndOperation.PLANNED_DURATION = ""; }
+                    if (planAndOperation.ACTUAL_COMPLETION_DATE != null && planAndOperation.ACTUAL_START_DATE != null)
+                    {
+                        actual_duration = (Convert.ToDateTime(planAndOperation.ACTUAL_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.ACTUAL_START_DATE)).Days;
+                        planAndOperation.ACTUAL_DURATION = Convert.ToString(actual_duration);
+                    }
+                    else { planAndOperation.ACTUAL_DURATION = ""; }
+                    planAndOperation.ID = planandworkId;
+                    //EditorHTMLContent = await ijsruntime.InvokeAsync<string>(
+                    //        "QuillFunctions.getQuillHTML", divEditorElement);
+
+                    //    EditorContent = await ijsruntime.InvokeAsync<string>(
+                    //"QuillFunctions.getQuillContent", divEditorElement);
+                    //strSavedContent = EditorHTMLContent;
+                    //planAndOperation.COMMENTS = strSavedContent;
+                    //planAndOperation.COMMENTS_QUILL_CONTENT = EditorContent;
+                    planAndOperation.TASK_DESCRIPTION = await this.taskDescription.GetHTML();
+                    planAndOperation.ACTIVITIES = await this.action.GetHTML();
+                    planAndOperation.COMMENTS = await this.remarks.GetHTML();
+                    if (planAndOperation.STATUS_ID == 0) { planAndOperation.STATUS_ID = 1; }
+                    var data = await Http.PutJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/UpdatePlanAndWorkSchedule", planAndOperation);
+                    toastService.ShowSuccess("Update Successfully");
+                    //ClearData();
+                    GetPlanAndWorkScheduleList(roleId);
+                    planAndOperation = new PlanAndOperationModel();
+                }
+                catch (Exception EX)
+                { }
+            }
+
+        }
+    }
+    public async Task UpdateWork()
+    {
+        if (IsValidation() != true)
+        {
+            try
+            {
+
+                //ACTUAL_COMPLETION_DATE = Convert.ToDateTime(changeEvent.Value.ToString());
+                //days = (ACTUAL_COMPLETION_DATE - ACTUAL_START_DATE).Days;
+
+                //planAndOperation.PLANNED_START_DATE = Convert.ToDateTime(date); //PLANNED_START_DATE;
+
+                //planAndOperation.ACTUAL_START_DATE = ACTUAL_START_DATE;
+                //planAndOperation.PLANNED_COMPLETION_DATE = PLANNED_COMPLETION_DATE;
+                //planAndOperation.ACTUAL_COMPLETION_DATE = ACTUAL_COMPLETION_DATE;
+                int reg_by = await sessionStorage.GetItemAsync<int>("session_userId");
+                string employee = await sessionStorage.GetItemAsync<string>("session_employeeName");
+                planAndOperation.REG_BY = reg_by;
+                if (planAndOperation.PLANNED_COMPLETION_DATE != null && planAndOperation.PLANNED_START_DATE != null)
+                {
+                    plan_duration = (Convert.ToDateTime(planAndOperation.PLANNED_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.PLANNED_START_DATE)).Days;
+                    planAndOperation.PLANNED_DURATION = Convert.ToString(plan_duration);
+                }
+                else { planAndOperation.PLANNED_DURATION = ""; }
+                if (planAndOperation.ACTUAL_COMPLETION_DATE != null && planAndOperation.ACTUAL_START_DATE != null)
+                {
+                    actual_duration = (Convert.ToDateTime(planAndOperation.ACTUAL_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.ACTUAL_START_DATE)).Days;
+                    planAndOperation.ACTUAL_DURATION = Convert.ToString(actual_duration);
+                }
+                else { planAndOperation.ACTUAL_DURATION = ""; }
+                planAndOperation.TASK_DESCRIPTION = await this.taskDescription.GetHTML();
+                planAndOperation.ACTIVITIES = await this.action.GetHTML();
+                planAndOperation.COMMENTS = await this.remarks.GetHTML();
+
+                var data = await Http.PostJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/AddPlanAndWorkSchedule", planAndOperation);
+                toastService.ShowSuccess("Save Successfully!!");
+                //ClearData();
+                GetPlanAndWorkScheduleList(roleId);
+            }
+            catch (Exception EX)
+            { }
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        //if (planAndOperation.TASK_DESCRIPTION == "" || planAndOperation.TASK_DESCRIPTION == string.Empty || planAndOperation.TASK_DESCRIPTION == null)
+        //{
+        //    toastService.ShowWarning("Task Description cannot be empty!");
+        //    flag = true;
+        //}
+        if (planAndOperation.DEPARTMENT_ID == 0)
+        {
+            toastService.ShowWarning("Please Select Department");
+            flag = true;
+        }
+        //else if (planAndOperation.TASK_ASSIGN_TO == 0)
+        //{
+        //    toastService.ShowWarning("Please Select Task Assign To");
+        //    flag = true;
+        //}
+        //else if (planAndOperation.TASK_ASSIGN_BY == 0)
+        //{
+        //    toastService.ShowWarning("Please Select Task Assign By");
+        //    flag = true;
+        //}
+        //else if (planAndOperation.STATUS_ID == 0)
+        //{
+        //    toastService.ShowWarning("Please Select Status");
+        //    flag = true;
+        //}
+        //else if (planAndOperation.PLANNED_START_DATE == "" || planAndOperation.PLANNED_START_DATE == null)
+        //{
+        //    toastService.ShowWarning("Please Select Plan Start Date");
+        //    flag = true;
+        //}
+        //else if (planAndOperation.PLANNED_COMPLETION_DATE == "" || planAndOperation.PLANNED_COMPLETION_DATE == null)
+        //{
+        //    toastService.ShowWarning("Please Select Plan Complete Date");
+        //    flag = true;
+        //}
+
+        return flag;
+    }
+    //private void ClearData()
+    //{
+    //    planAndOperation.TASK_DESCRIPTION = string.Empty;
+    //    planAndOperation.DEPARTMENT_ID = 0;
+    //    planAndOperation.EMPLOYEE_ID = 0;
+    //    planAndOperation.TASK_ASSIGN_TO = 0;
+    //    planAndOperation.TASK_ASSIGN_BY = 0;
+    //    planAndOperation.STATUS_ID = 0;
+    //    planAndOperation.PLANNED_START_DATE = "";
+    //    planAndOperation.ACTUAL_START_DATE = "";
+    //    planAndOperation.PLANNED_COMPLETION_DATE = "";
+    //    planAndOperation.ACTUAL_COMPLETION_DATE = "";
+    //    planAndOperation.ACTIVITIES = "";
+    //    planAndOperation.COMMENTS = "";
+
+    //}
+    private async Task GetPlanAndWorkScheduleList(int roleId)
+    {
+        if (roleId != 1)
+        { planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + departId); }
+        else { planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySuperAdmin"); }
+        StateHasChanged();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    }
+    private void SaveMode()
+    {
+        planAndOperation = new PlanAndOperationModel();
+
+        btnText = "Save";
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (listPlanOperation.Count > 0)
+        {
+            planAndOperationList = listPlanOperation.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(listPlanOperation.Count() / (decimal)pageSize);
+            StartNumber = planAndOperationList.FirstOrDefault().SL;
+            EndNumber = planAndOperationList[planAndOperationList.Count - 1].SL;
+        }
+
+    }
+    private void UpdateList(int pageNumber)
+    {
+        planAndOperationList = listPlanOperation.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (planAndOperationList.Count > 0)
+        {
+            StartNumber = planAndOperationList.FirstOrDefault().SL;
+            EndNumber = planAndOperationList[planAndOperationList.Count - 1].SL;
+        }
+
+    }
+    //private List<ProductViewModel> GetItem(string parameter)
+    //{
+    //    List<ProductViewModel> productList = new List<ProductViewModel>();
+    //    if (planAndOperationList.Any(er => er.ProductCode.Contains(parameter)))
+    //    { productList = planAndOperationList.FindAll(er => er.ProductCode.Contains(parameter)); }
+
+    //    else if (planAndOperationList.Any(er => er.ProductName.Contains(parameter)))
+    //    { productList = planAndOperationList.FindAll(er => er.ProductName.Contains(parameter)); }
+
+    //    else if (planAndOperationList.Any(er => er.ProductCategoryName.Contains(parameter)))
+    //    { productList = planAndOperationList.FindAll(er => er.ProductCategoryName.Contains(parameter)); }
+    //    if (parameter != null && parameter != "")
+    //    {
+    //        pageSize = 5;
+    //        productList = productList.Take(pageSize).ToList();
+    //        TotalPage = (int)Math.Ceiling(productList.Count() / (decimal)pageSize);
+    //    }
+    //    else
+    //    {
+
+    //    }
+    //    return productList;
+    //}
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    public async void PlanAndWork()
+    {
+        await Http.PostJsonAsync<List<PlanandOperationViewModel>>("http://localhost:32330/api/Abc1/GetPlan", listPlanOperation);
+    }
+
+    public async Task GetPlanAndOpp()
+    {
+        listPlanOperation = await planAndWorkService.GetPlanAndWork();
+    }
+
+    public async Task PlanAndWorkScheduleReport()
+    {
+        await JsRuntime.InvokeAsync<object>("open", Utility.ReportUrl+ "api/Abc1/GetPlan", "_blank");
+
+    }
+
+
+
+
+
+}
+
+

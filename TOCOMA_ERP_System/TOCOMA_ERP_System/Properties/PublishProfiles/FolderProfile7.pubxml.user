@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Project\Company All Project\SEMCORP\Release</_PublishTargetUrl>
+    <History>True|2023-05-03T06:58:16.6445265Z;True|2023-04-30T17:47:51.1917781+06:00;False|2023-04-30T17:32:15.1778178+06:00;False|2023-04-30T17:30:14.8820542+06:00;True|2023-04-30T17:23:03.9519541+06:00;</History>
+  </PropertyGroup>
+</Project>

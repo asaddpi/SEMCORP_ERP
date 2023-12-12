@@ -1,0 +1,104 @@
+﻿@page "/QuotationDetailsView/{Id}"
+@layout CustomLayout
+@inject HttpClient Http
+
+<style>
+    fieldset {
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: center;
+    }
+
+    tr th {
+        text-align: center;
+    }
+</style>
+<div class="dashboard-details">
+    <div class="container-fluid">
+        <a href="QuotationList"><i class='bi bi-arrow-left-circle' style="font-size:30px"></i></a>
+        <fieldset>
+            <div style="padding-top:10px;padding-left:10px">
+                <p style="font-size:15px;font-weight:bold">Quotation Type : @salesQuotationInfo.QUOTATION_TYPE</p> <label style="float:right;margin-right:230px">@planandOperationView.ENTRYDATE</label>
+                <p><b>Quotation No :   </b> @salesQuotationInfo.QUOTATION_NO</p>
+                <p><b>Quotation Date :   </b> @salesQuotationInfo.QUOTATION_DATE</p>
+                <p><b>Valid Up To :   </b> @salesQuotationInfo.VALID_UP_TO_DATE</p>
+                <p><b>Ship Via :   </b> @salesQuotationInfo.SHIP_VIA</p>
+                
+                <br />
+                <table style="width:70%">
+                    <thead>
+                        <tr>
+                            <th style="width:27%;background-color:gainsboro">Item <br />Description</th>
+                            <th style="width:7%;background-color:gainsboro">Minimum<br />Order<br />Quantity</th>
+                            <th style="width:7%;background-color:gainsboro">Unit<br />Of<br />Measure</th>
+                            <th style="width:7%;background-color:gainsboro">Unit Price</th>
+
+                            <th style="width:7%;background-color:gainsboro">AIT(%)</th>
+                            <th style="width:7%;background-color:gainsboro">VAT(%)</th>
+                            <th style="width:7%;background-color:gainsboro">Unit Price<br />Including VAT/TAX</th>
+
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+                        @if (salesQuotationItemList != null)
+                        {
+                            foreach (var item in salesQuotationItemList)
+                            {
+                                <tr>
+                                    <td>@item.ITEM_NAME<br>@((MarkupString)@item.ITEM_DESCRIPTION)</td>
+                                    <td>@item.ORDER_QUANTITY</td>
+                                    <td>@item.UOM</td>
+                                    <td>@item.UNIT_PRICE</td>
+                                    <td>@item.AIT</td>
+                                    <td>@item.VAT</td>
+                                    <td>@item.TOTAL_PRICE</td>
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </fieldset>
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+    PlanandOperationViewModel planandOperationView = new PlanandOperationViewModel();
+    PlanAndOperationModel planAndOperation = new PlanAndOperationModel();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    protected override async Task OnInitializedAsync()
+    {
+        salesQuotationInfo = await Http.GetJsonAsync<SalesQuotationView>(Utility.BaseUrl + "api/Sales/GetsalesQuotationInfoById/" + Id);
+        salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListById/" + Id);
+    }
+
+}

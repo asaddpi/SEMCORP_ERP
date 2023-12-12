@@ -1,0 +1,218 @@
+﻿@page "/DeliveryNoteList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime js
+
+<style>
+    table, tr, td {
+        border: none;
+        text-align: center;
+    }
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+    
+</style>
+
+<div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+    <div class="col-md-4"><h5>Delivery Note List</h5></div>
+    <div class="" style="display:flex;gap:10px;align-items:center">
+        <a href="NewDeliveryNote">
+            <button class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px"><i class='bi bi-plus' style="font-size:30px" /> New</button>
+        </a>
+
+
+        <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @quotationList.Count()</label>
+        <a style="color:Highlight;">
+            <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+        </a><a style="color:Highlight">
+            <i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+        </a>
+    </div>
+</div>
+
+
+<hr />
+
+<table id="#example" width="100%">
+    <thead>
+        <tr>
+            @*<th></th>*@
+            @*<td></td>*@
+
+            <td>DN No</td>
+            <td>Delivery Date</td>
+            <td style="text-align:left">Customer</td>
+            <td style="text-align:left">Project</td>
+
+
+
+        </tr>
+
+    </thead>
+    <tbody>
+        @if (AllDeliveryNoteList != null)
+        {
+            foreach (var item in AllDeliveryNoteList)
+            {
+                @*@onclick=@(() => GetPOData(item.PO_ID))*@
+                <tr>
+                    @*<td>
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="EditSalesQuotation/@item.DELIVERY_NOTE_NO">Edit</a>
+                                    <a class="dropdown-item">Print Delivery Note</a>
+                                    <a class="dropdown-item">Print Invoice</a>
+
+
+                                </div>
+                            </div>
+                        </td>*@
+                    @*<td style="text-align:center"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked((item.SALES_QUOTATION_ID), eventArgs.Value); }" /></td>*@
+                    <!--<td style="text-align:center;width:30px"><a href="EditSalesQuotation/@item.DELIVERY_NOTE_NO"><span class="oi oi-pencil"></span></a></td>-->
+                    @*<td style="text-align:center;width:30px"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.DELIVERY_NOTE_NO), eventArgs.Value); }" /></td>*@
+                    <td style="width:150px"><a style="color:Highlight;cursor:pointer" @onclick=@(() => DeliveryNoteClicked(item.DELIVERY_NOTE_NO))>@item.DELIVERY_NOTE_NO</a></td>
+
+                    <td>@item.DELIVERY_DATE</td>
+                    <td style="text-align:left">@item.CUSTOMER_NAME</td>
+                    <td style="text-align:left">@item.SHIPPING_PROJECT_NAME</td>
+
+
+
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+
+@code {
+
+    CustomerModel customer = new CustomerModel();
+    List<CustomerViewModel> allcustomerList = new List<CustomerViewModel>();
+    List<CustomerViewModel> customerList = new List<CustomerViewModel>();
+    List<DeliveryNoteViewModel> AllDeliveryNoteList = new List<DeliveryNoteViewModel>();
+    List<DeliveryNoteViewModel> quotationList = new List<DeliveryNoteViewModel>();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    DeliveryNoteViewModel deliveryNoteMaster = new DeliveryNoteViewModel();
+    List<DeliveryNoteViewModel> deliveryDetails = new List<DeliveryNoteViewModel>();
+
+
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    bool checkStatus = false;
+    int iOption = 0;
+    //[Parameter]
+    //public string woNo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllDeliveryNoteList = await Http.GetJsonAsync<List<DeliveryNoteViewModel>>(Utility.BaseUrl + "api/Sales/GetAllDeliveryNoteInfo");
+        quotationList = await Http.GetJsonAsync<List<DeliveryNoteViewModel>>(Utility.BaseUrl + "api/Sales/GetAllDeliveryNoteInfo");
+        //AppState.salesQuotation = quotationList;
+        //Pagination();
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+
+    async void CheckboxClicked(string deliverynoteNo, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            //deliveryNoteMaster = await Http.GetJsonAsync<DeliveryNoteViewModel>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + deliverynoteNo);
+            deliveryDetails = await Http.GetJsonAsync<List<DeliveryNoteViewModel>>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + deliverynoteNo);
+            //termsId = salesInfo.TERMS_AND_CONDITION;
+            //if (termsId != null)
+            //{ termsAndConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetTermsAndConditions/" + termsId); }
+            //int i = 1;
+            //foreach (var item in termsAndConditionList)
+            //{
+            //    condition = new PurchaseTermsConditionsModel();
+            //    condition.PURCHASE_TERMS_CONDITION_ID = item.PURCHASE_TERMS_CONDITION_ID;
+            //    condition.SALES_TERMS_CONDITION_ID = item.SALES_TERMS_CONDITION_ID;
+            //    condition.SL = item.SL;
+            //    condition.TERMS_AND_CONDITIONS = item.SL + " ." + item.TERMS_AND_CONDITIONS;
+
+            //    termsConditionList.Add(condition);
+            //    //i++;
+            //}
+            AppState.deliveryNoteView = deliveryNoteMaster;
+            AppState.DeliveryItemDetails = deliveryDetails;
+            //AppState.SalestermsConditionList = termsConditionList;
+
+        }
+        this.StateHasChanged();
+    }
+    private async void GetDeliveryInfoById(string dn_No)
+    {
+        deliveryNoteMaster = await Http.GetJsonAsync<DeliveryNoteViewModel>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + dn_No);
+    }
+    private async void PrintDeliveryNote()
+    {
+
+        try
+        {
+            await js.InvokeAsync<object>("open", "api/RDLCReport/GetSalesDeliveryNote", "_blank");
+        }
+        catch { }
+    }
+    private async void DeliveryNoteClicked(string deliverynoteNo)
+    {
+
+        try
+        {
+            deliveryDetails = await Http.GetJsonAsync<List<DeliveryNoteViewModel>>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + deliverynoteNo);
+            AppState.deliveryNoteView = deliveryDetails.FirstOrDefault();
+            AppState.DeliveryItemDetails = deliveryDetails;
+            await js.InvokeAsync<object>("open", "api/RDLCReport/GetSalesDeliveryNote", "_blank");
+        }
+        catch { }
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AllDeliveryNoteList = quotationList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (AllDeliveryNoteList.Count > 0)
+        {
+            StartNumber = AllDeliveryNoteList.FirstOrDefault().SL;
+            EndNumber = AllDeliveryNoteList[AllDeliveryNoteList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (quotationList.Count > 0)
+        {
+            AllDeliveryNoteList = quotationList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(quotationList.Count() / (decimal)pageSize);
+            StartNumber = AllDeliveryNoteList.FirstOrDefault().SL;
+            EndNumber = AllDeliveryNoteList[AllDeliveryNoteList.Count - 1].SL;
+        }
+
+    }
+
+}

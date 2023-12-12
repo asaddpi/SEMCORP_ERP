@@ -1,0 +1,11 @@
+﻿@page "/Index"
+
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome, @context.User.Identity.Name</p>
+    </Authorized>
+    <NotAuthorized>
+        <LoginLayout></LoginLayout>
+    </NotAuthorized>
+    
+</AuthorizeView>

@@ -1,0 +1,196 @@
+﻿@page "/ProjectList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+<style>
+    table, tr, td {
+        border: none;
+        /*text-align: center;*/
+    }
+
+    /*table, tbody, tr, td {
+        padding: 5px;
+    }*/
+</style>
+
+<div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+    <div class="col-md-4"><h5 style="color:blue">Home > Project List</h5></div>
+    @*<div class="" style="display:flex;gap:10px;align-items:center">
+            <a href="PurchaseforProject">
+                <button class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px"><i class='bi bi-plus' style="font-size:30px" /> New</button>
+            </a>
+
+
+
+        </div>*@
+</div>
+
+
+<hr />
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Customer</th>
+            <th>Project</th>
+            <th>Address</th>
+            <th>Contact Person</th>
+            <th>Contact Person Phone</th>
+            <th>Contact Person Email</th>
+            @*<th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>*@
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Projectlist != null)
+        {
+            foreach (var item in Projectlist)
+            {
+        <tr>
+            <td>@item.CUSTOMER_NAME</td>
+            <td>@item.SHIPPING_PROJECT_NAME</td>
+            <td>@item.PROJECT_ADDRESS</td>
+            <td>@item.PROJECT_CONTACT_PERSON_NAME</td>
+            <td>@item.PROJECT_CONTACT_PERSON_PHONE</td>
+            <td>@item.PROJECT_CONTACT_PERSON_EMAIL</td>
+            <td style="text-align:center"><a   href="EditProject/@item.CUSTOMER_PROJECT_ID" ><span class="oi oi-pencil"></span></a></td>
+            <td style="text-align:center"><a style="color:red" @onclick=@(() => DeleteProject(item.CUSTOMER_PROJECT_ID))><span class="oi oi-trash"></span></a></td>
+
+
+        </tr>
+            }
+        }
+        
+    </tbody>
+</table>
+
+
+<!--<table id="#example" width="100%">
+    <thead style="background-color:lightgreen">
+        <tr>-->
+            @*<td>SL</td>*@
+            <!--<td>Customer</td>-->
+            
+            @*<td>Po Date</td>
+                <td>Memo No.</td>
+                <td>Supplier</td>
+                <td>Total</td>
+                <td></td>*@
+        <!--</tr>
+
+    </thead>
+    <tbody>
+        @if (Projectlist != null)
+        {
+            foreach (var item in Projectlist)
+            {
+                <tr>
+                    <td>@item.CUSTOMER_NAME</td>
+                    <td>@item.SHIPPING_PROJECT_NAME</td>
+
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>-->
+@*<hr />
+<div class="" style="display:flex;gap:10px;align-items:center">
+    <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @purchaseviewList_forPagination.Count()</label>
+    <a style="color:Highlight;">
+        <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+    </a>
+    <a style="color:Highlight">
+        <i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+    </a>
+</div>*@
+
+
+
+@code {
+    List<PurchaseOrderViewModel> purchaseviewList_forPagination = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderViewModel> purchaseviewList = new List<PurchaseOrderViewModel>();
+    PurchaseOrderViewModel purchaseOrder = new PurchaseOrderViewModel();
+    List<CustomerProjectModel> Projectlist = new List<CustomerProjectModel>();
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    public int display_row_no { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Projectlist = await Http.GetJsonAsync<List<CustomerProjectModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomerProjectList");
+        //purchaseviewList_forPagination = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseList");
+        display_row_no = 10;
+        Pagination();
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private void Pagination()
+    {
+        pageSize = display_row_no;
+        if (purchaseviewList_forPagination.Count > 0)
+        {
+            purchaseviewList = purchaseviewList_forPagination.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(purchaseviewList_forPagination.Count() / (decimal)pageSize);
+            StartNumber = purchaseviewList.FirstOrDefault().SL;
+            EndNumber = purchaseviewList[purchaseviewList.Count - 1].SL;
+        }
+
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        purchaseviewList = purchaseviewList_forPagination.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (purchaseviewList.Count > 0)
+        {
+            StartNumber = purchaseviewList.FirstOrDefault().SL;
+            EndNumber = purchaseviewList[purchaseviewList.Count - 1].SL;
+        }
+
+    }
+    private async Task GetPurchaseOrder(string quotationNo)
+    {
+
+        purchaseOrder = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseListByQuotationNo/" + quotationNo);
+        //if (salesQuotationInfo.TERMS_AND_CONDITION != null && salesQuotationInfo.TERMS_AND_CONDITION != "")
+        //{
+        //    termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetSalesTermsAndConditionsByIds/" + salesQuotationInfo.TERMS_AND_CONDITION);
+        //    AppState.SalestermsConditionList = termsConditionList;
+        //}
+
+        ////porder.REPORT_TYPE = "1";
+        //salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListByByQuotationNo/" + quotationNo);
+        ////porder.pOrderDetailsList = purchaseOrderDetailsList;
+        //AppState.salesQuotation = salesQuotationInfo;
+        //AppState.salesQuotationitemList = salesQuotationItemList;
+
+        await JSRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrder", "_blank");
+    }
+
+    private async Task DeleteProject(int projectId)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteProject/" + projectId);
+        Projectlist = await Http.GetJsonAsync<List<CustomerProjectModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomerProjectList");
+
+    }
+}

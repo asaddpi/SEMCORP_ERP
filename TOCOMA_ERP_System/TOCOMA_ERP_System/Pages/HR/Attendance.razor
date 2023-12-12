@@ -1,0 +1,27 @@
+﻿@page "/Attendance"
+@layout CustomLayout
+
+<style>
+    .div1 {
+        width: 300px;
+        height: 100px;
+        border: 1px solid gray;
+    }
+    #cent {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px; /* this is half the height of your div*/
+        margin-left: -100px; /*this is half of width of your div*/
+        border: 1px solid gray;
+    }
+</style>
+<div1 id="cent">
+    <button class="btn btn-success" style="width:200px">Check In</button>
+    <button class="btn btn-primary" style="width:200px">Check Out</button>
+
+</div1>
+
+@code {
+
+}

@@ -1,0 +1,324 @@
+﻿@page "/PurchaseOrderView/{po_number}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@using Microsoft.AspNetCore.Mvc
+@using System.IO
+@*@using OfficeOpenXml *@
+ 
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+    }
+
+    tr td {
+        text-align: left;
+    }
+
+    tr th {
+        text-align: left;
+        background-color: LightGray;
+        font-size: 15px;
+    }
+
+    a#test:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="dashboard-details" style="margin-bottom:200px">
+    
+    <div class="container-fluid">
+
+        <br />
+        @*<div class="col-lg-12">
+            <div class="col-lg-8">
+
+            </div>
+            <div class="col-lg-4">
+                <a id="test" style="color: Highlight;float:right" class="col-md-4" target="_blank">Generate Pdf<img src="images/pdf.png" style="width:30px;height:30px" /></a>
+            </div>
+
+        </div>*@
+        @*<a id="test" style="color: Highlight" class="col-md-4" target="_blank"><img src="images/pdf.png" style="width: 20px; height:20px" />Generate Pdf</a>*@
+
+        <br />
+        
+        <div class="col-lg-12">
+            <fieldset class="border p-4">
+                <legend class="w-auto">Purchase Order(PO)</legend>
+                <label for="submitbutton" style="float:right" class="btn btn-success">Download Excel</label>
+                
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button style="background-color:@_localcolor" @onclick="Local_Tab_Click" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">LOCAL</button>
+                        <button class="nav-link" style="background-color:@_intcolor" id="nav-profile-tab" @onclick="Int_Tab_Click" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="true">INTERNATIONAL</button>
+
+                    </div>
+                </nav>
+                <br />
+                <div class="row">
+                    <br />
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-5"><label>VENDOR:</label></div>
+                            <div class="col-md-7">
+                                @purchaseOrderView.VENDOR_NAME
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>TYPE:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.VENDOR_TYPE_STATUS</div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>PO NO.:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.PO_NUMBER_LONG_CODE</div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>PO DATE:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.PO_DATE</div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>QUOTATION REF.NO.:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.QUOTATION_REFERANCE_NO</div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>QUOTATION REF. DATE:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.QUOTATION_REFERANCE_DATE</div>
+                        </div>
+                        @if (IL_OPTION == 3)
+                        {
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>TRANSECTION TYPE:</label></div>
+                                <div class="col-md-7">
+
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>DELIVERY TIME:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.DELIVERY_TIME</div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>SHIPPING ADDRESS:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.SHIPPING_ADDRESS</div>
+                        </div>
+                        @if (IL_OPTION == 1)
+                        {
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>DELIVERY MODE:</label></div>
+                                <div class="col-md-7">
+
+
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>PAYMENT TERM:</label></div>
+                            <div class="col-md-7">@purchaseOrderView.PAYMENT_TERM</div>
+                        </div>
+                        @if (IL_OPTION == 1)
+                        {
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>PAYMENT MODE:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.PAYMENT_MODE</div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-lg-5">
+                        @if (IL_OPTION == 2)
+                        {
+                            <div class="row">
+                                <div class="col-md-5"><label>INCOTERM:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.TRADE_TERM</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>SHIP VIA:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.SHIP_VIA</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>CONTAINER SIZE:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.CONTAINER_SIZE</div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>COUNTRY OF ORIGIN:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.COUNTRY_OF_ORIGIN</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>IMPORT FROM:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.IMPORT_FROM</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>PORT OF LOADING:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.PORT_OF_LOADING</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>PORT OF DISCHARGE:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.PORT_OF_DISCHARGE</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>SHIPPING MARK:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.SHIPPING_MARK</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>BIN:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.BIN</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>TIN:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.TIN</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>EMAIL:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.EMAIL</div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>MOBILE:</label></div>
+                                <div class="col-md-7">@purchaseOrderView.MOBILE</div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+
+
+        <br />
+        <div class="col-md-12">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="10%">Item</th>
+                        <th width="10%">Quantity</th>
+                        <th width="10%">Unit Price</th>
+                        <th width="10%">UOM</th>
+                        <th width="10%">Pack Size</th>
+                        <th width="10%">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (purchaseOrderDetailsList != null)
+                    {
+                        foreach (var item in purchaseOrderDetailsList)
+                        {
+                            <tr>
+                                <td>@item.ITEM_NAME</td>
+                                <td>@item.QUANTITY</td>
+                                <td>@item.UNIT_PRICE</td>
+                                <td>@item.UOM</td>
+                                <td>@item.PACK_SIZE</td>
+                                <td>@item.UNIT_TOTAL</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <br />
+        
+        Packaing Instruction
+        <div class="col-md-12" style="border: 1px solid #888">
+            @foreach (var item in packagingInsList)
+            {
+                <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" /> <label>@item.PACKAGING_INSTRUCTION</label><br />
+            }
+        </div>
+        <br />
+        <br />
+        Other Terms & Condition
+        <div style="border: 1px solid #888">
+            @foreach (var item in termsConditionList)
+            {
+                <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+            }
+
+        </div>
+
+
+        
+
+    </div>
+</div>
+<form action="Excel/GenerateInvoice" method="post" style="display:none">
+    <button type="submit" id="submitbutton"></button>
+</form>
+
+
+
+@code {
+
+    [Parameter]
+    public string po_number { get; set; }
+    PurchaseOrderViewModel purchaseOrderView = new PurchaseOrderViewModel();
+    List<PurchaseOrderDetailsEntity> purchaseOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+    List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    string _localcolor;
+    string _intcolor;
+    int IL_OPTION;
+    string packInsId = "";
+    string termsId = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPurchaseOrder();
+        packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        if (packInsId != null) { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        if (termsId != null) { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+
+
+        if (purchaseOrderView.VENDOR_TYPE_STATUS == "Local")
+        {
+            IL_OPTION = 1;
+            _localcolor = "gray";
+        }
+        else
+        {
+            IL_OPTION = 2;
+            _intcolor = "gray";
+        }
+
+    }
+    public async Task GetPurchaseOrder()
+    {
+        purchaseOrderView = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderInfo/" + po_number);
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        //requestItemList = await Http.GetJsonAsync<List<OrderItemEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+        //othersDetails = await Http.GetJsonAsync<List<PurchaseRequisitionOthersModel>>(Utility.BaseUrl + "api/Purchase/GetRequisitionOthersItemDetailsByReqNo/" + requisition_no);
+        AppState.porder = purchaseOrderView;
+        AppState.porderDetails = purchaseOrderDetailsList;
+    }
+    private void Local_Tab_Click()
+    {
+        _localcolor = "gray";
+        _intcolor = "ghostwhite";
+        IL_OPTION = 1;
+        //selectedVendorList = vendorList.FindAll(x => x.VENDOR_TYPE_STATUS == "Local");
+    }
+    private void Int_Tab_Click()
+    {
+        _localcolor = "ghostwhite";
+        _intcolor = "gray";
+        IL_OPTION = 2;
+        //selectedVendorList = vendorList.FindAll(x => x.VENDOR_TYPE_STATUS == "International");
+    }
+
+
+}

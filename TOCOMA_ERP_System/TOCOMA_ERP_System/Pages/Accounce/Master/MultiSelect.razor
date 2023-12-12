@@ -1,0 +1,23 @@
+﻿@page "/MultiSelect"
+@layout CustomLayout
+@inject IJSRuntime js
+
+<select>
+    @foreach(var item in MyList)
+    { 
+        <option value="">@item</option>
+    }
+</select>
+
+
+@code {
+    protected List<string> MyList = new List<string>() { "first", "second", "third" };
+
+    protected string MyItem { get; set; }
+
+    //Define a preselected value when the component initializes
+    protected override void OnInitialized()
+    {
+        MyItem = "second";
+    }
+}

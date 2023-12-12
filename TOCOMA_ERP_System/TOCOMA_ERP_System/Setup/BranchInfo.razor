@@ -1,0 +1,258 @@
+﻿@page "/BranchInfo"
+
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+
+<div class="card">
+    <div class="card-header">
+        Branch Info
+
+    </div>
+
+    <br />
+    <EditForm Model="@branch" style="height:20%;margin-left:10px">
+
+        <div class="row">
+            <div class="col-md-2"><label>Bank:</label></div>
+            <div class="col-md-7">
+                <InputSelect @bind-Value="@branch.BANK_ID" style="width:500px;height:28px">
+                    <option value="">--Select Bank--</option>
+                    @foreach (var bank in bankList)
+                    {
+                        <option value="@bank.BANK_ID">@bank.BANK_NAME</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Code:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.BRANCH_CODE" style="width:200px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Name:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.BRANCH_NAME" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Address:</label></div>
+            <div class="col-md-7">
+                <InputTextArea @bind-Value="@branch.BRANCH_ADDRESS" style="width:500px"></InputTextArea>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Phone:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.BRANCH_PHONE" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Routing No.:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.ROUTING_NUMBER" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Swift Code:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.SWIFT_CODE" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Postal Code:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.POSTAL_CODE" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Contact Person Name:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.CONTACT_PERSON_NAME" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Designation:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.CONTACT_PERSON_DESIGNATION" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Mobile:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.CONTACT_PERSON_MOBILE" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Email:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.CONTACT_PERSON_EMAIL" style="width:500px"></InputText>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-2"><label>Branch Email:</label></div>
+            <div class="col-md-7">
+                <InputText @bind-Value="@branch.BRANCH_EMAIL" style="width:500px"></InputText>
+            </div>
+        </div>
+
+
+
+        <br />
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <button type="submit" @onclick="SaveCategory" class="btn btn-info" style="width:120px;margin-right:10px">@submit</button>
+                <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+            </div>
+        </div>
+
+    </EditForm>
+
+    <br />
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:40px"></th>
+                        <th style="width:40px"></th>
+                        <td>Branch</td>
+                        <td>Bank</td>
+                        <td>Address</td>
+                        <td>Phone</td>
+                        <td>Routing No.</td>
+                        <td>Swift Code</td>
+                        <td>Contact Person Name</td>
+                        <td>Designation</td>
+                        <td>Mobile</td>
+                        <td>Email</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (branchList != null)
+                    {
+                        foreach (var item in branchList)
+                        {
+                            <tr>
+                                <td style="text-align:center"><a style="color:red" @onclick=@(() => DeleteCategory(item.BANK_BRANCH_ID))><span class="oi oi-trash"></span></a></td>
+                                <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => editCategory(item.BANK_BRANCH_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td>@item.BRANCH_NAME</td>
+                                <td>@item.BANK_NAME</td>
+                                <td>@item.BRANCH_ADDRESS</td>
+                                <td>@item.BRANCH_PHONE</td>
+                                <td>@item.ROUTING_NUMBER</td>
+                                <td>@item.SWIFT_CODE</td>
+                                <td>@item.CONTACT_PERSON_NAME</td>
+                                <td>@item.CONTACT_PERSON_DESIGNATION</td>
+                                <td>@item.CONTACT_PERSON_MOBILE</td>
+                                <td>@item.CONTACT_PERSON_EMAIL</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    BankBranchModel branch = new BankBranchModel();
+    List<BankBranchModel> branchList = new List<BankBranchModel>();
+    List<BankModel> bankList = new List<BankModel>();
+    string submit = "Save";
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBranchInfo();
+        bankList = await Http.GetJsonAsync<List<BankModel>>(Utility.BaseUrl + "api/Bank");
+        StateHasChanged();
+
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetBranchInfo()
+    {
+        branchList = await Http.GetJsonAsync<List<BankBranchModel>>(Utility.BaseUrl + "api/Bank/GetAllBranch");
+    }
+    public async Task SaveCategory()
+    {
+        if (IsValidation_Category() != true)
+        {
+            try
+            {
+                if (submit == "Save")
+                {
+                    branch.Operation_Type = 1;
+                    var data = await Http.PostJsonAsync<BankBranchModel>(Utility.BaseUrl + "api/Bank/AddBranch", branch);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                else if (submit == "Update")
+                {
+                    var data = await Http.PutJsonAsync<BankBranchModel>(Utility.BaseUrl + "api/Bank/UpdateBranch", branch);
+                    toastService.ShowSuccess("Update Successfully!!!");
+                }
+
+                branch = new BankBranchModel();
+                submit = "Save";
+            }
+            catch (Exception ex)
+            { }
+        }
+        await GetBranchInfo();
+    }
+    private async Task Cancel()
+    {
+        branch = new BankBranchModel();
+        submit = "Save";
+    }
+    private async Task editCategory(int categoryId)
+    {
+        submit = "Update";
+        branch = new BankBranchModel();
+        branch.BANK_ID = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BANK_ID;
+        branch.BRANCH_NAME = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BRANCH_NAME;
+        branch.BRANCH_ADDRESS = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BRANCH_ADDRESS;
+        branch.BRANCH_CODE = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BRANCH_CODE;
+        branch.CONTACT_PERSON_NAME = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).CONTACT_PERSON_NAME;
+        branch.BRANCH_PHONE = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BRANCH_PHONE;
+        branch.ROUTING_NUMBER = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).ROUTING_NUMBER;
+        branch.SWIFT_CODE = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).SWIFT_CODE;
+        branch.POSTAL_CODE = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).POSTAL_CODE;
+        branch.CONTACT_PERSON_DESIGNATION = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).CONTACT_PERSON_DESIGNATION;
+        branch.CONTACT_PERSON_MOBILE = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).CONTACT_PERSON_MOBILE;
+        branch.CONTACT_PERSON_EMAIL = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).CONTACT_PERSON_EMAIL;
+        branch.BRANCH_EMAIL = branchList.Find(x => x.BANK_BRANCH_ID == categoryId).BRANCH_EMAIL;
+        branch.BANK_BRANCH_ID = categoryId;
+        branch.Operation_Type = 2;
+    }
+    private async Task DeleteCategory(int categoryId)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteCategory/" + categoryId);
+        await GetBranchInfo();
+    }
+    private bool IsValidation_Category()
+    {
+        bool flag = false;
+        if (branch.BRANCH_NAME== "" || branch.BRANCH_NAME == string.Empty || branch.BRANCH_NAME == null)
+        {
+            toastService.ShowWarning("Branch cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+}

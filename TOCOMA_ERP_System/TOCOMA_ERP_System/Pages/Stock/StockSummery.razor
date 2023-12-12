@@ -1,0 +1,287 @@
+﻿@page "/StockSummery"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@*<style>
+        .scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #888;
+            padding: 0.25em 0.5em;
+        }
+    </style>*@
+
+
+
+
+<div class="card">
+    <div class="card-header">
+        <h3>Stock Summery</h3>
+
+    </div>
+
+    <br />
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <td scope="col">Brand</td>
+                        <td scope="col">Item</td>
+                        <td scope="col">Pack Size</td>
+                        <td scope="col">UOM</td>
+                        <td scope="col">Opening Balance<br />at<br /></td>
+                        <td scope="col">Stock In</td>
+                        <td scope="col">Stock Out</td>
+                        <td scope="col">Balance</td>
+                        <td scope="col">Location</td>
+                        <td scope="col">Unit Rate</td>
+                        <td scope="col">Total Value</td>
+                        <td scope="col">Remarks</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (stockSummery != null)
+                    {
+                        foreach (var item in stockSummery)
+                        {
+                            <tr>
+                                <td scope="col">@item.BRAND_NAME</td>
+                                <td scope="col">@item.ITEM_NAME</td>
+                                <td scope="col">@item.PACK_SIZE</td>
+                                <td scope="col">@item.UOM</td>
+                                <td scope="col">@item.OPENING_BALANCE</td>
+                                <td scope="col">@item.STOCK_IN_QUANTITY</td>
+                                <td scope="col">@item.STOCK_OUT_QUANTITY</td>
+                                <td scope="col">@item.BALANCE</td>
+                                <td scope="col">@item.WAREHOUSE_NAME</td>
+                                <td scope="col">@item.UNIT_PRICE</td>
+                                <td scope="col">@item.TOTAL_VALUE</td>
+                                <td scope="col">@item.REMARKS</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!--<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">STOCK SUMMERY</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+
+            <select style="height:32px;width:304px" @onchange="ReportType_Clicked">
+                <option value="">-Select Warehouse-</option>
+                @foreach (var item in warehouseList)
+                {
+                    <option value="@item.WAREHOUSE_ID">@item.WAREHOUSE_NAME</option>
+                }
+            </select>-->
+@*<label>From Date</label><input type="date" @bind-value="PO_FROM_DATE" />
+    <label>To Date</label><input type="date" @bind-value="PO_TO_DATE" />
+    <button class="btn btn-info" @onclick=@(() => GetData())>>></button>*@
+
+
+<!--<button class="btn btn-info" @onclick="PrintOption">Print</button>-->
+@*<img src="images/1200px-PDF_file_icon.svg.png" alt="" width="50" height="40" style="margin-left:30px">
+    <lable>Download PDF</lable>
+    <img src="images/excel_ms-5bfc379146e0fb00511cdefe.jpg" alt="" width="50" height="40" style="margin-left:30px">
+    <lable>Download Excel</lable>
+    <br />*@
+<!--<div class="analytic_details_contain_two scroll">
+                <table class="table table-striped ">
+                    <thead style="background-color:lightgray;color:black;text-align:center">
+
+
+                            <tr>
+                                <td scope="col">Brand</td>
+                                <td scope="col">Item</td>
+                                <td scope="col">Pack Size</td>
+                                <td scope="col">UOM</td>
+                                <td scope="col">Opening Balance<br />at<br /></td>
+                                <td scope="col">Stock In</td>
+                                <td scope="col">Stock Out</td>
+                                <td scope="col">Balance</td>
+                                <td scope="col">Location</td>
+                                <td scope="col">Unit Rate</td>
+                                <td scope="col">Total Value</td>
+                                <td scope="col">Remarks</td>
+                            </tr>
+
+
+
+
+                    </thead>
+                    <tbody>
+
+
+                            @if (stockSummery != null)
+                            {
+                                foreach (var item in stockSummery)
+                                {
+                                    <tr>
+                                        <td scope="col">@item.BRAND_NAME</td>
+                                        <td scope="col">@item.ITEM_NAME</td>
+                                        <td scope="col">@item.PACK_SIZE</td>
+                                        <td scope="col">@item.UOM</td>
+                                        <td scope="col">@item.OPENING_BALANCE</td>
+                                        <td scope="col">@item.STOCK_IN_QUANTITY</td>
+                                        <td scope="col">@item.STOCK_OUT_QUANTITY</td>
+                                        <td scope="col">@item.BALANCE</td>
+                                        <td scope="col">@item.WAREHOUSE_NAME</td>
+                                        <td scope="col">@item.UNIT_PRICE</td>
+                                        <td scope="col">@item.TOTAL_VALUE</td>
+                                        <td scope="col">@item.REMARKS</td>
+                                    </tr>
+                                }
+                            }
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>-->
+
+@code {
+    List<PurchaseOrderViewModel> poList = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderViewModel> pOrderView = new List<PurchaseOrderViewModel>();
+    PurchaseOrderViewModel poModel = new PurchaseOrderViewModel();
+    List<StockSummeryReportModel> stockSummery = new List<StockSummeryReportModel>();
+    List<WarehouseModel> warehouseList = new List<WarehouseModel>();
+    //PurchaseOrderViewModel pOrderView = new PurchaseOrderViewModel();
+    DateTime PO_FROM_DATE = System.DateTime.Now;
+    DateTime PO_TO_DATE = System.DateTime.Now;
+    string reportType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetStockSummery();
+        warehouseList = await Http.GetJsonAsync<List<WarehouseModel>>(Utility.BaseUrl + "api/Setup/GetWareHouseList");
+        StateHasChanged();
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetStockSummery()
+    {
+        stockSummery = await Http.GetJsonAsync<List<StockSummeryReportModel>>(Utility.BaseUrl + "api/Stock/GetStockSummery");
+    }
+
+    protected async Task GetData()
+    {
+        if (reportType == "2")
+        {
+            //await GetPODetailsItemByPOID(PO_FROM_DATE, PO_TO_DATE);
+            pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderIdByPurchaseDate/" + PO_FROM_DATE + "/" + PO_TO_DATE);
+        }
+        else if (reportType == "3")
+        {
+            await GetDailyPurchaseStatement(PO_FROM_DATE, PO_TO_DATE);
+        }
+
+    }
+    private async Task PrintOption()
+    {
+        if (reportType == "1") { await Http.PostJsonAsync("https://localhost:44350/Report/PurchaseOrder", poModel); }
+        else if (reportType == "2")
+        {
+            await GetPODetailsItemByPOID(PO_FROM_DATE, PO_TO_DATE);
+            await Http.PostJsonAsync("https://localhost:44350/Report/PurchaseOrderTracker", pOrderView);
+        }
+        else if (reportType == "3")
+        {
+            await GetDailyPurchaseStatement(PO_FROM_DATE, PO_TO_DATE);
+            await Http.PostJsonAsync("https://localhost:44350/Report/PurchaseOrderTracker", pOrderView);
+        }
+    }
+    private async Task GetDailyPurchaseStatement(DateTime date1, DateTime date2)
+    {
+        pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetDailyPurchaseStatementByDate/" + date1 + "/" + date2);
+    }
+    private async Task GetPODetailsItemByPOID(DateTime date1, DateTime date2)
+    {
+        //pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderByPOId/" + poId);
+        pOrderView = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderIdByPurchaseDate/" + date1 + "/" + date2);
+
+        //foreach (var p in pOrderView)
+        //{
+        //    //purchaseOrderDetailsListByPO_Id = new List<PurchaseOrderDetailsEntity>();
+        //    //purchaseOrderDetailsListByPO_Id = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_ID/" + p.PO_ID);
+        //    if (!checkedPOIds.Contains(Convert.ToString(p.PO_ID)))
+        //    {
+        //        checkedPOIds.Add(Convert.ToString(p.PO_ID));
+        //    }
+        //    str = String.Join(",", checkedPOIds);
+
+        //    //p.pOrderDetailsList= purchaseOrderDetailsListByPO_Id.FindAll(x => x.PO_ID == p.PO_ID);
+
+        //    //p.pOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_ID/" + poId);
+        //}
+        //purchaseOrderDetailsListByPO_Id = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsBYPO_ID_IN/" + str);
+        //foreach (var p in pOrderView)
+        //{
+        //    p.pOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+        //    p.pOrderDetailsList = purchaseOrderDetailsListByPO_Id.FindAll(x => x.PO_ID == p.PO_ID);
+
+        //}
+        ////p.pOrderDetailsList = purchaseOrderDetailsListByPO_Id.FindAll(x => x.PO_ID == p.PO_ID);
+        this.StateHasChanged();
+
+
+    }
+    async void CheckboxClicked(string poId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            await GetPOItemByPOID(poId);
+            //if (!checkedBrandIds.Contains(poId))
+            //{
+            //    checkedBrandIds.Add(poId);
+            //}
+        }
+        //else
+        //{
+        //    if (checkedBrandIds.Contains(poId))
+        //    {
+        //        checkedBrandIds.Remove(poId);
+        //    }
+        //}
+        //str = String.Join(",", checkedBrandIds);
+
+
+
+    }
+    protected async void ReportType_Clicked(ChangeEventArgs categoryevent)
+    {
+        //pOrderView.REPORT_TYPE = categoryevent.Value.ToString();
+        reportType = categoryevent.Value.ToString();
+        this.StateHasChanged();
+    }
+    private async Task GetPOItemByPOID(string poId)
+    {
+        poModel = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderByPOId/" + poId);
+    }
+}

@@ -1,0 +1,67 @@
+﻿@page "/ItemApplicationArea"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+
+<div class="container">
+    <div class="card" style="height:100%">
+        <div class="card-header">
+            New Application Area
+            <button type="submit" @onclick="SaveCategory" class="btn btn-info" style="width:150px;float:right">Save</button>
+        </div>
+        <EditForm Model="@itemApplication" style="height:20%;margin-left:10px">
+            <div class="row">
+                <div class="col-md-3"><label>Application Area Name:</label></div>
+                <div class="col-md-7">
+                    <InputText @bind-Value="@itemApplication.APPLICATION_AREA" style="width:500px"></InputText>
+                </div>
+            </div>
+
+        </EditForm>
+    </div>
+    <br />
+    <table class="table">
+        <tr>
+            <th style="width:60px"></th>
+            <td>Application Area</td>
+        </tr>
+        <tbody>
+            @if (itemApplicationList != null)
+            {
+                foreach (var item in itemApplicationList)
+                {
+                    <tr>
+                        <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#"><span class="oi oi-pencil"></span></a></td>
+                        <td>@item.APPLICATION_AREA</td>
+                    </tr>
+                }
+            }
+
+
+        </tbody>
+    </table>
+</div>
+@code {
+    ItemApplicationAreaModel itemApplication = new ItemApplicationAreaModel();
+    List<ItemApplicationAreaModel> itemApplicationList = new List<ItemApplicationAreaModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetItemApplicationArea();
+    }
+    private async Task GetItemApplicationArea()
+    {
+        itemApplicationList = await Http.GetJsonAsync<List<ItemApplicationAreaModel>>(Utility.BaseUrl + "api/Setup/GetItemApplicationArea");
+    }
+    public async Task SaveCategory()
+    {
+        try
+        {
+            var data = await Http.PostJsonAsync<ItemApplicationAreaModel>(Utility.BaseUrl + "api/Setup/AddItemApplicationArea", itemApplication);
+            toastService.ShowSuccess("Insert Successfully!!!");
+        }
+        catch (Exception ex)
+        { }
+        await GetItemApplicationArea();
+    }
+}
+

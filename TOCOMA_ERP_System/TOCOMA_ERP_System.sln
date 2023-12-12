@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31727.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TOCOMA_ERP_System", "TOCOMA_ERP_System\TOCOMA_ERP_System.csproj", "{7D26ABFA-82BA-4F5E-AD47-4794F74E2D7C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TOCOMA_ERP_ClassLibrary", "TOCOMA_ERP_ClassLibrary\TOCOMA_ERP_ClassLibrary.csproj", "{BA0E1701-E416-4038-BE3B-7D797DC0E13E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D26ABFA-82BA-4F5E-AD47-4794F74E2D7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D26ABFA-82BA-4F5E-AD47-4794F74E2D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D26ABFA-82BA-4F5E-AD47-4794F74E2D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D26ABFA-82BA-4F5E-AD47-4794F74E2D7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA0E1701-E416-4038-BE3B-7D797DC0E13E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA0E1701-E416-4038-BE3B-7D797DC0E13E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA0E1701-E416-4038-BE3B-7D797DC0E13E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA0E1701-E416-4038-BE3B-7D797DC0E13E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13FADB5A-9664-47EB-BAF3-CAD8ABD6123E}
+	EndGlobalSection
+EndGlobal

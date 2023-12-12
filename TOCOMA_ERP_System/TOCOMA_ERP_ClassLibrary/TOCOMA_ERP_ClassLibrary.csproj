@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\OutputReportSupport.cs" />
+    <Compile Remove="Models\ReportConfig.cs" />
+    <Compile Remove="Models\ReportService.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,364 @@
+﻿@page "/SalesOrderTracking"
+@layout CustomLayout
+@inject HttpClient Http
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject IToastService toastService
+
+
+<div class="container">
+    <h3>Sales Order Tracking</h3>
+    <br />
+    <table width="100%">
+        <thead>
+            <tr>
+                <th colspan="6">General Information</th>
+                <th colspan="5">Order Information</th>
+                <th colspan="6">Material In & Out Information</th>
+                <th colspan="3">Status</th>
+            </tr>
+            <tr>
+                <th rowspan="2" style="width:50px"></th>
+                <th rowspan="2">SL</th>
+                <th rowspan="2">PO/WO<br />Number<br />& Date</th>
+                <th rowspan="2">PO/WO<br />Received<br />Date</th>
+                <th rowspan="2">Order<br />Receive<br />By</th>
+                <th rowspan="2" style="width:5%">Customer Name & Person</th>
+                <th rowspan="2">PO/WO <br />Number &<br />Delivery Date</th>
+                <th rowspan="2">Item</th>
+                <th rowspan="2">UOM</th>
+                <th rowspan="2">Quantity</th>
+                <th rowspan="2">Assign <br />to</th>
+                <th colspan="3">ETA to TL-WH with QTY</th>
+                <th colspan="3">Expected Delivery Date<br />with QTY</th>
+                <th rowspan="2">Parcentage of<br />Complete</th>
+                <th rowspan="2">Status of<br />Partial<br />Shipment</th>
+                <th rowspan="2">Next Instruction</th>
+            </tr>
+            <tr>
+                <th>1st Date</th>
+                <th>2nd Date</th>
+                <th>3rd Date</th>
+                <th>1st Date</th>
+                <th>2nd Date</th>
+                <th>3rd Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (salesorderList != null)
+            {
+                foreach (var item in salesorderList)
+                {
+                    @*<tr onclick="window.location='EditSalesOrderTracking/@item.PO_WO_NUMBER'">*@
+                    <tr>
+                        <td style="text-align:center"><a data-toggle="modal" style="color:Highlight" data-target=".bd-example-modal-lg" @onclick=@(() => GetPOData(item.SALES_ID))><span class="oi oi-pencil"></span></a></td>
+                        <td>@item.SL</td>
+                        <td>@item.PO_WO_NUMBER<br />@item.PO_WO_DATE</td>
+                        <td>@item.SALES_ORDER_RECEIVED_DATE</td>
+                        <td>@item.ORDER_RECEIVED_BY</td>
+                        <td style="width:10%">@item.CUSTOMER_NAME<br>@item.CONTACT_PERSON_NAME</td>
+                        <td>@item.PO_WO_NUMBER<br />@item.DELIVERY_DATE</td>
+                        <td style="width:10%">
+                            @if (item.sorderDetailsList != null)
+                            {
+                                @foreach (var i in item.sorderDetailsList)
+                                {
+                                    if (item.SALES_ID == Convert.ToString(i.SALES_ID))
+                                    {@i.ITEM_NAME <br />}
+                                }
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.sorderDetailsList != null)
+                            {
+                                @foreach (var i in item.sorderDetailsList)
+                                {
+                                    if (item.SALES_ID == Convert.ToString(i.SALES_ID))
+                                    {@i.UOM <br />}
+                                }
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.sorderDetailsList != null)
+                            {
+                                @foreach (var i in item.sorderDetailsList)
+                                {
+                                    if (item.SALES_ID == Convert.ToString(i.SALES_ID))
+                                    {@i.SALES_QUANTITY <br />}
+                                }
+                            }
+
+                        </td>
+                        <td>@item.ASSIGN_TO</td>
+                        <td>@item.ETA_TL_WH_1st_DATE</td>
+                        <td>@item.ETA_TL_WH_2nd_DATE</td>
+                        <td>@item.ETA_TL_WH_3rd_DATE</td>
+                        <td>@item.EXPECTED_DELIVERY_1st_DATE</td>
+                        <td>@item.EXPECTED_DELIVERY_2nd_DATE</td>
+                        <td>@item.EXPECTED_DELIVERY_3rd_DATE</td>
+                        <td>@item.PARCHENTAGE_OF_COMPLETE</td>
+                        <td>@item.STATUS_OF_SHIPMENT</td>
+                        <td></td>
+
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*-------------Modal-----------------*@
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> UPDATE SHIPMENT INFORMATION</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@sales">
+                    <table class="table">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>PO NO</td>
+                                <td>PO Date</td>
+                                <td>Customer</td>
+                                <td>Concern Person</td>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>@sales.PO_WO_NUMBER</td>
+                                <td>@sales.PO_WO_DATE</td>
+                                <td>@sales.CUSTOMER_NAME</td>
+                                <td>@contactPersonName</td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    
+                  
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td scope="col" colspan="3">ETA to TL-WH with QTY</td>
+                                <td scope="col" colspan="3">Expected Delivery Date</td>
+                            </tr>
+                            <tr>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                                <td>1st Date</td>
+                                <td>2nd Date</td>
+                                <td>3rd Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" id="date_1" autocomplete="off" @bind-value="@sales.ETA_TL_WH_1st_DATE" /></td>
+                                <td><input type="text" id="date_2" autocomplete="off" @bind-value="@sales.ETA_TL_WH_2nd_DATE" /></td>
+                                <td><input type="text" id="date_3" autocomplete="off" @bind-value="@sales.ETA_TL_WH_3rd_DATE" /></td>
+                                <td><input type="text" id="date_4" autocomplete="off" @bind-value="@sales.EXPECTED_DELIVERY_1st_DATE" /></td>
+                                <td><input type="text" id="date_5" autocomplete="off" @bind-value="@sales.EXPECTED_DELIVERY_2nd_DATE" /></td>
+                                <td><input type="text" id="date_6" autocomplete="off" @bind-value="@sales.EXPECTED_DELIVERY_3rd_DATE" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table width="100%">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td>Delivery Date</td>
+                                <td>Complete Parchentage</td>
+                                <td>Shipment Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:20%"><input type="text" id="date_10" @bind-value="@deliverydate" autocomplete="off" /></td>
+                                <td><InputText @bind-Value="@sales.PARCHENTAGE_OF_COMPLETE"></InputText></td>
+                                <td>
+                                    <InputText @bind-Value="@sales.STATUS_OF_SHIPMENT"></InputText>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </EditForm>
+            </div>
+
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick="EditSales">UPDATE</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    List<SalesOrderViewModel> salesorderList = new List<SalesOrderViewModel>();
+    List<SalesItemDetailsModel> salesDetails = new List<SalesItemDetailsModel>();
+    SalesOrderModel sales = new SalesOrderModel();
+    string quotation_ref_date;
+    string eta_1st_date;
+    string eta_2nd_date;
+    string eta_3rd_date;
+    string ed_1st_date;
+    string ed_2nd_date;
+    string ed_3rd_date;
+    string message;
+    string deliverydate;
+    string contactPersonName;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await GetAllData();
+            StateHasChanged();
+            await JsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        }
+        catch (Exception ex)
+        {
+            //toastService.ShowError(ex.Message);
+        }
+
+
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    }
+    private async Task GetAllData()
+    {
+        salesorderList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetSalesOrderTrackingInfo");
+        salesDetails = await Http.GetJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/GetAllSalesItemDetails");
+        List<SalesItemDetailsModel> sodetails = new List<SalesItemDetailsModel>();
+        SalesItemDetailsModel sodetails1 = new SalesItemDetailsModel();
+        foreach (var item in salesorderList)
+        {
+            try
+            {
+                sodetails = salesDetails.FindAll(el => el.SALES_ID == Convert.ToInt32(item.SALES_ID));
+                foreach (var l in sodetails)
+                {
+                    sodetails1 = new SalesItemDetailsModel();
+                    if (item.sorderDetailsList == null)
+                    { item.sorderDetailsList = new List<SalesItemDetailsModel>(); }
+                    sodetails1.ITEM_NAME = l.ITEM_NAME;
+                    sodetails1.ITEM_ID = l.ITEM_ID;
+                    sodetails1.SALES_ID = l.SALES_ID;
+                    sodetails1.UOM = l.UOM;
+                    sodetails1.SALES_QUANTITY = l.SALES_QUANTITY;
+                    item.sorderDetailsList.Add(sodetails1);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+    }
+    public async Task EditSales()
+    {
+
+        try
+        {
+            //sales.ETA_TL_WH_1st_DATE = Convert.ToDateTime(sales.ETA_TL_WH_1st_DATE).Year+"/"+ Convert.ToDateTime(sales.ETA_TL_WH_1st_DATE).Month + "/" + Convert.ToDateTime(sales.ETA_TL_WH_1st_DATE).Day;
+            //sales.ETA_TL_WH_2nd_DATE = eta_2nd_date;
+            //sales.ETA_TL_WH_3rd_DATE = eta_3rd_date;
+            //sales.EXPECTED_DELIVERY_1st_DATE = ed_1st_date;
+            //sales.EXPECTED_DELIVERY_2nd_DATE = ed_2nd_date;
+            //sales.EXPECTED_DELIVERY_3rd_DATE = ed_3rd_date;
+            sales.DELIVERY_DATE = deliverydate;
+
+            var data = await Http.PutJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/UpdateSalesTrackingInfo", sales);
+            toastService.ShowSuccess("Update SuccessfullY !!");
+            await GetAllData();
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+    private async Task GetPOData(string Id)
+    {
+        try
+        {
+            sales.PO_WO_NUMBER = salesorderList.Find(x => x.SALES_ID == Id).PO_WO_NUMBER;
+            sales.PO_WO_DATE = salesorderList.Find(x => x.SALES_ID == Id).PO_WO_DATE;
+            sales.CUSTOMER_NAME = salesorderList.Find(x => x.SALES_ID == Id).CUSTOMER_NAME;
+            contactPersonName = salesorderList.Find(x => x.SALES_ID == Id).CONTACT_PERSON_NAME;
+
+            sales.SALES_ID = Id;
+            //PODate = purchaseOrderList.Find(x => x.PO_ID == Id).PO_DATE;
+            //Vendor = purchaseOrderList.Find(x => x.PO_ID == Id).VENDOR_NAME;
+            //concernPerson = purchaseOrderList.Find(x => x.PO_ID == Id).CONTACT_PERSON_NAME;
+            sales.ETA_TL_WH_1st_DATE = salesorderList.Find(x => x.SALES_ID == Id).ETA_TL_WH_1st_DATE;
+            sales.ETA_TL_WH_2nd_DATE = salesorderList.Find(x => x.SALES_ID == Id).ETA_TL_WH_2nd_DATE;
+            sales.ETA_TL_WH_3rd_DATE = salesorderList.Find(x => x.SALES_ID == Id).ETA_TL_WH_3rd_DATE;
+            sales.EXPECTED_DELIVERY_1st_DATE = salesorderList.Find(x => x.SALES_ID == Id).EXPECTED_DELIVERY_1st_DATE;
+            sales.EXPECTED_DELIVERY_2nd_DATE = salesorderList.Find(x => x.SALES_ID == Id).EXPECTED_DELIVERY_2nd_DATE;
+            sales.EXPECTED_DELIVERY_3rd_DATE = salesorderList.Find(x => x.SALES_ID == Id).EXPECTED_DELIVERY_3rd_DATE;
+            sales.PARCHENTAGE_OF_COMPLETE = salesorderList.Find(x => x.SALES_ID == Id).PARCHENTAGE_OF_COMPLETE;
+            sales.STATUS_OF_SHIPMENT= salesorderList.Find(x => x.SALES_ID == Id).STATUS_OF_SHIPMENT;
+            deliverydate =salesorderList.Find(x => x.SALES_ID == Id).DELIVERY_DATE;
+            //pOrderModel.EA_WH_1st_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_1st_Date;
+            //pOrderModel.EA_WH_2nd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_2nd_Date;
+            //pOrderModel.EA_WH_3rd_Date = purchaseOrderList.Find(x => x.PO_ID == Id).EA_WH_3rd_Date;
+            //receivedDate = Convert.ToString(purchaseOrderList.Find(x => x.PO_ID == Id).RECEIVED_DATE);
+            //pOrderModel.SHIPMENT_STATUS = purchaseOrderList.Find(x => x.PO_ID == Id).SHIPMENT_STATUS;
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+
+
+        StateHasChanged();
+    }
+}

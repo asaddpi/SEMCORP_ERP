@@ -1,0 +1,191 @@
+﻿@page "/InvoiceList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime js
+
+<style>
+    table, tr, td {
+        border: none;
+        text-align: center;
+    }
+
+    table, tbody, tr, td {
+        padding: 5px;
+    }
+</style>
+
+<div class="col-md-12" style="display: flex;align-items:center;justify-content:space-between">
+    <div class="col-md-4"><h5>Invoice List</h5></div>
+    <div class="" style="display:flex;gap:10px;align-items:center">
+        <a href="Invoice">
+            <button class="btn btn-primary" style="display:flex;justify-content:center;height:40px;align-items:center;width:max-content;padding:0 10px"><i class='bi bi-plus' style="font-size:30px" /> New</button>
+        </a>
+
+
+        <label style="margin-bottom:0!important">@StartNumber-@EndNumber of @invoiceList.Count()</label>
+        <a style="color:Highlight;">
+            <i class='bi bi-arrow-left-circle' style="font-size:30px" @onclick="@(e => NavigatTo("prev"))"></i>
+        </a><a style="color:Highlight">
+            <i class='bi bi-arrow-right-circle' style="font-size:30px;" @onclick="@(e => NavigatTo("next"))"></i>
+        </a>
+    </div>
+</div>
+
+
+<hr />
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>Invoice No.</th>
+            <th>Invoice Date</th>
+            <th>Wo No.</th>
+            <th>Customer</th>
+            <th>Project</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (AllInvoiceList != null)
+        {
+            foreach (var item in AllInvoiceList)
+            {
+        <tr>
+            <td style="width:150px"><a style="color:Highlight;cursor:pointer" @onclick=@(() => DeliveryNoteClicked(item.INVOICE_NO))>@item.INVOICE_NO</a></td>
+            <td>@item.INVOICE_DATE</td>
+            <td>@item.WO_NUMBER</td>
+            <td>@item.CUSTOMER_NAME</td>
+            <td>@item.SHIPPING_PROJECT_NAME</td>
+
+        </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    CustomerModel customer = new CustomerModel();
+    List<CustomerViewModel> allcustomerList = new List<CustomerViewModel>();
+    List<CustomerViewModel> customerList = new List<CustomerViewModel>();
+    List<InvoiceViewModel> AllInvoiceList = new List<InvoiceViewModel>();
+    List<InvoiceViewModel> invoiceList = new List<InvoiceViewModel>();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    DeliveryNoteViewModel deliveryNoteMaster = new DeliveryNoteViewModel();
+    List<InvoiceViewModel> deliveryDetails = new List<InvoiceViewModel>();
+
+
+    public int pageSize { get; set; }
+    public int TotalPage { get; set; }
+    public int Currentpage { get; set; }
+    public int StartNumber { get; set; }
+    public int EndNumber { get; set; }
+    bool checkStatus = false;
+    int iOption = 0;
+    //[Parameter]
+    //public string woNo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //AllInvoiceList = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetAllInvoiceInfo/" + woNo);
+        //invoiceList = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetAllInvoiceInfo/" + woNo);
+        AllInvoiceList = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetAllInvoiceInfo");
+        invoiceList = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetAllInvoiceInfo");
+
+        //AppState.salesQuotation = quotationList;
+        //Pagination();
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+
+
+    async void CheckboxClicked(string deliverynoteNo, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            //deliveryNoteMaster = await Http.GetJsonAsync<DeliveryNoteViewModel>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + deliverynoteNo);
+            deliveryDetails = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + deliverynoteNo);
+            //termsId = salesInfo.TERMS_AND_CONDITION;
+            //if (termsId != null)
+            //{ termsAndConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetTermsAndConditions/" + termsId); }
+            //int i = 1;
+            //foreach (var item in termsAndConditionList)
+            //{
+            //    condition = new PurchaseTermsConditionsModel();
+            //    condition.PURCHASE_TERMS_CONDITION_ID = item.PURCHASE_TERMS_CONDITION_ID;
+            //    condition.SALES_TERMS_CONDITION_ID = item.SALES_TERMS_CONDITION_ID;
+            //    condition.SL = item.SL;
+            //    condition.TERMS_AND_CONDITIONS = item.SL + " ." + item.TERMS_AND_CONDITIONS;
+
+            //    termsConditionList.Add(condition);
+            //    //i++;
+            //}
+            AppState.deliveryNoteView = deliveryNoteMaster;
+            AppState.InvoiceDetails = deliveryDetails;
+            //AppState.SalestermsConditionList = termsConditionList;
+
+        }
+        this.StateHasChanged();
+    }
+    private async void GetDeliveryInfoById(string dn_No)
+    {
+        deliveryNoteMaster = await Http.GetJsonAsync<DeliveryNoteViewModel>(Utility.BaseUrl + "api/Sales/GetDeliveryInfoByDNNo/" + dn_No);
+    }
+    private async void PrintDeliveryNote()
+    {
+
+        try
+        {
+            await js.InvokeAsync<object>("open", "api/RDLCReport/GetInvoice", "_blank");
+        }
+        catch { }
+    }
+    private async void DeliveryNoteClicked(string deliverynoteNo)
+    {
+
+        try
+        {
+            deliveryDetails = await Http.GetJsonAsync<List<InvoiceViewModel>>(Utility.BaseUrl + "api/Sales/GetInvoiceInfoByInvNo/" + deliverynoteNo);
+            AppState.invoiceView = deliveryDetails.FirstOrDefault(); ;
+            AppState.InvoiceDetails = deliveryDetails;
+            await js.InvokeAsync<object>("open", "api/RDLCReport/GetInvoice", "_blank");
+        }
+        catch { }
+    }
+    private void NavigatTo(string direction)
+    {
+        if (direction == "prev" && Currentpage != 0)
+            Currentpage -= 1;
+        if (direction == "next" && Currentpage != TotalPage - 1)
+            Currentpage += 1;
+
+        UpdateList(Currentpage);
+    }
+    private void UpdateList(int pageNumber)
+    {
+        AllInvoiceList = invoiceList.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+        Currentpage = pageNumber;
+        if (AllInvoiceList.Count > 0)
+        {
+            StartNumber = AllInvoiceList.FirstOrDefault().SL;
+            EndNumber = AllInvoiceList[AllInvoiceList.Count - 1].SL;
+        }
+
+    }
+    private void Pagination()
+    {
+        pageSize = 20;
+        if (invoiceList.Count > 0)
+        {
+            AllInvoiceList = invoiceList.Take(pageSize).ToList();
+            TotalPage = (int)Math.Ceiling(invoiceList.Count() / (decimal)pageSize);
+            StartNumber = AllInvoiceList.FirstOrDefault().SL;
+            EndNumber = AllInvoiceList[AllInvoiceList.Count - 1].SL;
+        }
+
+    }
+
+}

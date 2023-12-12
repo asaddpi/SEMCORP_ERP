@@ -1,0 +1,153 @@
+﻿@page "/EditSalesOrderTracking/{PONO}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject IToastService toastService
+
+<style>
+    th {
+        font-weight: bold;
+    }
+</style>
+<div class="dashboard-details">
+    <div class="container-fluid">
+        <br />
+        <br />
+        <div class="col-lg-8" style="border: 1px solid #888">
+            <button @onclick="EditSales" class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px">Update</button>
+
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>PO NO</th>
+                        <th>PO Date</th>
+                    </tr>
+                    <tr>
+                        <td>@sales.PO_WO_NUMBER</td>
+                        <td>@sales.PO_WO_DATE</td>
+                    </tr>
+                    <tr>
+                        <th colspan="3">ETA to TL-WH With QTY</th>
+                        <th colspan="3">Expected Delivery Date</th>
+                    </tr>
+                    <tr>
+                        <th>1st Date</th>
+                        <th>2nd Date</th>
+                        <th>3rd Date</th>
+                        <th>1st Date</th>
+                        <th>2nd Date</th>
+                        <th>3rd Date</th>
+                    </tr>
+                    <tr>
+                        <th><input type="text" id="date_1" autocomplete="off" @bind-value="@eta_1st_date" /></th>
+                        <th><input type="text" id="date_2" autocomplete="off" @bind-value="@eta_2nd_date" /></th>
+                        <th><input type="text" id="date_3" autocomplete="off" @bind-value="@eta_3rd_date" /></th>
+                        <th><input type="text" id="date_4" autocomplete="off" @bind-value="@ed_1st_date" /></th>
+                        <th><input type="text" id="date_5" autocomplete="off" @bind-value="@ed_2nd_date" /></th>
+                        <th><input type="text" id="date_6" autocomplete="off" @bind-value="@ed_3rd_date" /></th>
+                    </tr>
+                    <tr>
+                        <th>Parcentage of Complete</th>
+                        <th>Status of Shipment</th>
+                    </tr>
+                    <tr>
+                        <th><input type="text" @bind-value="@sales.PARCHENTAGE_OF_COMPLETE" /></th>
+                        <th><input type="text" @bind-value="@sales.STATUS_OF_SHIPMENT" /></th>
+                    </tr>
+                    @*<tr>
+                            <th>Parcentage of Complete</th>
+                            <th>Status of Shipment</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text"  /></td>
+                            <td><input type="text" /></td>
+                        </tr>*@
+                </thead>
+            </table>
+
+            <br />
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>UOM</th>
+                        <th>Quantity</th>
+                        <th>UnitPrice</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (salesitemList != null)
+                    {
+                        foreach (var item in salesitemList)
+                        {
+                            <tr>
+                                <td>@item.ITEM_NAME</td>
+                                <td>@item.UOM</td>
+                                <td>@item.SALES_QUANTITY</td>
+                                <td>@item.UNIT_PRICE</td>
+                                <td>@item.TOTAL_PRICE</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string PONO { get; set; }
+    SalesOrderModel sales = new SalesOrderModel();
+    List<SalesItemDetailsModel> salesitemList = new List<SalesItemDetailsModel>();
+    string quotation_ref_date;
+    string eta_1st_date;
+    string eta_2nd_date;
+    string eta_3rd_date;
+    string ed_1st_date;
+    string ed_2nd_date;
+    string ed_3rd_date;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        salesitemList = await Http.GetJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/GetSalesItemByPONo/" + PONO);
+        sales = await Http.GetJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/GetSalesByPONo/" + PONO);
+        eta_1st_date = sales.ETA_TL_WH_1st_DATE;
+        eta_2nd_date = sales.ETA_TL_WH_2nd_DATE;
+        eta_3rd_date = sales.ETA_TL_WH_3rd_DATE;
+        ed_1st_date = sales.EXPECTED_DELIVERY_1st_DATE;
+        ed_2nd_date = sales.EXPECTED_DELIVERY_2nd_DATE;
+        ed_3rd_date = sales.EXPECTED_DELIVERY_3rd_DATE;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    }
+
+    public async Task EditSales()
+    {
+
+        try
+        {
+            sales.ETA_TL_WH_1st_DATE = eta_1st_date;
+            sales.ETA_TL_WH_2nd_DATE = eta_2nd_date;
+            sales.ETA_TL_WH_3rd_DATE = eta_3rd_date;
+            sales.EXPECTED_DELIVERY_1st_DATE = ed_1st_date;
+            sales.EXPECTED_DELIVERY_2nd_DATE = ed_2nd_date;
+            sales.EXPECTED_DELIVERY_3rd_DATE = ed_3rd_date;
+            var data = await Http.PutJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/UpdateSalesTrackingInfo", sales);
+            toastService.ShowSuccess("Update SuccessfullY !!");                
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+}

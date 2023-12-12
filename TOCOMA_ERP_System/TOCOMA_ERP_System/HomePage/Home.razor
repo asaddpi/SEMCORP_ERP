@@ -1,0 +1,386 @@
+﻿@layout CustomLayout
+@attribute [Authorize]
+@page "/Home"
+
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+@inject HttpClient Http
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+<!-- Begin Page Content -->
+
+<style>
+    table thead tr td{
+        background-color:none;
+    }
+</style>    
+
+<div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Earnings (Monthly)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">BDT 40,000</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Earnings (Annual)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"> BDT @mvalue</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Tasks
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                            </div>
+                            <div class="col">
+                                <div class="progress progress-sm mr-2">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Pending Requests
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Project Cost Summery</h6>
+                <div class="dropdown no-arrow">
+
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr style="background-color:none">
+                            <td>Project</td>
+                            <td>Cost</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in projectCostList)
+            {
+                <tr>
+                    <td>@item.PROJECT_NAME</td>
+                    <td>@item.AMOUNT</td>
+                </tr>
+            }
+                    </tbody>
+                </table>
+                @*<div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Receivable Payment</h6>
+                <div class="dropdown no-arrow">
+
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr style="background-color:none">
+                            <td>Customer</td>
+                            <td>Amount</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Payable Payment</h6>
+                <div class="dropdown no-arrow">
+
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr style="background-color:none">
+                            <td>Supplier</td>
+                            <td>Amount</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+
+        <!-- Project Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Projects Completeness</h6>
+            </div>
+            <div class="card-body">
+                <h4 class="small font-weight-bold">
+                    Sadma Fashion Ware <span class="float-right">40%</span>
+                </h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 30%"
+                         aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">
+                    CC7 Roof <span class="float-right">40%</span>
+                </h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">
+                    Project 3 <span class="float-right">60%</span>
+                </h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" style="width: 60%"
+                         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">
+                    Project 4 <span class="float-right">80%</span>
+                </h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
+                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">
+                    Project 5 <span class="float-right">Complete!</span>
+                </h4>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
+                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+
+    
+</div>
+
+
+
+
+@code {
+    int DepartmentId;
+    EmployeeModel empModel = new EmployeeModel();
+    List<SalesQuotationView> quotationList = new List<SalesQuotationView>();
+    SalesQuotationView salesQuotationInfo = new SalesQuotationView();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<SalesQuotationItemView> salesQuotationItemList = new List<SalesQuotationItemView>();
+    List<PurchaseOrderViewModel> poList = new List<PurchaseOrderViewModel>();
+    List<PurchaseOrderDetailsEntity> purchaseOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+    PurchaseOrderViewModel purchaseOrderView = new PurchaseOrderViewModel();
+    List<ProjectCostReportModel> projectCostList = new List<ProjectCostReportModel>();
+    public static string employeeImage;
+    string mvalue ="215,000";
+    protected override async Task OnInitializedAsync()
+    {
+        DepartmentId = 1;
+        empModel.EMPLOYEE_ID = await sessionStorage.GetItemAsync<string>("session_employeeId");
+        //empModel = await Http.GetJsonAsync<EmployeeModel>(Utility.BaseUrl + "api/Employee/GetEmployeeById/" + empModel.EMPLOYEE_ID);
+        quotationList = await Http.GetJsonAsync<List<SalesQuotationView>>(Utility.BaseUrl + "api/Sales/GetAllQuotationCurrentYear");
+        poList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOList");
+        employeeImage = await localStorageService.GetItemAsync<string>("employeeImage");
+        projectCostList = await Http.GetJsonAsync<List<ProjectCostReportModel>>(Utility.BaseUrl + "api/Purchase/GetProjectwiseCost");
+    }
+    async void PaymentTypeSelect(ChangeEventArgs e)
+    {
+        //SelectedPaymentType = e.Value.ToString();
+        projectCostList = await Http.GetJsonAsync<List<ProjectCostReportModel>>(Utility.BaseUrl + "api/Purchase/GetProjectwiseCost");
+
+        StateHasChanged();
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsRuntime.InvokeVoidAsync("JsInteropcollaps");
+            //await ijsruntime.InvokeAsync<string>(
+            //    "QuillFunctions.createQuill", divEditorElement);
+
+            employeeImage = await localStorageService.GetItemAsync<string>("employeeImage");
+        }
+
+    }
+    private async Task GetSalesQuotationById(int poId)
+    {
+
+        salesQuotationInfo = await Http.GetJsonAsync<SalesQuotationView>(Utility.BaseUrl + "api/Sales/GetsalesQuotationInfoById/" + poId);
+        if (salesQuotationInfo.TERMS_AND_CONDITION != null && salesQuotationInfo.TERMS_AND_CONDITION != "")
+        {
+            termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetSalesTermsAndConditionsByIds/" + salesQuotationInfo.TERMS_AND_CONDITION);
+            AppState.SalestermsConditionList = termsConditionList;
+        }
+
+        //porder.REPORT_TYPE = "1";
+        salesQuotationItemList = await Http.GetJsonAsync<List<SalesQuotationItemView>>(Utility.BaseUrl + "api/Sales/GetSalesQuotationItemListById/" + poId);
+        //porder.pOrderDetailsList = purchaseOrderDetailsList;
+        AppState.salesQuotation = salesQuotationInfo;
+        AppState.salesQuotationitemList = salesQuotationItemList;
+
+        await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesQuotation", "_blank");
+    }
+    public async Task PurchaseOrderInvoice(string po_number)
+    {
+        //string packInsId = "";
+        //string termsId = "";
+        //List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        //List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        ////purchaseOrderView = new PurchaseOrderViewModel();
+        ////purchaseOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+
+
+
+
+
+        purchaseOrderView = await Http.GetJsonAsync<PurchaseOrderViewModel>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderInfo/" + po_number);
+        if (purchaseOrderView.VENDOR_TYPE_STATUS == "Local")
+        {
+            await GetLocal(purchaseOrderView.PO_NUMBER_LONG_CODE);
+        }
+        else if (purchaseOrderView.VENDOR_TYPE_STATUS == "International")
+        {
+            await GetInt(purchaseOrderView.PO_NUMBER_LONG_CODE);
+        }
+        //purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        //packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        //termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        //if (packInsId != null && packInsId!="") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        //if (termsId != null && termsId !="") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        //AppState.porder = purchaseOrderView;
+        //AppState.porderDetails = purchaseOrderDetailsList;
+        //AppState.termsConditionList = termsConditionList;
+        //if (purchaseOrderView.VENDOR_TYPE_STATUS=="Local")
+        //{ await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceLocal", "_blank"); }
+        //else if(purchaseOrderView.VENDOR_TYPE_STATUS == "International")
+        //{ await js.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceInt", "_blank"); }
+
+
+    }
+
+    private async Task GetLocal(string po_number)
+    {
+        string packInsId = "";
+        string termsId = "";
+        List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        if (packInsId != null && packInsId != "") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        if (termsId != null && termsId != "") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        AppState.porder = purchaseOrderView;
+        AppState.porderDetails = purchaseOrderDetailsList;
+        AppState.termsConditionList = termsConditionList;
+
+        await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceLocal", "_blank");
+    }
+    private async Task GetInt(string po_number)
+    {
+        string packInsId = "";
+        string termsId = "";
+        List<PackagingInstructionModel> packagingInsList = new List<PackagingInstructionModel>();
+        List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+        purchaseOrderDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + po_number);
+        packInsId = purchaseOrderView.PACKAGING_INSTRUCTION;
+        termsId = purchaseOrderView.OTHER_TERMS_AND_CONDITION;
+        if (packInsId != null && packInsId != "") { packagingInsList = await Http.GetJsonAsync<List<PackagingInstructionModel>>(Utility.BaseUrl + "api/Purchase/GetPackagingInstructionById/" + packInsId); }
+        if (termsId != null && termsId != "") { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Purchase/GetTermsAndConditions/" + termsId); }
+        AppState.porder = purchaseOrderView;
+        AppState.porderDetails = purchaseOrderDetailsList;
+        AppState.termsConditionList = termsConditionList;
+        AppState.packagingList = packagingInsList;
+
+        await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetPurchaseOrderInvoiceInt", "_blank");
+    }
+}

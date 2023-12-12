@@ -1,0 +1,6 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="D:\SEMCORP\TOCOMA_ERP_System\TOCOMA_ERP_System\obj\Debug\net5.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="_content/Blazored.Toast" Path="C:\Users\NAZAT\.nuget\packages\blazored.toast\3.2.2\build\..\staticwebassets\" />
+  <ContentRoot BasePath="_content/Excubo.Blazor.TreeViews" Path="C:\Users\NAZAT\.nuget\packages\excubo.blazor.treeviews\3.2.13\build\..\staticwebassets\" />
+  <ContentRoot BasePath="_content/Radzen.Blazor" Path="C:\Users\NAZAT\.nuget\packages\radzen.blazor\4.14.4\build\..\staticwebassets\" />
+</StaticWebAssets>

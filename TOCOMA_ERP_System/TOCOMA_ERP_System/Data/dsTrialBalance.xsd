@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsTrialBalance" targetNamespace="http://tempuri.org/dsTrialBalance.xsd" xmlns:mstns="http://tempuri.org/dsTrialBalance.xsd" xmlns="http://tempuri.org/dsTrialBalance.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsTrialBalance" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsTrialBalance" msprop:Generator_UserDSName="dsTrialBalance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="GR_NAME" msprop:Generator_ColumnVarNameInTable="columnGR_NAME" msprop:Generator_ColumnPropNameInRow="GR_NAME" msprop:Generator_ColumnPropNameInTable="GR_NAMEColumn" msprop:Generator_UserColumnName="GR_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="GR_PARENT" msprop:Generator_ColumnVarNameInTable="columnGR_PARENT" msprop:Generator_ColumnPropNameInRow="GR_PARENT" msprop:Generator_ColumnPropNameInTable="GR_PARENTColumn" msprop:Generator_UserColumnName="GR_PARENT" type="xs:string" minOccurs="0" />
+              <xs:element name="GR_OPENING" msprop:Generator_ColumnVarNameInTable="columnGR_OPENING" msprop:Generator_ColumnPropNameInRow="GR_OPENING" msprop:Generator_ColumnPropNameInTable="GR_OPENINGColumn" msprop:Generator_UserColumnName="GR_OPENING" type="xs:string" minOccurs="0" />
+              <xs:element name="GR_DEBIT" msprop:Generator_ColumnVarNameInTable="columnGR_DEBIT" msprop:Generator_ColumnPropNameInRow="GR_DEBIT" msprop:Generator_ColumnPropNameInTable="GR_DEBITColumn" msprop:Generator_UserColumnName="GR_DEBIT" type="xs:string" minOccurs="0" />
+              <xs:element name="GR_CREDIT" msprop:Generator_ColumnVarNameInTable="columnGR_CREDIT" msprop:Generator_ColumnPropNameInRow="GR_CREDIT" msprop:Generator_ColumnPropNameInTable="GR_CREDITColumn" msprop:Generator_UserColumnName="GR_CREDIT" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH_NAME" msprop:Generator_ColumnVarNameInTable="columnBRANCH_NAME" msprop:Generator_ColumnPropNameInRow="BRANCH_NAME" msprop:Generator_ColumnPropNameInTable="BRANCH_NAMEColumn" msprop:Generator_UserColumnName="BRANCH_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="C_GR_DEBIT" msprop:Generator_ColumnVarNameInTable="columnC_GR_DEBIT" msprop:Generator_ColumnPropNameInRow="C_GR_DEBIT" msprop:Generator_ColumnPropNameInTable="C_GR_DEBITColumn" msprop:Generator_UserColumnName="C_GR_DEBIT" type="xs:string" minOccurs="0" />
+              <xs:element name="C_GR_CREDIT" msprop:Generator_ColumnVarNameInTable="columnC_GR_CREDIT" msprop:Generator_ColumnPropNameInRow="C_GR_CREDIT" msprop:Generator_ColumnPropNameInTable="C_GR_CREDITColumn" msprop:Generator_UserColumnName="C_GR_CREDIT" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DataTable2" msprop:Generator_TableClassName="DataTable2DataTable" msprop:Generator_TableVarName="tableDataTable2" msprop:Generator_TablePropName="DataTable2" msprop:Generator_RowDeletingName="DataTable2RowDeleting" msprop:Generator_RowChangingName="DataTable2RowChanging" msprop:Generator_RowEvHandlerName="DataTable2RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable2RowDeleted" msprop:Generator_UserTableName="DataTable2" msprop:Generator_RowChangedName="DataTable2RowChanged" msprop:Generator_RowEvArgName="DataTable2RowChangeEvent" msprop:Generator_RowClassName="DataTable2Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DR_TOTAL" msprop:Generator_ColumnVarNameInTable="columnDR_TOTAL" msprop:Generator_ColumnPropNameInRow="DR_TOTAL" msprop:Generator_ColumnPropNameInTable="DR_TOTALColumn" msprop:Generator_UserColumnName="DR_TOTAL" type="xs:string" minOccurs="0" />
+              <xs:element name="CR_TOTAL" msprop:Generator_ColumnVarNameInTable="columnCR_TOTAL" msprop:Generator_ColumnPropNameInRow="CR_TOTAL" msprop:Generator_ColumnPropNameInTable="CR_TOTALColumn" msprop:Generator_UserColumnName="CR_TOTAL" type="xs:string" minOccurs="0" />
+              <xs:element name="DATE" msprop:Generator_ColumnVarNameInTable="columnDATE" msprop:Generator_ColumnPropNameInRow="DATE" msprop:Generator_ColumnPropNameInTable="DATEColumn" msprop:Generator_UserColumnName="DATE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

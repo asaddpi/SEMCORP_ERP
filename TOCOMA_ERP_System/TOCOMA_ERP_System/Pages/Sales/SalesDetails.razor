@@ -1,0 +1,418 @@
+﻿@page "/SalesDetails/{DeliveryNoteNo}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+<style>
+    fieldset {
+        border: 1px solid gray;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        /*width: 150% !important;*/
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: left;
+    }
+
+    tr th {
+        text-align: left;
+    }
+
+    .tabs {
+        position: relative;
+        clear: both;
+    }
+
+        .tabs .tab {
+            float: left;
+        }
+
+            .tabs .tab .content {
+                position: absolute;
+                background-color: white;
+                left: 0px;
+                width: 60%;
+                border: 1px #000 solid;
+                height: 400px
+            }
+
+    .checkboxtab {
+        display: none;
+    }
+
+    .tab label {
+        margin-right: 10px;
+    }
+
+    .checkboxtab:checked ~ label {
+        color: #ab70ff;
+        /*border: 1px #000 solid;*/
+    }
+
+    .checkboxtab:checked ~ .content {
+        z-index: 1;
+    }
+</style>
+<div class="dashboard-details">
+    <!--<div style="background-color:gainsboro">
+        <label for="download" style="margin-right:20px" class="btn btn-success"></label>-->
+
+        @*<label for="salesInvoice" class="btn btn-success">Download Invoice</label>*@
+        @*<img style="width:40px;height:40px;margin-left:400px" src="images/deliverynotePrint.JPG" />*@
+    <!--</div>-->
+    
+    <div class="container-fluid" style="margin-bottom:500px">
+        <input type="checkbox" style="width:20px"   @onchange="eventArgs => { DeliveryCheckboxClicked(eventArgs.Value); }"  />Delivery Not &nbsp; 
+        <input type="checkbox"  @onchange="eventArgs => { InvoiceCheckboxClicked(eventArgs.Value); }" style="width:20px" />Invoice
+        <input type="button" style="width: 70px;  background-color: lightgray" @onclick="GoPreview" value="Preview"  />
+
+        @*<img style="width:40px;height:40px;margin-left:400px" src="images/deliverynotePrint.JPG" />
+        <br />*@
+        <br />
+        @*<nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button style="background-color:@_localcolor" @onclick="Local_Tab_Click" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Delivery Note</button>
+                <button class="nav-link" style="background-color:@_intcolor" id="nav-profile-tab" @onclick="Int_Tab_Click" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="true">Invoice</button>
+
+            </div>
+        </nav>*@
+        <br />
+        <div class="row">
+            @if (IL_OPTION == 1)
+            {
+                <div class="col-md-12">
+                    <table style="width:50%">
+                        <thead>
+                            <tr style="background-color:lightgray">
+                                <th>Consignee :</th>
+                                <th>Shipping/Project Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:50%">@salesInfo.CUSTOMER_NAME_SHORT_FORM<br />@salesInfo.CORPORATE_ADDRESS</td>
+                                <td style="width:50%">@salesInfo.SHIPPING_ADDRESS</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%"> Concern Person:  @salesInfo.CONTACT_PERSON_NAME<br>@salesInfo.CONTACT_PERSON_DESIGNATION</td>
+                                <td style="width:30%">@salesInfo.CUSTOMER_CODE</td>
+                            </tr>
+                            <tr>
+                                <td>Contact Details: @salesInfo.CONTACT_PERSON_PHONE</td>
+                                <td>PO Number: @salesInfo.PO_WO_NUMBER <label style="float:right">Date: @salesInfo.PO_WO_DATE</label> </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12">
+                    <table style="width:50%;margin-top:20px">
+
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th style="text-align:center">Description</th>
+                                <th style="text-align:center">Pack Size</th>
+                                <th style="text-align:center">Unit</th>
+                                <th style="text-align:center">Number Of<br /> Pack</th>
+                                <th style="text-align:center">Total Quantity</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (itemList != null)
+                            {
+                                foreach (var item in itemList)
+                                {
+                                    <tr>
+                                        <td>@item.SL</td>
+                                        <td>@item.ITEM_NAME</td>
+                                        <td style="text-align:center">@item.PACK_SIZE</td>
+                                        <td style="text-align:center">@item.UOM</td>
+                                        <td style="text-align:center">@item.NUMBER_OF_PACK</td>
+                                        <td style="text-align:center">@item.SALES_QUANTITY</td>
+
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <br />
+                @*<br />
+            <label class="col-lg-12">Terms & Condition</label><br />
+            <div style="border: 1px solid #888">
+                @foreach (var item in termsConditionList)
+                {
+                    <input style="margin-top:5px;margin-left:5px" type="checkbox" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                }
+
+            </div>*@
+            }
+            else if (IL_OPTION == 2)
+            {
+                <table style="width:50%">
+                    <thead>
+                        <tr style="background-color:lightgray">
+                            <th>Consignee :</th>
+                            <th>Shipping/Project Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="width:50%">@salesInfo.CUSTOMER_NAME_SHORT_FORM<br />@salesInfo.CORPORATE_ADDRESS</td>
+                            <td style="width:50%">@salesInfo.SHIPPING_ADDRESS</td>
+                        </tr>
+                        <tr>
+                            <td style="width:30%"> Concern Person:  @salesInfo.CONTACT_PERSON_NAME<br>@salesInfo.CONTACT_PERSON_DESIGNATION</td>
+                            <td style="width:30%">Reference: </td>
+                        </tr>
+                        <tr>
+                            <td>Contact Details: @salesInfo.CONTACT_PERSON_PHONE</td>
+                            <td>Currency: BDT <label style="float:right">Date: @salesInfo.PO_WO_DATE</label> </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="width:50%">
+                    <br />
+                    <label>We Submit herewith the Bill/Invoice for your kind acceptance and necessary payment</label>
+                </div>
+                
+                <table style="width:50%">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th style="text-align:center">Item &Description</th>
+                            <th style="text-align:center">QTY</th>
+                            <th style="text-align:center">UOM</th>
+                            <th style="text-align:center">Unit<br />Price<br />(BDT)</th>
+                            <th style="text-align:center">Amount<br />(Excluding<br />VAT & TAX )</th>
+                            <th style="text-align:center">AIT<br />(5%)</th>
+                            <th style="text-align:center">VAT<br />(7.5%)</th>
+                            <th style="text-align:center">Total Amount<br />BDT<br />Including VAT & TAX</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (itemList != null)
+                        {
+                            foreach (var item in itemList)
+                            {
+                                double GrandTotal = Convert.ToDouble(item.AMOUNT) + Convert.ToDouble(item.AIT) + Convert.ToDouble(item.VAT);
+                                <tr>
+                                    <td>@item.SL</td>
+                                    <td>@item.ITEM_NAME</td>
+                                    <td style="text-align:center">@item.SALES_QUANTITY</td>
+                                    <td style="text-align:center">@item.UOM</td>
+                                    <td style="text-align:center">@item.UNIT_PRICE</td>
+                                    <td style="text-align:center">@item.AMOUNT</td>
+                                    <td style="text-align:center">@item.AIT</td>
+                                    <td style="text-align:center">@item.VAT</td>
+                                    <td style="text-align:center">@GrandTotal</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                
+                <br />
+                <label style="margin-top:20px;font-weight:bold" class="col-lg-12">Terms & Condition</label><br />
+                <div style="border: 1px solid #888">
+                    @foreach (var item in termsConditionList)
+                    {
+                        <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                    }
+
+                </div>
+            }
+        </div>
+        
+
+    </div>
+</div>
+<form action="@Report_URl" method="post" style="display:none">
+    <button type="submit" id="download"></button>
+</form>
+@*<form action="Excel/GenerateSalesInvoice" method="post" style="display:none">
+        <button type="submit" id="salesInvoice"></button>
+    </form>*@
+@code {
+    [Parameter]
+    public string DeliveryNoteNo { get; set; }
+    SalesOrderViewModel salesInfo = new SalesOrderViewModel();
+    List<SalesItemDetailsModel> itemList = new List<SalesItemDetailsModel>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> termsAndConditionList = new List<PurchaseTermsConditionsModel>();
+    PurchaseTermsConditionsModel condition = new PurchaseTermsConditionsModel();
+    int iOption = 0;
+    string termsId = "";
+    string _localcolor;
+    string _intcolor;
+    int IL_OPTION;
+    int rptType;
+    string Report_URl;
+    string ischeckedDN;
+    string ischeckedIN;
+    string deliveredQuantity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        salesInfo = await Http.GetJsonAsync<SalesOrderViewModel>(Utility.BaseUrl + "api/Sales/GetSalesInfoByPONo/" + DeliveryNoteNo);
+        itemList = await Http.GetJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/GetSalesItemByPONo/" + DeliveryNoteNo);
+        termsId = salesInfo.TERMS_AND_CONDITION;
+        if (termsId != null)
+        { termsAndConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Sales/GetTermsAndConditions/" + termsId); }
+        //int i = 1;
+        foreach(var item in termsAndConditionList)
+        {
+            condition = new PurchaseTermsConditionsModel();
+            condition.PURCHASE_TERMS_CONDITION_ID = item.PURCHASE_TERMS_CONDITION_ID;
+            condition.SALES_TERMS_CONDITION_ID = item.SALES_TERMS_CONDITION_ID;
+            condition.SL = item.SL;
+            condition.TERMS_AND_CONDITIONS = item.SL+" ."+item.TERMS_AND_CONDITIONS;
+
+            termsConditionList.Add(condition);
+            //i++;
+        }
+        //AppState.salesOrderView = salesInfo;
+        //AppState.salesItemDetails = itemList;
+        AppState.SalestermsConditionList = termsConditionList;
+        iOption = 1;
+        //_localcolor = "transparent;color:blueviolet";
+        //_intcolor = "transparent;color:black";
+        IL_OPTION = 1;
+        rptType = 1;
+        Report_URl = "Excel/GenerateDeliveryNote";
+        ischeckedDN = "checked";
+    }
+    private async void DeliveryNoteClicked()
+    {
+        iOption = 1;
+        StateHasChanged();
+    }
+    private async void InvoiceClicked()
+    {
+        iOption = 2;
+        StateHasChanged();
+    }
+
+    private void Local_Tab_Click()
+    {
+        _localcolor = "transparent;color:blueviolet";
+        _intcolor = "transparent;color:black;border:none";
+        IL_OPTION = 1;
+        rptType = 1;
+        Report_URl = "Excel/GenerateDeliveryNote";
+
+    }
+    private void Int_Tab_Click()
+    {
+        _intcolor = "transparent;color:blueviolet";
+        _localcolor = "transparent;color:black;border:none";
+        IL_OPTION = 2;
+        rptType = 2;
+        Report_URl = "Excel/GenerateSalesInvoice";
+
+    }
+    public async Task GetSalesDeliveryNote()
+    {
+        rptType = 1;
+        //AppState.salesOrderView = salesInfo;
+        //AppState.salesItemDetails = itemList;
+        AppState.SalestermsConditionList = termsConditionList;
+        //ischeckedIN = "null";
+        //ischeckedDN = "null";
+        StateHasChanged();
+
+    }
+    public async Task GetSalesInvoice()
+    {
+        rptType = 2;
+
+        //AppState.salesOrderView = salesInfo;
+        //AppState.salesItemDetails = itemList;
+        AppState.SalestermsConditionList = termsConditionList;
+        //ischeckedDN = "unchecked";
+        //ischeckedIN = "checked";
+        StateHasChanged();
+
+    }
+    private async Task GoPreview()
+    {
+        //if(rptType==1)
+        //{ }
+        //else if(rptType==2)
+        //{ }
+        if(rptType==1)
+        { await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesDeliveryNote", "_blank"); }
+        else if(rptType==2)
+        { await JsRuntime.InvokeAsync<object>("open", "api/RDLCReport/GetSalesInvoice", "_blank"); }
+
+    }
+    public void DeliveryCheckboxClicked( object aChecked)
+    {
+        if ((bool)aChecked)
+        {
+            IL_OPTION = 1;
+            rptType = 1;
+            //if (!SelectedValues.Contains(aSelectedId))
+            //{
+            //    SelectedValues.Add(aSelectedId);
+            //}
+        }
+        else
+        {
+            //if (SelectedValues.Contains(aSelectedId))
+            //{
+            //    SelectedValues.Remove(aSelectedId);
+            //}
+        }
+        StateHasChanged();
+    }
+
+
+    public void InvoiceCheckboxClicked(object aChecked)
+    {
+        if ((bool)aChecked)
+        {
+            IL_OPTION = 2;
+            rptType = 2;
+            //if (!SelectedValues.Contains(aSelectedId))
+            //{
+            //    SelectedValues.Add(aSelectedId);
+            //}
+        }
+        else
+        {
+            //if (SelectedValues.Contains(aSelectedId))
+            //{
+            //    SelectedValues.Remove(aSelectedId);
+            //}
+        }
+        StateHasChanged();
+    }
+
+
+
+
+}

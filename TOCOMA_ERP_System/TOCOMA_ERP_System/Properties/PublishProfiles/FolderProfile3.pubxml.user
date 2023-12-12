@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>F:\Project\Company All Project\TocomaERP\Publis_h</_PublishTargetUrl>
+    <History>False|2022-10-19T06:02:10.5555256Z;False|2022-10-19T12:01:30.0997392+06:00;False|2022-10-19T12:00:55.0419458+06:00;False|2022-10-19T11:59:06.2420779+06:00;False|2022-10-19T11:51:22.7923339+06:00;False|2022-10-19T11:49:23.4833692+06:00;False|2022-10-19T11:46:42.6691835+06:00;True|2022-10-18T13:28:36.6631970+06:00;True|2022-10-18T13:12:18.5771369+06:00;True|2022-10-18T12:44:02.6734621+06:00;</History>
+  </PropertyGroup>
+</Project>

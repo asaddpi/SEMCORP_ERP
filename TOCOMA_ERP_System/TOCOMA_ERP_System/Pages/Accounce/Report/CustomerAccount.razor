@@ -1,0 +1,108 @@
+﻿@page "/CustomerAccount"
+@layout CustomLayout
+@inject IJSRuntime js
+@inject HttpClient Http
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+<style>
+    .btn-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start
+    }
+</style>
+<!--<div class="fill header new-criteria d-print-none">
+    <div class="btn-toolbar float-left">
+        <div class="date-filter ">
+            <div end_date="2023-01-31" start_date="2023-01-01" id="ember4108" class="zf-daterange-picker ember-view form-control cursor-pointer">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span class="range-text notranslate">This Month</span> <span class="caret"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="bt-group ember-view">-->
+        <!--<div class="droupdown ember-view">
+        <button id="ember4121" class="dropdown-toggle ember-view btn btn-secondary" type="button">Export As&nbsp; </button>
+        <div id="ember4122" class="dropdown-menu dropdown-menu dropdown-menu-right ember-view px-2"> <div class="export-format-list">-->
+        <!----> <!--<button class="dropdown-item pl-4" tabindex="-1" type="button" data-ember-action="" data-ember-action-4123="4123">PDF</button> <button class="dropdown-item pl-4" tabindex="-1" type="button" data-ember-action="" data-ember-action-4124="4124">XLSX (Microsoft Excel)</button> <button class="dropdown-item pl-4" tabindex="-1" type="button" data-ember-action="" data-ember-action-4125="4125">XLS (Microsoft Excel 1997-2004 Compatible)</button>--> <!---->
+        <!--<button class="dropdown-item pl-4" tabindex="-1" type="button" data-ember-action="" data-ember-action-4126="4126">CSV (Comma Separated Value)</button> <div class="dropdown-divider"></div> <button class="dropdown-item pl-4" tabindex="-1" type="button" data-ember-action="" data-ember-action-4127="4127">Export to Zoho Sheet</button></div></div>
+        </div>-->
+        <!--<div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<div>
+    <table class="table table-striped" id="example">
+        <thead style="background-color:steelblue;color:white">
+            <tr>
+                @*<td scope="col"></td>*@
+                <td scope="col">Customer Code</td>
+                <td scope="col">Name</td>
+                <td scope="col">Contact Person</td>
+                <td scope="col">Contact No</td>
+                <td scope="col">Email</td>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (customerList != null)
+            {
+                foreach (var item in customerList)
+                {
+                    <tr>
+                        @*<td scope="col"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.CUSTOMER_ID), eventArgs.Value); }" /></td>*@
+
+                        <td scope="col"> <a style="color:Highlight;cursor:pointer" @onclick=@(() => CustomerClicked(item.CUSTOMER_ID))>@item.CUSTOMER_CODE</a></td>
+                        <td scope="col">@item.CUSTOMER_NAME</td>
+                        <td scope="col">@item.CONTACT_PERSON_NAME</td>
+                        <td scope="col">@item.CONTACT_PERSON_PHONE</td>
+                        <td scope="col">@item.CONTACT_PERSON_EMAIL</td>
+
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<CustomerViewModel> customerList = new List<CustomerViewModel>();
+    CustomerViewModel customer = new CustomerViewModel();
+    List<CustomerAccountReportModel> customertransectionList = new List<CustomerAccountReportModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVendorList();
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetVendorList()
+    {
+        customerList = await Http.GetJsonAsync<List<CustomerViewModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomer");
+    }
+    private async void CustomerClicked(int CustomerId)
+    {
+        customertransectionList = await Http.GetJsonAsync<List<CustomerAccountReportModel>>(Utility.BaseUrl + "api/Customer/GetCustomerAccountData/" + CustomerId);
+        customer = await Http.GetJsonAsync<CustomerViewModel>(Utility.BaseUrl + "api/Customer/GetCustomerAccountById/" + CustomerId);
+        AppState.CustomerAccountReportList = customertransectionList;
+        AppState.customerview = customer;
+        try
+        {
+            await js.InvokeAsync<object>("open", "api/RDLCReport/GetCustomerAccount", "_blank");
+        }
+        catch { }
+
+
+    }
+
+}

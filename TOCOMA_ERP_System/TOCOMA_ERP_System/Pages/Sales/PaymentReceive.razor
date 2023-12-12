@@ -1,0 +1,491 @@
+﻿@page "/PaymentReceive/{customerId}"
+@layout CustomLayout
+@using System.Data
+@using System.IO
+@inject HttpClient Http
+@using System.Collections.Generic;
+@using System.Data;
+@using System.Reflection;
+@*@inject IHostingEnvironment _host*@
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    /* Style the tab */
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #ccc;
+            }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        padding: 0.25em 0.5em;
+    }
+</style>
+
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">CUSTOMER PAYMENT</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <EditForm Model="@customerPayment" OnValidSubmit="@SavePurchaseOrder">
+                <label>Customer Name : @vendor</label><br />
+                <label>Customer List</label>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>SO No.</th>
+                            <th>PO Date</th>
+                            <th>Amount</th>
+                            <th>Total Paid</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (poList.Count > 0)
+                        {
+                            foreach (var item in poList)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.SALES_ORDER_NO), eventArgs.Value); }" /></td>
+                                    <td>@item.SALES_ORDER_NO</td>
+                                    <td scope="col">@item.DELIVERY_DATE</td>
+                                    <td scope="col">@item.GRAND_TOTAL</td>
+                                    <td scope="col">@item.TOTAL_PAYMENT</td>
+                                    <td scope="col">@item.PAYMENT_STATUS</td>
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+                </table>
+                <fieldset class="border p-4">
+                    <legend class="w-auto">Payment</legend>
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-md-5"><label>SO No:</label></div>
+                                <div class="col-md-7">
+                                    <InputText @bind-Value="@customerPayment.SALES_ORDER_NO" style="height:30px;width:204px"></InputText>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Customer:</label></div>
+                                <div class="col-md-7">
+                                    <select @bind="@customerPayment.CUSTOMER_ID" style="height:30px;width:204px" disabled>
+                                        <option value=""></option>
+                                        @foreach (var vendor in customerList)
+                                        {
+                                            <option value="@vendor.CUSTOMER_ID">@vendor.CUSTOMER_NAME</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Payment Type:</label></div>
+                                <div class="col-md-7">
+                                    <select @onchange="PaymentTypeClicked" style="height:30px;width:204px">
+                                        <option value="Cash">Cash</option>
+                                        <option value="Cheque">Cheque</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            @if (payment_type == "Cheque")
+                            {
+                                <div class="row mt-1">
+                                    <div class="col-md-5"><label>Cheque No.:</label></div>
+                                    <div class="col-md-7">
+                                        <InputText @bind-Value="@customerPayment.CHEQUE_NO" style="height:30px;width:204px"></InputText>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-5"><label>Cheque Date:</label></div>
+                                    <div class="col-md-7"><input type="date" @bind-value="@cheque_Date" style="height:30px;width:204px" /></div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-5"><label>Bank:</label></div>
+                                    <div class="col-md-7">
+                                        <InputSelect @bind-Value="@customerPayment.BANK_ID" style="height:30px;width:204px" @oninput="BankClicked">
+                                            <option value="">--Select Bank--</option>
+                                            @foreach (var bank in bankList)
+                                                {
+                                                <option value="@bank.BANK_ID">@bank.BANK_NAME</option>
+                                                }
+                                        </InputSelect>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-5"><label>Branch:</label></div>
+                                    <div class="col-md-7">
+                                        <InputSelect @bind-Value="@customerPayment.BANK_BRANCH_ID" style="height:30px;width:204px">
+                                            <option value="">--Select Branch--</option>
+                                            @foreach (var branch in branchList)
+                                                {
+                                                <option value="@branch.BANK_BRANCH_ID">@branch.BRANCH_NAME</option>
+                                                }
+                                        </InputSelect>
+
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Payment Date:</label></div>
+                                <div class="col-md-7">
+                                    <input type="date" @bind-value="@payment_date" style="height:30px;width:204px" />
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Money Receipt No:</label></div>
+                                <div class="col-md-7"><InputText @bind-Value="@customerPayment.MONEY_RECEIPT_NO" style="height:30px;width:204px"></InputText></div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Next Payment Date:</label></div>
+                                <div class="col-md-7">
+                                    <input type="date" @bind-value="@nextpayment_date" style="height:30px;width:204px" />
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-md-5"><label>Payment Status:</label></div>
+                                <div class="col-md-7">
+                                    <InputSelect @bind-Value="customerPayment.PAYMENT_STATUS" style="width:203px;height:28px">
+                                        <option></option>
+                                        <option value="Advance Payment">Advance Payment</option>
+                                        <option value="Partial Payment">Partial Payment</option>
+                                        <option value="Full Payment">Full Payment</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Remarks:</label></div>
+                                <div class="col-md-7"><InputTextArea @bind-Value="@customerPayment.REMARKS" style="width:203px"></InputTextArea></div>
+                            </div>
+                            @*<div class="row mt-1">
+                                    <div class="col-md-3"><label>Advance Payment:</label></div>
+                                    <div class="col-md-7">
+                                        <InputNumber @bind-Value="@vendorPayment.OPENING_BALANCE" @oninput="PaidAmount_Clicked"></InputNumber>
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="row mt-1">
+                                    <div class="col-md-3"><label>Paid Amount:</label></div>
+                                    <div class="col-md-7">
+                                        <InputNumber @bind-Value="@vendorPayment.AMOUNT_PAID" @oninput="PaidAmount_Clicked"></InputNumber>
+
+                                    </div>
+                                </div>*@
+                            <!--<div class="row mt-1">
+                            <div class="col-md-3"><label>Due:</label></div>
+                            <div class="col-md-7">-->
+                            @*<InputNumber @bind-Value="@vendorPayment.AMOUNT_DUE" @oninput="PaidAmount_Clicked"></InputNumber>*@
+                            <!--<lable>@due</lable>
+                                </div>
+                            </div>-->
+                            @*<div class="row mt-1">
+                                <div class="col-md-3"><label>Balance: </label></div>
+                                <div class="col-md-7">
+                                <lable>@balance</lable>
+
+                                </div>
+                                </div>*@
+                        </div>
+                    </div>
+                </fieldset>
+                <br />
+                <fieldset class="border p-4">
+                    <legend class="w-auto">---</legend>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label style="font-weight:bold;font-size:20px">Receiveable Amount  : @OUTSTANDING_BALANCE </label>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Payment :</label>
+                            <InputNumber @bind-Value="@customerPayment.AMOUNT_PAID" type="number" style="width:200px"/>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <!--<h5>PURCHASE ITEMS</h5>
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped">
+                        <thead style="background-color:steelblue;color:white;height:20px">
+                            <tr>
+                                <td scope="col">Item Description</td>
+                                <td scope="col">UOM</td>
+                                <td scope="col">Quantity</td>
+                                <td scope="col">Rate</td>
+                                <td scope="col">Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tableitem in purchaseDetailsList)
+                            {
+                                double total = Convert.ToDouble(tableitem.QUANTITY) * Convert
+                                    .ToDouble(tableitem.UNIT_PRICE);
+
+
+                                <tr>
+                                    <td scope="col">@tableitem.ITEM_NAME</td>
+                                    <td scope="col">@tableitem.UOM</td>
+                                    <td scope="col">@tableitem.QUANTITY</td>
+                                    <td scope="col">@tableitem.UNIT_PRICE</td>
+                                    <td scope="col">@total</td>
+                                </tr>
+
+                            }
+                            <tr>
+                                <td colspan="4" style="text-align:right">Total Amount</td>
+                                <td style="font-weight:bold;font-size:20px">@FinalTotal</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="text-align:right;border:none">Paid</td>-->
+                @*<td style="font-weight:bold;font-size:20px"></td>*@
+                <!--<td><input type="text" /></td>
+                </tr>-->
+                @*<tr>
+                    <td colspan="4" style="text-align:right">Total Due</td>
+                    <td style="font-weight:bold;font-size:20px">@FinalTotal</td>
+                    </tr>*@
+                <!--</tbody>
+                    </table>
+                </div>
+                <br />-->
+
+
+
+                <div class="col-4 d-flex" style="margin:20px 0 20px">
+                    <button class="btn btn-info" style="border:none;border-radius:10px;width:150px;margin-left:275px">Save</button>&nbsp;&nbsp;&nbsp;
+
+                </div>
+            </EditForm>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string requisition_no { get; set; }
+    [Parameter]
+    public string customerId { get; set; }
+    //private ReportService _ReportService = new ReportService();
+    DataSet DS_OUTPUT_DATA = new DataSet();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    PurchaseOrderEntity purchaseOrder = new PurchaseOrderEntity();
+    DateTime invoice_Date = System.DateTime.Now;
+    DateTime document_Date = System.DateTime.Now;
+    DateTime cheque_Date = System.DateTime.Now;
+    DateTime nextpayment_date = System.DateTime.Now;
+    PurchaseOrderModel purchaseOrderModel = new PurchaseOrderModel();
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+    PRE pp = new PRE();
+    List<CustomerModel> customerList = new List<CustomerModel>();
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    public string po_no { get; set; }
+    string payment_type;
+    PurchaseOrderDetailsEntity details = new PurchaseOrderDetailsEntity();
+    List<SalesOrderViewModel> salesDetailsList = new List<SalesOrderViewModel>();
+    List<PurchaseOrderDetailsEntity> oOrderDetailsList = new List<PurchaseOrderDetailsEntity>();
+    CustomerPaymentViewModel customerPayment = new CustomerPaymentViewModel();
+    List<BankModel> bankList = new List<BankModel>();
+    List<BankBranchModel> branchList = new List<BankBranchModel>();
+    DateTime payment_date = System.DateTime.Now;
+    List<SalesOrderViewModel> poList = new List<SalesOrderViewModel>();
+    string vendor;
+    string Vendor_Id;
+    double t;
+    double FinalTotal;
+    double balance;
+    double paidAmount;
+    double due;
+    double OUTSTANDING_BALANCE = 0;
+
+
+    //protected bool IsDisabled { get; set; }
+
+
+
+
+    //[Parameter]
+    //public string Format { get; set; } = "dd/mm/yyyy";
+
+
+    public async Task GetProductDetailsBYPO()
+    {
+        string pono = customerPayment.SALES_ORDER_NO;
+        //purchaseDetailsList = await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + pono);
+        //pOrderList = await Http.GetJsonAsync<List<PurchaseOrderEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO_NO/" + pono);
+        //pOrderList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPOList");
+        salesDetailsList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetCustomerPaymentInfoByPO/" + pono);
+
+        //foreach (var data in salesDetailsList)
+        //{
+        //    t = 0;
+        //    t = Convert.ToDouble(data.Un) * Convert.ToDouble(data.Q);
+        //    FinalTotal += t;
+        //}
+        //var first = salesDetailsList.First();
+        //vendor = first.VENDOR_NAME;
+        //Vendor_Id = first.VENDOR_ID;
+        //GetVendorOutStandingBalance(Vendor_Id);
+
+
+
+    }
+    //private async void GetVendorOutStandingBalance(int vendor_id)
+    //{
+    //    double OUTSTANDING_BALANCE = await Http.GetJsonAsync<double>(Utility.BaseUrl + "api/Vendor/GetSupplierOutStandingBalance/" + vendor_id);
+    //}
+    private async void PaidAmount_Clicked(ChangeEventArgs paidAmountevent)
+    {
+        balance = FinalTotal - Convert.ToDouble(paidAmountevent.Value.ToString());
+    }
+    private async void PaymentTypeClicked(ChangeEventArgs changeEventArgs)
+    {
+        payment_type = changeEventArgs.Value.ToString();
+    }
+    private async void BankClicked(ChangeEventArgs changeEventArgs)
+    {
+        branchList = await Http.GetJsonAsync<List<BankBranchModel>>(Utility.BaseUrl + "api/Bank/GetBranchList/" + changeEventArgs.Value.ToString());
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        ////IsDisabled = true;
+        //requestItemList = await Http.GetJsonAsync<List<OrderItemEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+        bankList = await Http.GetJsonAsync<List<BankModel>>(Utility.BaseUrl + "api/Bank");
+        //purchaseDetailsList= await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+        await GetSupplier();
+        poList = await Http.GetJsonAsync<List<SalesOrderViewModel>>(Utility.BaseUrl + "api/Sales/GetUnPaidPoListByCustomerId/" + customerId);
+        //OUTSTANDING_BALANCE = await Http.GetJsonAsync<double>(Utility.BaseUrl + "api/Vendor/GetSupplierOutStandingBalance/" + vendorPayment.PO_NUMBER_LONG_CODE);
+        if (customerList.Count > 0)
+        {
+            vendor = customerList.FirstOrDefault(x => x.CUSTOMER_ID == Convert.ToInt32(customerId)).CUSTOMER_NAME;
+            customerPayment.CUSTOMER_ID = customerList.FirstOrDefault(x => x.CUSTOMER_ID == Convert.ToInt32(customerId)).CUSTOMER_ID;
+        }
+    }
+    private async Task GetSupplier()
+    {
+        customerList = await Http.GetJsonAsync<List<CustomerModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomer");
+    }
+    async void CheckboxClicked(string poId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            customerPayment.SALES_ORDER_NO = poId;
+            customerPayment.SALES_ID = Convert.ToInt32(poList.Find(x => x.SALES_ORDER_NO == poId).SALES_ID);
+            OUTSTANDING_BALANCE = await Http.GetJsonAsync<double>(Utility.BaseUrl + "api/Customer/GetCustomerReceiveableBalance/" + customerPayment.SALES_ORDER_NO);
+        }
+        this.StateHasChanged();
+    }
+    public async Task SavePurchaseOrder()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                //vendorPayment.AMOUNT_PAID = paidAmount;
+                customerPayment.PAYMENT_DATE = payment_date;
+                //vendorPayment.PO_ID = purchaseDetailsList.First().PO_ID;
+                //vendorPayment.PO_NUMBER_LONG_CODE = purchaseDetailsList.First().PO_NUMBER_LONG_CODE;
+                //vendorPayment.VENDOR_ID = purchaseOrderModel.VENDOR_ID;//Convert.ToInt32(Vendor_Id);//purchaseDetailsList.First().VENDOR_ID;
+                customerPayment.CHEQUE_DATE = cheque_Date;
+                customerPayment.PAYMENT_AMOUNT = FinalTotal;
+                customerPayment.AMOUNT_DUE =OUTSTANDING_BALANCE - customerPayment.PAYMENT_AMOUNT;
+                customerPayment.NEXT_PAYMENT_DATE = nextpayment_date;
+
+                customerPayment.TOTAL_INVOICE_AMOUNT = FinalTotal;
+                customerPayment.REG_BY = await sessionStorage.GetItemAsync<string>("session_employeeLoginId");
+                customerPayment.TYPE_OF_PAYMENT = payment_type;
+
+                var payment = await Http.PostJsonAsync<CustomerPaymentViewModel>(Utility.BaseUrl + "api/Customer/AddCustomerPayment", customerPayment);
+                //var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderId/" + purchaseOrderModel.PO_NUMBER_LONG_CODE);
+
+                //var payment = await Http.PostJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/AddPurchaseOrderDetails", purchaseDetailsList);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        //if (vendorPayment.AMOUNT_PAID== "" || purchaseOrderModel.PO_NUMBER_LONG_CODE == string.Empty || purchaseOrderModel.PO_NUMBER_LONG_CODE == null)
+        //{
+        //    toastService.ShowWarning("Requisition No cannot be empty!");
+        //    flag = true;
+        //}
+
+        return flag;
+    }
+    protected async void Vendor_Clicked(ChangeEventArgs changeEventArgs)
+    {
+        //pOrderView.REPORT_TYPE = categoryevent.Value.ToString();
+        Vendor_Id = changeEventArgs.Value.ToString();
+        OUTSTANDING_BALANCE = await Http.GetJsonAsync<double>(Utility.BaseUrl + "api/Vendor/GetSupplierOutStandingBalance/" + Vendor_Id);
+        this.StateHasChanged();
+    }
+
+}
+

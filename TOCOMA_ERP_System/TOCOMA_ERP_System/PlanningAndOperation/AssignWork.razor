@@ -1,0 +1,862 @@
+﻿@page "/AssignWork"
+@layout MainLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@*@inject ProtectedSessionStorage storage*@
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IToastService toastService
+@inject NavigationManager UriHelper
+@inject IJSRuntime ijsruntime
+@*@functions{
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        //await JsRuntime.InvokeAsync<object>("showdatepicker");
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+        firstRender = false;
+    }
+    }*@
+<style>
+    .scroll {
+        overflow-x: auto;
+        white-space: normal;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        /*padding: 0.25em 0.5em;*/
+    }
+
+        td i {
+            display: inline-block;
+        }
+
+    tr td {
+        text-align: center;
+    }
+</style>
+
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">ADD PLANNING & WORK SCHEDULE</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <fieldset class="border p-4">
+                <button @onclick="SaveWork" class="btn btn-info" style="border:none;width:120px;float:right;margin-top:-42px">Save</button>
+                <legend class="w-auto">Assign Work</legend>
+
+                @*<div class="col-4 d-flex " style="float:right">
+                        <button @onclick="SaveWork" class="btn btn-info" style="border:none;width:120px">Save</button>
+                    </div>*@
+                <div class="analytic_details_contain_two scroll">
+                    <!--<EditForm Model="planAndOperation" OnValidSubmit="SavePurchaseOrder">
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td style="height:70px" scope="col" rowspan="2">Task Description</td>
+                                <td scope="col" rowspan="2">Department</td>
+                                <td scope="col" rowspan="2">Assign To</td>
+                                <td scope="col" rowspan="2">Assign By</td>
+                                <td scope="col" colspan="2">Start Date</td>
+                                <td scope="col" colspan="2">Completion Date</td>
+                                <td scope="col" rowspan="2">Duration</td>
+                                <td scope="col" rowspan="2">Action</td>
+                                <td scope="col" rowspan="2">Status</td>
+                                <td scope="col" rowspan="2">Remarks</td>
+                            </tr>
+                            <tr>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td><InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.TASK_DESCRIPTION" style="width:203px" cols="30" rows="3" placeholder="task description.."></InputTextArea></td>
+                                <td>
+                                    <InputSelect @bind-Value="@planAndOperation.DEPARTMENT_ID" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var department in departmentList)
+                                        {
+                                            <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td>
+                                    <select @onchange="TaskAssingTo_Clicked" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select @onchange="TaskAssingBy_Clicked" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </select>
+                                </td>
+
+
+
+
+                                <td>-->
+                    @*<InputText @bind-Value="@planAndOperation.PLANNED_START_DATE" @oninput="PlanStart_Clicked" style="width:120px" id="datepicker"></InputText>*@
+                    <!--<input style="width:120px" type="text" id="datepicker_planstart" @bind-value="@planAndOperation.PLANNED_START_DATE" />
+
+                                    </td>
+                                    <td><input style="width:120px" type="text" id="datepicker_actualstart" @bind-value="@planAndOperation.ACTUAL_START_DATE" /></td>
+                                    <td><input style="width:120px" type="text" id="datepicker_plansdone" @bind-value="@planAndOperation.PLANNED_COMPLETION_DATE" /></td>
+                                    <td><input style="width:120px" type="text" id="datepicker_actualdone" @bind-value="@planAndOperation.ACTUAL_COMPLETION_DATE" /></td>
+
+
+                                    <td><InputText @bind-Value="@days" style="width:80px"></InputText></td>
+                                    <td><InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.ACTIVITIES" style="width:203px" cols="30" rows="3" placeholder="action.."></InputTextArea></td>
+                                    <td>
+                                        <InputSelect @bind-Value="@planAndOperation.STATUS_ID" style="width:203px;height:28px">
+                                            <option value="">--Select--</option>
+                                            @foreach (var status in statusList)
+                                            {
+                                                <option value="@status.STATUS_ID">@status.STATUS</option>
+                                            }
+                                        </InputSelect>
+                                    </td>
+                                    <td><InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.COMMENTS" style="width:203px" cols="30" rows="3" placeholder="remarks.."></InputTextArea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </EditForm>-->
+                </div>
+                <br />
+                <EditForm Model="planAndOperation" OnValidSubmit="SavePurchaseOrder">
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+                                <td style="height:40px;width:10%" scope="col">Task Description</td>
+                                <td scope="col" style="width:15%">Department</td>
+                                <td scope="col" style="width:15%">Assign To</td>
+                                <td scope="col" style="width:15%">Assign By</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    @*<InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.TASK_DESCRIPTION" style="width:203px" cols="30" rows="2" placeholder="task description.."></InputTextArea>*@
+                                    <BlazoredTextEditor @ref="@taskDescription">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+                                            
+
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+                                </td>
+                                <td>
+                                    <InputSelect @bind-Value="@planAndOperation.DEPARTMENT_ID" style="width:203px;height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var department in departmentList)
+                                        {
+                                            <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td>
+                                    <select @onchange="TaskAssingTo_Clicked" style="width:203px;height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select @onchange="TaskAssingBy_Clicked" style="width:203px;height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_ID">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </select>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+
+                                <td scope="col" colspan="2">Start Date</td>
+                                <td scope="col" colspan="2">Completion Date</td>
+                            </tr>
+                            <tr>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+
+
+
+
+                                <td>
+                                    @*<InputText @bind-Value="@planAndOperation.PLANNED_START_DATE" @oninput="PlanStart_Clicked" style="width:120px" id="datepicker"></InputText>*@
+                                    <input style="width:120px" type="text" id="datepicker_planstart" autocomplete="off" @bind-value="@planAndOperation.PLANNED_START_DATE" />
+
+                                </td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualstart" autocomplete="off" @bind-value="@planAndOperation.ACTUAL_START_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_plansdone" autocomplete="off" @bind-value="@planAndOperation.PLANNED_COMPLETION_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualdone" autocomplete="off" @bind-value="@planAndOperation.ACTUAL_COMPLETION_DATE" /></td>
+
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+
+                                <td scope="col">Duration</td>
+                                <td scope="col">Action</td>
+                                <td scope="col">Status</td>
+                                <td scope="col">Remarks</td>
+                            </tr>
+
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+
+
+                                @*<td><InputText @bind-Value="@days" style="width:80px"></InputText></td>*@
+                                <td></td>
+                                <td>
+                                    @*<InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.ACTIVITIES" style="width:auto" cols="30" rows="2" placeholder="action.."></InputTextArea>*@
+                                    <BlazoredTextEditor @ref="@action">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+                                </td>
+                                <td>
+                                    <InputSelect @bind-Value="@planAndOperation.STATUS_ID" style="width:203px;height:28px">
+                                        <option value="0">--Select--</option>
+                                        @foreach (var status in statusList)
+                                        {
+                                            <option value="@status.STATUS_ID">@status.STATUS</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td>
+                                    @*<InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.COMMENTS" style="width: auto" cols="30" rows="2" placeholder="remarks.."></InputTextArea>*@
+                                    <BlazoredTextEditor @ref="@remarks">
+                                        <ToolbarContent>
+                                            <select class="ql-header">
+                                                <option selected=""></option>
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                                <option value="3"></option>
+                                                <option value="4"></option>
+                                                <option value="5"></option>
+                                            </select>
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <select class="ql-color"></select>
+                                                <select class="ql-background"></select>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                            </span>
+                                            <span class="ql-formats">
+                                                <button class="ql-link"></button>
+                                            </span>
+                                        </ToolbarContent>
+                                        <EditorContent>
+
+                                        </EditorContent>
+                                    </BlazoredTextEditor>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </EditForm>
+                <!--<br />
+                <EditForm Model="planAndOperation" OnValidSubmit="SavePurchaseOrder">
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+
+                                <td scope="col" colspan="2">Start Date</td>
+                                <td scope="col" colspan="2">Completion Date</td>
+                            </tr>
+                            <tr>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+                                <td scope="col">Planned</td>
+                                <td scope="col">Actual</td>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+
+
+
+
+                                <td>-->
+                @*<InputText @bind-Value="@planAndOperation.PLANNED_START_DATE" @oninput="PlanStart_Clicked" style="width:120px" id="datepicker"></InputText>*@
+                <!--<input style="width:120px" type="text" id="datepicker_planstart" @bind-value="@planAndOperation.PLANNED_START_DATE" />
+
+                                </td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualstart" @bind-value="@planAndOperation.ACTUAL_START_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_plansdone" @bind-value="@planAndOperation.PLANNED_COMPLETION_DATE" /></td>
+                                <td><input style="width:120px" type="text" id="datepicker_actualdone" @bind-value="@planAndOperation.ACTUAL_COMPLETION_DATE" /></td>
+
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </EditForm>
+                <br />
+                <EditForm Model="planAndOperation" OnValidSubmit="SavePurchaseOrder">
+                    <table class="table table-striped ">
+                        <thead style="font-weight:bold">
+                            <tr>
+
+                                <td scope="col">Duration</td>
+                                <td scope="col">Action</td>
+                                <td scope="col">Status</td>
+                                <td scope="col">Remarks</td>
+                            </tr>
+
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+
+
+                                <td><InputText @bind-Value="@days" style="width:80px"></InputText></td>
+                                <td><InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.ACTIVITIES" style="width:auto" cols="30" rows="2" placeholder="action.."></InputTextArea></td>
+                                <td>
+                                    <InputSelect @bind-Value="@planAndOperation.STATUS_ID" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var status in statusList)
+                                        {
+                                            <option value="@status.STATUS_ID">@status.STATUS</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td><InputTextArea class="form-control form-control-md" @bind-Value="@planAndOperation.COMMENTS" style="width: auto" cols="30" rows="2" placeholder="remarks.."></InputTextArea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </EditForm>-->
+
+            </fieldset>
+
+            <br />
+            <div>
+                <h4>Planning and Work Schedule</h4><br />
+            </div>
+            <div class="scroll">
+                <table class="table" style="width: 150%">
+                    <thead style="font-weight:bold">
+                        <tr>
+                            <td data-orderable="false" scope="col" rowspan="2"></td>
+                            <td data-orderable="false" scope="col" rowspan="2">SL</td>
+                            <td data-orderable="false" scope="col" rowspan="2">Entry<br />Date</td>
+                            <td data-orderable="false" style="width: 15%" scope="col" rowspan="2">Task Description</td>
+                            <td data-orderable="false" scope="col" rowspan="2">
+                                @*Department*@
+                                @*<input type="text" @bind-value="@itemname" list="txtSearch" style="width:20px;height:10px" />
+                                    <datalist id="txtSearch">
+                                        @foreach (var department in departmentList)
+                                        {
+                                            <option>@department.DEPARTMENT_NAME</option>
+                                        }
+                                    </datalist>*@
+                                <select @onchange="DepartmentClicked">
+                                    <option value="">Department</option>
+                                    @foreach (var department in departmentList)
+                                    {
+                                        <option value="@department.DEPARTMENT_ID">@department.DEPARTMENT_NAME</option>
+                                    }
+
+                                </select>
+
+                                @*<input list="browsers" name="myBrowser" />
+                                    <datalist id="browsers">
+                                        <option>Chrome</option>
+                                        <option>Firefox</option>
+                                        <option>Internet Explorer</option>
+                                        <option>Opera</option>
+                                    </datalist>*@
+
+                            </td>
+                            <td data-orderable="false" scope="col" rowspan="2">Assign To</td>
+                            <td data-orderable="false" scope="col" rowspan="2">Assign By</td>
+                            <td data-orderable="false" scope="col" colspan="2">Start Date</td>
+                            <td data-orderable="false" scope="col" colspan="2">Completion Date</td>
+                            <td data-orderable="false" scope="col" rowspan="2">Duration</td>
+                            <td data-orderable="false" scope="col" rowspan="2" style="width: 15%">Action</td>
+                            <td data-orderable="false" scope="col" rowspan="2">
+                                @*Status*@
+                                <select @onchange="StatusClicked">
+                                    <option value="">Status</option>
+                                    @foreach (var status in statusList)
+                                    {
+                                        <option value="@status.STATUS_ID">@status.STATUS</option>
+                                    }
+
+                                </select>
+
+                            </td>
+                            <td data-orderable="false" scope="col" rowspan="2" style="width: 15%">Remarks</td>
+                        </tr>
+                        <tr>
+                            <td data-orderable="false" scope="col">Planned</td>
+                            <td data-orderable="false" scope="col">Actual</td>
+                            <td data-orderable="false" scope="col">Planned</td>
+                            <td data-orderable="false" scope="col">Actual</td>
+
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @if (planAndOperationList != null)
+                        {
+                            foreach (var item in planAndOperationList)
+                            {
+                                <tr>
+                                    <td scope="col" width="60px"><a href="EditAssignWork/@item.ID"><span class="oi oi-pencil"></span></a></td>
+                                    <td scope="col">@item.SL</td>
+                                    <td scope="col">@item.ENTRYDATE</td>
+                                    <td scope="col">@item.TASK_DESCRIPTION</td>
+                                    <td scope="col">
+                                        @item.DEPARTMENT_NAME
+                                    </td>
+                                    <td scope="col">@item.TASK_ASSIGN_TO</td>
+                                    <td scope="col">@item.TASK_ASSIGN_BY</td>
+                                    <td scope="col">@item.PLANNED_START_DATE</td>
+                                    <td scope="col">@item.ACTUAL_START_DATE</td>
+                                    <td scope="col">@item.PLANNED_COMPLETION_DATE</td>
+                                    <td scope="col">@item.ACTUAL_COMPLETION_DATE</td>
+                                    <td>P- @item.PLANNED_DURATION<br />A- @item.ACTUAL_DURATION</td>
+                                    <td scope="col">@item.ACTIVITIES</td>
+                                    <td scope="col">@item.STATUS</td>
+                                    <td>@((MarkupString)@item.COMMENTS)</td>
+
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        @*<input @bind-value="@myValue" id="datepickertest" autocomplete="off" placeholder="Select Date" />
+            <div class="col">
+                <p>The date you choose is : @myValue</p>
+            </div>*@
+    </div>
+
+</div>
+
+@code {
+
+    private DateTime _endDate;
+
+    string myValue;
+    PlanAndOperationModel planAndOperation = new PlanAndOperationModel();
+    List<PlanandOperationViewModel> planAndOperationList = new List<PlanandOperationViewModel>();
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+    List<PlanAndWorkScheduleStatusModel> statusList = new List<PlanAndWorkScheduleStatusModel>();
+
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    DateTime PLANNED_START_DATE = System.DateTime.Now;
+    //DateTime ACTUAL_START_DATE = System.DateTime.Now;
+    //DateTime PLANNED_COMPLETION_DATE = System.DateTime.Now;
+    //DateTime ACTUAL_COMPLETION_DATE = System.DateTime.Now;
+    string datepicker;
+    public DateTime DateValue { get; set; } = new DateTime(2022, 04, 26);
+    string InvalidMessage;
+    string itemname = "";
+    int empId = 0;
+    int departId = 0;
+    int roleId = 0;
+    int statusId = 0;
+    int departmentId = 0;
+    int plan_duration;
+    int actual_duration;
+    private string strSavedContent = "";
+    private ElementReference divEditorElement;
+    private string EditorContent;
+    private string EditorHTMLContent;
+    private bool EditorEnabled = true;
+    BlazoredTextEditor taskDescription;
+    BlazoredTextEditor action;
+    BlazoredTextEditor remarks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+        //await JSRuntime.InvokeAsync<string>("QuillFunctions.createQuill", divEditorElement);
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee");
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+        statusList = await Http.GetJsonAsync<List<PlanAndWorkScheduleStatusModel>>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkStatus");
+        //myValue = DateTime.Now.ToString("dd/MM/yyyy");
+
+        departId = await sessionStorage.GetItemAsync<int>("session_employeeDepartmentId");
+        statusList = await Http.GetJsonAsync<List<PlanAndWorkScheduleStatusModel>>(Utility.BaseUrl + "api/Setup/GetPlanAndWorkStatus");
+        roleId = await sessionStorage.GetItemAsync<int>("session_userRoleId");
+        GetPlanAndWorkScheduleList(roleId);
+    }
+    private async Task GetPlanAndWorkScheduleList(int roleId)
+    {
+        if (roleId != 1)
+        { planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkSchedule/" + departId); }
+        else { planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySuperAdmin"); }
+        StateHasChanged();
+    }
+    protected void EndDate_change(Microsoft.AspNetCore.Components.ChangeEventArgs endDateEvent)
+    {
+        _endDate = Convert.ToDateTime(endDateEvent.Value);
+        StateHasChanged();
+    }
+    public async Task SavePurchaseOrder()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+
+                var data = await Http.PostJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/AddPlanAndWorkSchedule", planAndOperation);
+            }
+            catch (Exception EX)
+            { }
+        }
+    }
+    public void ValidationDate()
+    {
+        string oldValue = myValue;
+
+        InvalidMessage = "";
+
+        DateTime time;
+
+        if (!DateTime.TryParseExact(myValue, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out time))
+        {
+            InvalidMessage = oldValue + " Format Date is not valid";
+            myValue = DateTime.Now.ToString("dd/MM/yyyy");
+        }
+        else
+        {
+            var date = DateTime.ParseExact(myValue, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            if (date.Date < DateTime.Now.Date)
+            {
+                myValue = DateTime.Now.ToString("dd/MM/yyyy");
+                InvalidMessage = "Minimum date is " + oldValue;
+            }
+        }
+
+    }
+    public async Task SaveWork()
+    {
+        if (IsValidation() != true)
+        {
+            try
+            {
+
+                //ACTUAL_COMPLETION_DATE = Convert.ToDateTime(changeEvent.Value.ToString());
+                //days = (ACTUAL_COMPLETION_DATE - ACTUAL_START_DATE).Days;
+
+                //planAndOperation.PLANNED_START_DATE = Convert.ToDateTime(date); //PLANNED_START_DATE;
+
+                //planAndOperation.ACTUAL_START_DATE = ACTUAL_START_DATE;
+                //planAndOperation.PLANNED_COMPLETION_DATE = PLANNED_COMPLETION_DATE;
+                //planAndOperation.ACTUAL_COMPLETION_DATE = ACTUAL_COMPLETION_DATE;
+                int reg_by = await sessionStorage.GetItemAsync<int>("session_userId");
+                string employee = await sessionStorage.GetItemAsync<string>("session_employeeName");
+                planAndOperation.REG_BY = reg_by;
+                if (planAndOperation.PLANNED_COMPLETION_DATE != null && planAndOperation.PLANNED_START_DATE != null)
+                {
+                    plan_duration = (Convert.ToDateTime(planAndOperation.PLANNED_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.PLANNED_START_DATE)).Days;
+                    planAndOperation.PLANNED_DURATION = Convert.ToString(plan_duration);
+                }
+                else { planAndOperation.PLANNED_DURATION = ""; }
+                if (planAndOperation.ACTUAL_COMPLETION_DATE != null && planAndOperation.ACTUAL_START_DATE != null)
+                {
+                    actual_duration = (Convert.ToDateTime(planAndOperation.ACTUAL_COMPLETION_DATE) - Convert.ToDateTime(planAndOperation.ACTUAL_START_DATE)).Days;
+                    planAndOperation.ACTUAL_DURATION = Convert.ToString(actual_duration);
+                }
+                else { planAndOperation.ACTUAL_DURATION = ""; }
+                if (planAndOperation.COMMENTS != null || planAndOperation.COMMENTS != "")
+                { planAndOperation.COMMENTS = planAndOperation.COMMENTS + "( " + employee + " )"; }
+                EditorHTMLContent = await ijsruntime.InvokeAsync<string>(
+                        "QuillFunctions.getQuillHTML", divEditorElement);
+
+                EditorContent = await ijsruntime.InvokeAsync<string>(
+                "QuillFunctions.getQuillContent", divEditorElement);
+                strSavedContent = EditorHTMLContent;
+                planAndOperation.COMMENTS = strSavedContent;
+                planAndOperation.COMMENTS_QUILL_CONTENT = EditorContent;
+
+                var data = await Http.PostJsonAsync<PlanAndOperationModel>(Utility.BaseUrl + "api/Setup/AddPlanAndWorkSchedule", planAndOperation);
+                toastService.ShowSuccess("Save Successfully!!");
+                ClearData();
+                GetPlanAndWorkScheduleList(roleId);
+            }
+            catch (Exception EX)
+            { }
+        }
+    }
+    private void ClearData()
+    {
+        planAndOperation.TASK_DESCRIPTION = string.Empty;
+        planAndOperation.DEPARTMENT_ID = 0;
+        planAndOperation.EMPLOYEE_ID = 0;
+        planAndOperation.TASK_ASSIGN_TO = 0;
+        planAndOperation.TASK_ASSIGN_BY = 0;
+        planAndOperation.STATUS_ID = 0;
+        planAndOperation.PLANNED_START_DATE = "";
+        planAndOperation.ACTUAL_START_DATE = "";
+        planAndOperation.PLANNED_COMPLETION_DATE = "";
+        planAndOperation.ACTUAL_COMPLETION_DATE = "";
+        planAndOperation.ACTIVITIES = "";
+        planAndOperation.COMMENTS = "";
+
+    }
+    protected async void TaskAssingTo_Clicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        planAndOperation.TASK_ASSIGN_TO = Convert.ToInt32(changeEventArgs.Value.ToString());
+        this.StateHasChanged();
+    }
+    protected async void TaskAssingBy_Clicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        planAndOperation.TASK_ASSIGN_BY = Convert.ToInt32(changeEventArgs.Value.ToString());
+        this.StateHasChanged();
+    }
+    protected async void actual_completed_date_clicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEvent)
+    {
+        //ACTUAL_COMPLETION_DATE = Convert.ToDateTime(changeEvent.Value.ToString());
+        //days = (ACTUAL_COMPLETION_DATE - ACTUAL_START_DATE).Days;
+    }
+    protected async void PlanStart_Clicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEvent)
+    {
+        string d = changeEvent.Value.ToString();
+    }
+
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (planAndOperation.TASK_DESCRIPTION == "" || planAndOperation.TASK_DESCRIPTION == string.Empty || planAndOperation.TASK_DESCRIPTION == null)
+        {
+            toastService.ShowWarning("Task Description cannot be empty!");
+            flag = true;
+        }
+        else if (planAndOperation.DEPARTMENT_ID == 0)
+        {
+            toastService.ShowWarning("Please Select Department");
+            flag = true;
+        }
+        else if (planAndOperation.TASK_ASSIGN_TO == 0)
+        {
+            toastService.ShowWarning("Please Select Task Assign To");
+            flag = true;
+        }
+        else if (planAndOperation.TASK_ASSIGN_BY == 0)
+        {
+            toastService.ShowWarning("Please Select Task Assign By");
+            flag = true;
+        }
+        else if (planAndOperation.STATUS_ID == 0)
+        {
+            toastService.ShowWarning("Please Select Status");
+            flag = true;
+        }
+        else if (planAndOperation.PLANNED_START_DATE == "" || planAndOperation.PLANNED_START_DATE == null)
+        {
+            toastService.ShowWarning("Please Select Plan Start Date");
+            flag = true;
+        }
+        else if (planAndOperation.PLANNED_COMPLETION_DATE == "" || planAndOperation.PLANNED_COMPLETION_DATE == null)
+        {
+            toastService.ShowWarning("Please Select Plan Complete Date");
+            flag = true;
+        }
+
+        return flag;
+    }
+    public class Person
+    {
+        public DateTime DateOfBirth { get; set; } = DateTime.Now;
+    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await JsRuntime.InvokeVoidAsync("showdatepicker");
+    //}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("JsInteropDatepicker");
+        if (firstRender)
+        {
+            //await ijsruntime.InvokeAsync<string>(
+            //    "QuillFunctions.createQuill", divEditorElement);
+
+
+
+        }
+    }
+    protected async void DepartmentClicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        departmentId = Convert.ToInt32(changeEventArgs.Value.ToString());
+        await GetSearchItem();
+        this.StateHasChanged();
+    }
+    protected async void StatusClicked(Microsoft.AspNetCore.Components.ChangeEventArgs changeEventArgs)
+    {
+        statusId = Convert.ToInt32(changeEventArgs.Value.ToString());
+        await GetSearchItem();
+        this.StateHasChanged();
+    }
+    private async Task GetSearchItem()
+    {
+        string param = "";
+        string WhereCondition = "";
+        if (departmentId != 0)
+        {
+            if (param != "")
+            {
+                param = param + " AND PS.DEPARTMENT_ID=" + departmentId + "";
+            }
+            else
+            {
+                param = param + "  PS.DEPARTMENT_ID=" + departmentId + "";
+            }
+        }
+        if (statusId != 0)
+        {
+            if (param != "")
+            {
+                param = param + " AND S.STATUS_ID=" + statusId + "";
+            }
+            else
+            {
+                param = param + "  S.STATUS_ID=" + statusId + "";
+            }
+        }
+
+        if (param != "")
+        {
+            WhereCondition = "WHERE " + param;
+
+        }
+
+        planAndOperationList = await Http.GetJsonAsync<List<PlanandOperationViewModel>>(Utility.BaseUrl + "api/Setup/GetWorkScheduleBySearchOption/" + WhereCondition);
+
+        StateHasChanged();
+    }
+
+}

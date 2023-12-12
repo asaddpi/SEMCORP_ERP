@@ -1,0 +1,215 @@
+﻿@page "/"
+@namespace TOCOMA_ERP_System.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @*<---------Default link*@
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="~/images/SEMCORP-Icon.png" />
+    <title>SEMCORP</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="TOCOMA_ERP_System.styles.css" rel="stylesheet" />
+    <link href="_content/Radzen.Blazor/css/default.css" rel="stylesheet" />
+
+    @*<---------Default link*@
+    <link href="~/css/login.css" rel="stylesheet" />
+    <link href="~/css/dashboard.css" rel="stylesheet" />
+    <link href="~/css/toast.css" rel="stylesheet" />
+    @*<link href="~/css/tab.css" rel="stylesheet" />*@
+    <link href="_content/Blazored.Toast/blazored-toast.css" rel="stylesheet" />
+    <link href="~/css/form.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
+
+
+</head>
+<body>
+    @*<component type="typeof(App)" render-mode="Server" />*@
+    <app>
+        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
+    </app>
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    @*<script src="~/js/sweetalert.js"></script>
+        <script src="sweetalert2/dist/sweetalert2.min.js"></script>*@
+    <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="~/js/quill-blot-formatter.min.js"></script>
+    <script src="~/js/Blazored-BlazorQuill.js"></script>
+    <script src="~/js/interop.js"></script>
+    <script src="~/js/tabscript.js"></script>
+    <script type="text/javascript">
+
+        $("#myCheckBox").click(function () {
+            if (!$(this).is(':checked')) {
+
+                alert("Checked");
+                $('#dt_ETD_1st').datepicker(this.checked ? "enable" : "enable");
+
+            }
+            else {
+
+                $('#enable').attr('readonly', false);
+                $('#dt_ETD_1st').datepicker(this.checked ? "disable" : "enable");
+
+            }
+        });
+    </script>
+    <script>
+        window.triggerFileDownload = (fileName, url) => {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
+    <script>
+
+        window.JsInteropcollaps = function () {
+            $(document).ready(function () {
+                $('.dashMainContainer .card-header .expand-more-dash-icon').click(function () {
+                    if ($(this).attr('aria-expanded') == 'true') {
+                        $(this).find('span').css('transform', 'rotate(180deg)')
+                    } else {
+                        $(this).find('span').css('transform', 'rotate(0deg)')
+                    }
+                })
+                $('.sidebar li').click(function () {
+                    if ($(this).attr('aria-expanded') == 'false') {
+                        $(this).find('.fa-caret-right').css('transform', 'rotate(90deg)')
+                    } else {
+                        $(this).find('.fa-caret-right').css('transform', 'rotate(0deg)')
+                    }
+                    let list = $('.sidebar li')
+                    for (let i = 0; i < list.length; i++) {
+                        const element = list[i].classList.remove('active-link');
+                    }
+                    $(this).addClass('active-link')
+                })
+                $('#sidebar-mobile li').click(function () {
+                    if ($(this).attr('aria-expanded') == 'false') {
+                        $(this).find('.fa-caret-right').css('transform', 'rotate(90deg)')
+                    } else {
+                        $(this).find('.fa-caret-right').css('transform', 'rotate(0deg)')
+                    }
+                    let list = $('#sidebar-mobile li')
+                    for (let i = 0; i < list.length; i++) {
+                        const element = list[i].classList.remove('active-link');
+                    }
+                    $(this).addClass('active-link')
+                })
+                $('.left-side-expend-btn').click(function () {
+                    if (window.innerWidth < 768) {
+                        $('.rightSideContent').toggleClass('rightSideContent-toggle')
+                    } else {
+                        $('.rightSideContent').toggleClass('right-side-toggle')
+
+                    }
+                    $('.rightSideContent-list').toggleClass('rightSideContent-list-toggle')
+                    $(this).find('span').toggleClass('right-side-arrow-toggle')
+
+                })
+                $('.menu-controller').click(function () {
+                    $('#sidebar').toggleClass('sideBar-toggle')
+                    $('.mini-sidebar').toggleClass('mini-sidebar-toggle')
+                    $('#sidebar-mobile').toggleClass('sidebar-mobile-toggle')
+                })
+                $('.mini-sidebar-list').click(function () {
+                    $('.mini-sidebar').removeClass('mini-sidebar-toggle')
+                    $('#sidebar').toggleClass('sideBar-toggle')
+                })
+            })
+        }
+    </script>
+    <script>
+        function _base64ToArrayBuffer(base64) {
+            var binary_string = window.atob(base64);
+            var len = binary_string.length;
+            var bytes = new Uint8Array(len);
+
+            for (var i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+
+            return bytes.buffer;
+        }
+
+        function loadVideo3(base64, contentType) {
+            var arrayBuffer = _base64ToArrayBuffer(base64);
+
+            const blob = new Blob([arrayBuffer], { type: contentType });
+            var dataUrl = window.URL.createObjectURL(blob);
+
+            var video = document.getElementById("videoTagId");
+            video.src = dataUrl;
+        }
+
+    </script>
+    <script>
+        function TestDataTablesAdd(table) {
+            $(document).ready(function () {
+                $(table).DataTable();
+            });
+        }
+    </script>
+
+    <script>
+        function TestDataTablesRemove(table) {
+            $(document).ready(function () {
+                $(table).DataTable().destroy();
+            });
+        }
+    </script>
+</body>
+</html>

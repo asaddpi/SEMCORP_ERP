@@ -1,0 +1,1733 @@
+﻿@*@page "/SalesOrder/{quotationNo}"*@
+@page "/SalesOrder/{quotationNo}"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@*<style>
+
+    //230725Q99
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #888;
+        }
+
+        tr td {
+            text-align: center;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td input {
+            width: 100%;
+        }
+    </style>*@
+
+
+<div class="container">
+    <div class="card">
+        <div class="card-header"><h4>Work Order</h4></div>
+        <div class="card-body">
+            <!--<EditForm Model="@salesOrder" OnValidSubmit="@SaveSalesOrder">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Qut. No</td>
+                            <td>PO/WO Number</td>
+                            <td>WO Date</td>
+                            <td>Order Reveived by</td>
+                            <td>Customer <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-customer" style="font-size:13px;text-decoration:none;float:right"><span class="oi oi-pencil"></span></a></td>
+                            <td>Contact Person</td>
+                            <td>Delivery Date</td>
+                        </tr>
+                        <tr>-->
+            @*disabled="@REQ_IS_DISABLE"*@
+            <!--<td><InputText @bind-Value="@quotationNo"></InputText></td>
+                            <td><InputText @bind-Value="@salesOrder.PO_WO_NUMBER"></InputText></td>
+                            <td><input type="text" id="datepicker_planstart" style="height:28px" autocomplete="off" @bind-value="@workOrderDate" placeholder="dd/mm/yy" /></td>
+                            <td>
+                                <InputSelect @bind-Value="@salesOrder.ORDER_RECEIVED_BY" style="height:28px">
+                                    <option value="">--Select Employee--</option>
+                                    @foreach (var employee in employeeList)
+                                    {
+                                        <option value="@employee.EMPLOYEE_NAME">@employee.EMPLOYEE_NAME</option>
+                                    }
+                                </InputSelect>
+                            </td>
+                            <td>
+                                <InputSelect @bind-Value="@salesQuotation.CUSTOMER_ID" class="form-control" disable>
+                                    <option value="">--Select Customer--</option>
+                                    @foreach (var customer in customerList)
+                                    {
+                                        <option value="@customer.CUSTOMER_ID">@customer.CUSTOMER_NAME</option>
+                                    }
+                                </InputSelect>
+                            </td>
+                            <td><InputText @bind-Value="@salesQuotation.CONTACT_PERSON_NAME" readonly class="form-control"></InputText></td>
+                            <td><input type="text" id="datepicker_actualstart" style="height:28px" autocomplete="off" @bind-value="@deliveryDate" placeholder="dd/mm/yy" /></td>
+                        </tr>
+                        <tr>
+                            <th>Assign To</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <InputSelect @bind-Value="@salesOrder.ASSIGN_TO" style="height:28px">
+                                    <option value="">--Select Employee--</option>
+                                    @foreach (var employee in employeeList)
+                                    {
+                                        <option value="@employee.EMPLOYEE_NAME">@employee.EMPLOYEE_NAME</option>
+                                    }
+                                </InputSelect>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <br />
+
+            </EditForm>-->
+            @*<div style="margin-bottom:100px">*@
+            <div class="testbox">
+                <div class="tablearea">
+                    <EditForm Model="@salesOrder">
+                        <h4>General Information</h4>
+                        <hr />
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="inputCity">Qut. No</label>
+                                <InputText @bind-Value="@quotationNo" class="form-control"></InputText>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputState">PO/WO Number</label>
+                                <InputText @bind-Value="@salesOrder.PO_WO_NUMBER" class="form-control"></InputText>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputZip">PO/WO Date</label>
+                                <input type="text" id="datepicker_planstart" autocomplete="off" @bind-value="@workOrderDate" placeholder="dd/mm/yy" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputZip">PO/WO Receive Date</label>
+                                <input type="text" id="date_1" autocomplete="off" @bind-value="@orderReceiveDate" placeholder="dd/mm/yy" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputZip">Order Reveived by</label>
+                                <InputSelect @bind-Value="@salesOrder.ORDER_RECEIVED_BY" class="form-control">
+                                    <option value="">--Select Employee--</option>
+                                    @foreach (var employee in employeeList)
+                                    {
+                                        <option value="@employee.EMPLOYEE_NAME">@employee.EMPLOYEE_NAME</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputState">Customer</label>
+                                <InputSelect @bind-Value="@salesQuotation.CUSTOMER_ID" class="form-control" disable>
+                                    <option value="">--Select Customer--</option>
+                                    @foreach (var customer in customerList)
+                                    {
+                                        <option value="@customer.CUSTOMER_ID">@customer.CUSTOMER_NAME</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="inputZip">Contact Person</label>
+                                <InputText @bind-Value="@salesQuotation.CONTACT_PERSON_NAME" readonly class="form-control"></InputText>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="inputState">Assign To</label>
+                                <InputSelect @bind-Value="@salesOrder.ASSIGN_TO" class="form-control">
+                                    <option value="">--Select Employee--</option>
+                                    @foreach (var employee in employeeList)
+                                    {
+                                        <option value="@employee.EMPLOYEE_NAME">@employee.EMPLOYEE_NAME</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                    </EditForm>
+
+
+
+
+                    @*<div class="form-row">
+                            <div class="form-group col-md-2">
+                                <button class="btn btn-primary btn-sm" @onclick=@(() => AddItem())>Add</button>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+
+
+
+
+
+
+            <table class="table">
+                <tr>
+                    <th style="width:20%">Item</th>
+                    <th style="width:10%">Pack Size</th>
+                    <th style="width:10%">Unit</th>
+                    <th style="width:10%">Number of<br />Pack</th>
+                    <th style="width:10%">Quantity</th>
+                    <th style="width:10%">Rate</th>
+                    <th style="width:10%">AIT</th>
+                    <th style="width:10%">VAT</th>
+                    <th style="width:10%">Amount</th>
+                    <th style="width:10%"></th>
+                </tr>
+                @*<tr>
+
+
+
+                        <td>
+                            <input type="text" list="txtSearch" @onchange="ItemSelected" value="@itemname" class="form-control" />
+                            <datalist id="txtSearch">
+
+                                @foreach (var product in productList)
+                                {
+                                    <option>@product.ITEM_NAME</option>
+                                }
+                            </datalist>
+
+                        </td>
+                        <td><input type="text" @bind-value="@packSize" class="form-control" /></td>
+                        <td>
+                            <select @bind="@unitName" style="height:38px;width:110px" class="form-control">
+
+                                <option value="">-Unit-</option>
+                                @foreach (var unit in unitList)
+                                {
+                                    <option value="@unit.UNIT_NAME">@unit.UNIT_NAME</option>
+                                }
+                            </select>
+                        </td>
+                        <td><input type="text" @bind-value="@noOfPack" class="form-control" /></td>
+                        <td><input type="text" @bind-value="@q" id="quantity" class="form-control" /></td>
+                        <td><input type="text" @bind-value="@r" class="form-control" /></td>
+                        <td><input type="text" @bind-value="@ait" id="quantity" class="form-control" /></td>
+                        <td><input type="text" @bind-value="@vat" class="form-control" /></td>
+                        <td></td>
+                        <td><button class="btn btn-primary btn-sm" @onclick=@(() => AddItem())>Add</button></td>
+
+
+
+
+                    </tr>
+                    <tr>
+                        <th>
+                            <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg" style="font-size:13px;text-decoration:none">Add Item Description &nbsp;<span class="oi oi-pencil"></span></a>
+                        </th>
+                    </tr>*@
+                <tbody>
+                    @foreach (var salesItem in salesItemModelList)
+                    {
+                        <tr>
+                            <td>
+                                @salesItem.SERVICE_NAME<br />
+                                @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+                            </td>
+                            <td>@salesItem.PACK_SIZE</td>
+                            <td>@salesItem.UOM</td>
+                            <td>@salesItem.NUMBER_OF_PACK</td>
+                            <td>@salesItem.ORDER_QUANTITY</td>
+                            <td>@salesItem.UNIT_PRICE</td>
+                            <td>@salesItem.AIT</td>
+                            <td>@salesItem.VAT</td>
+                            <td>@salesItem.TOTAL_PRICE</td>
+                            <td><a @onclick=@(() => EditItem(salesItem.ITEM_NAME)) data-toggle="modal" data-target=".bd-example-modal-lg"><span class="oi oi-pencil"></span></a>&nbsp; &nbsp;<a @onclick=@(() => DeleteItem(salesItem.ITEM_NAME))><span class="oi oi-delete"></span></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+
+
+            <br />
+
+            <table width="55%" style="margin-bottom:100px">
+                @*<tr>
+                        <td style="width:27%">Sub Total</td>
+                        <td style="width:7%">@requisitionTotal</td>
+                    </tr>
+                    <tr>
+                        <td style="width:27%">LC Amount</td>
+                        <td style="width:7%"><input type="text" @oninput="LC_Amount_Clicked" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:27%">LC Commission</td>
+                        <td style="width:7%"><input type="text" @oninput="LC_Commission_Clicked" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width:27%">Insurance</td>
+                        <td style="width:7%"><input type="text" @oninput="Insurance_Clicked" /></td>
+                    </tr>*@
+                <tr>
+                    <td>Total Amount(BDT) </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@Total</td>
+
+                </tr>
+                <tr>
+                    <td>Discount </td>
+                    <td>%</td>
+                    <td><input type="text" @oninput="discount_amount_In_Parcent_Clicked" /></td>
+                    <td>Tk</td>
+                    <td><input type="text" @oninput="discount_amount_In_TK_Clicked" /></td>
+                </tr>
+                <tr>
+                    <td>Net Amount </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@netAmount</td>
+                </tr>
+                <tr>
+                    <td>Advance Amount </td>
+                    <td>%</td>
+                    <td><input type="text" @oninput="advance_amount_In_Parcent_Clicked" /></td>
+                    <td>Tk</td>
+                    <td><input type="text" @oninput="advance_amount_In_TK_Clicked" /></td>
+                </tr>
+                <tr>
+                    <td>Total Net Amount </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@totalNetAmount</td>
+                </tr>
+                <tr>
+                    <td style="width:60%">Delivery Charge/Others Charge</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><input type="text" @oninput="delivery_And_Others_Clicked" /></td>
+                </tr>
+                <tr>
+                    <td>Grand Total(BDT)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@GrandTotal</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="width:27%;text-align:left">In Words(BDT)  : @Inwords</td>
+                </tr>
+            </table>
+            <br />
+
+            <div class="card">
+                <div class="card-header">Terms &nbsp;&nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-xl-alltermsconditions">All</a> &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-termsconditions"><span class="oi oi-pencil"></span></a></div>
+
+            </div>
+            <div style="border: 1px solid #888">
+                @foreach (var item in selectedtermsConditionList)
+                {
+                    <table>
+                        <tr>
+                            <td><a @onclick=@(() => DeleteTermsConditions(item.SALES_TERMS_CONDITION_ID))><span class="oi oi-delete"></span></a></td>
+                            <td><label>@item.TERMS_AND_CONDITIONS</label></td>
+                        </tr>
+                    </table>
+
+                }
+
+            </div>
+
+            <br />
+            @*Terms & Condition &nbsp; <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-termsconditions"><span class="oi oi-pencil"></span></a>
+                <div style="border: 1px solid #888">
+                    @foreach (var item in termsConditionList)
+                    {
+                        <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.PURCHASE_TERMS_CONDITION_ID), eventArgs.Value); }" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                    }
+
+                </div>*@
+
+            @*</div>*@
+        </div>
+        <div class="card-footer text-muted" style="background-color: lightgray;text-align:center">
+            <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+            <button class="btn btn-success" style="width:100px" @onclick="SaveSalesOrder">Save</button>
+        </div>
+    </div>
+</div>
+
+
+
+@*//--------------Modal Item Description-----*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> ITEM DESCRIPTION</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Item Information</h4>
+                <hr />
+                <div class="form-group">
+                    <label for="inputAddress">Item Name</label>
+                    <input type="text" list="txtSearch" @onchange="ItemSelected" value="@itemname" class="form-control" />
+                    <datalist id="txtSearch">
+
+                        @foreach (var product in productList)
+                        {
+                            <option>@product.ITEM_NAME</option>
+                        }
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label for="inputAddress2">Description</label>
+                    <BlazoredTextEditor @ref="@itemDescription">
+                        <ToolbarContent>
+                            <select class="ql-header">
+                                <option selected=""></option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                                <option value="3"></option>
+                                <option value="4"></option>
+                                <option value="5"></option>
+                            </select>
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-color"></select>
+                                <select class="ql-background"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                            </span>
+                        </ToolbarContent>
+                        <EditorContent>
+                            @((MarkupString)@salesItem.ITEM_DESCRIPTION)
+
+                        </EditorContent>
+                    </BlazoredTextEditor>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">Pack Size</label>
+                        <input type="text" @bind-value="@packSize" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputState">Unit</label>
+                        <select @bind="@unitName" class="form-control">
+                            <option value="">-Unit-</option>
+                            @foreach (var unit in unitList)
+                            {
+                                <option value="@unit.UNIT_NAME">@unit.UNIT_NAME</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputZip">No Of Pack</label>
+                        <input type="text" @bind-value="@noOfPack" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="inputCity">Quantity</label>
+                        <input type="text" @bind-value="@q" id="quantity" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputState">Unit Price</label>
+                        <input type="text" @bind-value="@r" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputZip">AIT</label>
+                        <input type="text" @bind-value="@ait" id="quantity" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputZip">VAT</label>
+                        <input type="text" @bind-value="@vat" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick=@(() => AddItem())>Add</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*//--------------New Customer Entry-----*@
+<div class="modal fade bd-example-modal-lg-customer" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-md-12">
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="form-outline">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase"> ADD CUSTOMER</span>  </h4>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@customer">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th style="width:150px">Customer Code</th>
+                                <th style="width:400px">Customer Name</th>
+                                <th colspan="3">Corporate Address</th>
+                            </tr>
+                            <tr>
+                                <td><InputText @bind-Value="@customer.CUSTOMER_CODE" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CUSTOMER_NAME" class="form-control"></InputText></td>
+                                <td colspan="3"><InputTextArea @bind-Value="@customer.CORPORATE_ADDRESS" class="form-control"></InputTextArea></td>
+                            </tr>
+                            <tr>
+                                <th>Customer Type</th>
+                                <th>Contact Person Name</th>
+                                <th>Designation</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <InputSelect @bind-Value="@customer.CUSTOMER_TYPE_ID" class="form-control">
+                                        <option value="">--Select Type--</option>
+                                        @foreach (var type in customerType)
+                                        {
+                                            <option value="@type.CUSTOMER_TYPE_ID">@type.CUSTOMER_TYPE</option>
+                                        }
+                                    </InputSelect>
+                                </td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_NAME" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_DESIGNATION" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_PHONE" class="form-control"></InputText></td>
+                                <td><InputText @bind-Value="@customer.CONTACT_PERSON_EMAIL" class="form-control"></InputText></td>
+                            </tr>
+                        </thead>
+                    </table>
+                </EditForm>
+
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>*@
+                <div>
+                    <button class="btn btn-info" data-dismiss="modal" style="border:none;width:120px;float:right;margin-left:10px" @onclick=@(() => AddCustomer())>Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*-------------Terms & Conditions Modal-----------*@
+<div class="modal fade bd-example-modal-lg-termsconditions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@termsconditions">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW TERMS & CONDITIONS</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>INSTRUCTION:</label></div>
+                                            <div class="col-md-6"><InputTextArea @bind-Value="@termsconditions.TERMS_AND_CONDITIONS" style="width:400px" cols="30" rows="3"></InputTextArea></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveTermsConditions())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@*-------------ALL Terms & Conditions Modal-----------*@
+<div class="modal fade bd-example-modal-xl-alltermsconditions" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="p-2"><span class="text-uppercase"> TERMS & CONDITIONS</span>  </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="col-md-1 flax">
+                <a style="color:Highlight;width:20px" @onclick=@(() => EditTermsConditionItem())><span class="oi oi-pencil"></span></a>&nbsp;
+                @*<a><span class="oi oi-trash" style="color:red;width:20px" @onclick=@(() => DeleteTermsCondition())></span></a>*@
+
+            </div>
+
+
+
+
+            <div class="modal-body">
+                @*<InputTextArea @bind-Value="@termsconditions.TERMS_AND_CONDITIONS" style="width:400px" cols="30" rows="3"></InputTextArea>&nbsp;*@
+                @*<a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-expecteddate"><span class="oi oi-pencil"></span></a>&nbsp;
+                    <a @onclick=@(() => DeleteItem(salesItem.ITEM_NAME))><span class="oi oi-delete"></span></a>*@
+
+                @if (editfieldsetareastatus == 1)
+                {
+                    <fieldset style="border: 1px solid lightgray">
+                        <legend>Edit Terms & Condition</legend>
+                        <textarea @bind="@termsconditions.TERMS_AND_CONDITIONS"></textarea>
+                        <button class="btn btn-success" style="width:90px;float:right;margin-right:12px;margin-bottom:20px" @onclick="EditTermsCondition">Edit</button>
+                    </fieldset>
+
+
+                    <br />
+                }
+
+                <input type="search" placeholder="search.." @oninput="SearchCondition" />
+                <br />
+                <br />
+                @foreach (var item in termsConditionList)
+                {
+                    <input style="margin-top:5px;margin-left:5px;width:20px" type="checkbox" @onchange="eventArgs => { OtherTermsClicked(Convert.ToString(item.SALES_TERMS_CONDITION_ID), eventArgs.Value); }" /> <label>@item.TERMS_AND_CONDITIONS</label><br />
+                }
+            </div>
+            <div class="modal-footer">
+                <div>
+                    @*<button style="width:100px" data-dismiss="modal">Close</button>*@
+                    <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick="GetSelectedTerms">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    List<CustomerModel> customerList = new List<CustomerModel>();
+    SalesOrderModel salesOrder = new SalesOrderModel();
+    CustomerModel customer = new CustomerModel();
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+    SalesOrderItemDetailsModel salesItemDetails = new SalesOrderItemDetailsModel();
+    List<SalesOrderItemDetailsModel> salesItemDetailsList = new List<SalesOrderItemDetailsModel>();
+    ItemEntity item = new ItemEntity();
+    List<UnitModel> unitList = new List<UnitModel>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    List<PurchaseTermsConditionsModel> selectedtermsConditionList = new List<PurchaseTermsConditionsModel>();
+    PurchaseTermsConditionsModel termsconditions = new PurchaseTermsConditionsModel();
+    int editfieldsetareastatus = 0;
+    string workOrderDate = "";
+    string orderReceiveDate = "";
+    string deliveryDate = "";
+    string selectedunit;
+    private string value { get; set; }
+    string noOfPack;
+    string terms_And_Conditions_No;
+    decimal discount_amount_In_Parcent;
+    decimal discount_amount_In_Taka;
+    decimal advance_amount_In_Parcent;
+    decimal advance_amount_In_Taka;
+    decimal netAmount = 0;
+    decimal totalNetAmount = 0;
+    decimal deliveryAndOthers = 0;
+    [Parameter]
+    public string quotationNo { get; set; }
+    int termsconditionId;
+
+
+    //---------------------
+
+    private List<PurchaseRequisitionEntity> Customers { get; set; }
+    PurchaseRequisitionEntity purchaseRequisition = new PurchaseRequisitionEntity();
+    SalesQuotationModel salesQuotation = new SalesQuotationModel();
+    SalesItemDetailsModel salesItem = new SalesItemDetailsModel();
+    SalesItemDetailsModel salesItemData = new SalesItemDetailsModel();
+    List<SalesItemDetailsModel> salesItemList = new List<SalesItemDetailsModel>();
+    List<SalesItemDetailsModel> salesItemModelList = new List<SalesItemDetailsModel>();
+
+    List<SalesItemDetailsModel> itemList = new List<SalesItemDetailsModel>();
+    List<PurchaseRequisitionDetailsEntity> requisitionDetailsEntities = new List<PurchaseRequisitionDetailsEntity>();
+    PurchaseRequisitionDetailsEntity details = new PurchaseRequisitionDetailsEntity();
+    PurchaseRequisitionOthersModel reqOthers = new PurchaseRequisitionOthersModel();
+    List<PurchaseRequisitionOthersModel> reqOthersList = new List<PurchaseRequisitionOthersModel>();
+    List<DepartmentEntity> departmentList = new List<DepartmentEntity>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    private ItemEntity SelectedArticle;
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    List<OthersRequisitionItemsModel> othersItemList = new List<OthersRequisitionItemsModel>();
+    OthersRequisitionItemsModel othersItem = new OthersRequisitionItemsModel();
+    List<CustomerTypeModel> customerType = new List<CustomerTypeModel>();
+    ACC_VOUCHER_ITEM_MODEL accVoucherItem = new ACC_VOUCHER_ITEM_MODEL();
+    List<ACC_VOUCHER_ITEM_MODEL> accVoucherItemList = new List<ACC_VOUCHER_ITEM_MODEL>();
+    ACC_COMPANY_VOUCHER_MODEL accCompanyVoucherModel = new ACC_COMPANY_VOUCHER_MODEL();
+    List<LedgerModel> ledgerList = new List<LedgerModel>();
+    List<PurchaseTermsConditionsModel> AlltermsConditionList = new List<PurchaseTermsConditionsModel>();
+
+    string searchitem = "";
+    OrderItemEntity orderitem;
+    OrderItemEntity order_itm = null;
+    BlazoredTextEditor itemDescription;
+    string q = "";
+    string r = "";
+    string ait = "5.00";
+    string vat = "7.5";
+    string itemname;
+    double requisitionTotal = 0;
+    decimal salesSubTotal = 0;
+    string unitName = "";
+    string packSize = "";
+
+    double othersSubTotal = 0;
+    //DateTime request_date = System.DateTime.Now;
+    string quotation_date;
+    string validupto_date;
+    int tablerow;
+    string selected_department;
+    int selected_department_Id;
+    string cheque_Date;
+    bool checked_cheque;
+    decimal GrandTotal;
+    decimal Total = 0;
+    decimal LC_AMOUNT;
+    decimal LC_COMMISSION;
+    decimal INSURANCE;
+    string Inwords;
+    string othersItemName;
+    string othersitemQuantity;
+    string OthersitemRate;
+    string reqNo;
+    protected bool REQ_IS_DISABLE { get; set; }
+    string salesOrderNo;
+    string companyShortForm = "";
+    int customerId = 0;
+    string SelectedString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        tablerow = 1;
+        //itemname = itemname + "_" + tablerow;
+        await DepartmentList();
+        await GetItemList();
+        await GetCustomer();
+        await GetCustomerType();
+        await GetReqNo();
+        await GetEmployee();
+        await GetLedger();
+        unitList = await Http.GetJsonAsync<List<UnitModel>>(Utility.BaseUrl + "api/Setup/GetUnitList");
+        termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditionsForSalesOrder");
+        await GetSalesItemDetails();
+        AlltermsConditionList = termsConditionList;
+        salesQuotation = await Http.GetJsonAsync<SalesQuotationModel>(Utility.BaseUrl + "api/Sales/GetQuotationByQutNo/" + quotationNo);
+        TotalCalculation();
+
+    }
+    private async Task GetLedger()
+    {
+        ledgerList = await Http.GetJsonAsync<List<LedgerModel>>(Utility.BaseUrl + "api/Setup/GetLedger");
+    }
+    private async Task GetSalesItemDetails()
+    {
+        salesItemList = await Http.GetJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/GetQuotationDetailsByQutNo/" + quotationNo);
+        if (salesItemList.Count > 0)
+        {
+            foreach (var item in salesItemList)
+            {
+                salesItemData = new SalesItemDetailsModel();
+                decimal total = item.UNIT_PRICE * Convert.ToDecimal(item.ORDER_QUANTITY);
+                decimal AIT = (total * 5) / 100;
+                decimal ait_in_Parcent = Convert.ToDecimal(String.Format("{0:0.00}", AIT));
+                decimal unitPriceAndAit = total + ait_in_Parcent;
+                decimal p = (unitPriceAndAit * Convert.ToDecimal(7.5)) / 100;
+                decimal VAT_with_Price_and_AIT = Convert.ToDecimal(String.Format("{0:0.00}", p));
+                //decimal tUnitPrice = total + ait_in_Parcent + p;
+                decimal tUnitPrice = total + item.AIT + item.VAT;
+                decimal totalUnitPrice = Convert.ToDecimal(String.Format("{0:0.00}", tUnitPrice));
+
+                salesItemData.AMOUNT = Convert.ToDouble(total);
+                salesItemData.AIT = item.AIT;//ait_in_Parcent;
+                salesItemData.VAT = item.VAT; //VAT_with_Price_and_AIT;
+                salesItemData.TOTAL_PRICE = totalUnitPrice;
+                salesItemData.UOM = item.UOM;
+                salesItemData.UNIT_PRICE = item.UNIT_PRICE;
+                salesItemData.ORDER_QUANTITY = item.ORDER_QUANTITY;
+                salesItemData.SERVICE_NAME = item.SERVICE_NAME;
+                salesItemData.ITEM_DESCRIPTION = item.ITEM_DESCRIPTION;
+                salesItemData.ITEM_ID = item.ITEM_ID;
+                salesItemData.NUMBER_OF_PACK = item.NUMBER_OF_PACK;
+                salesItemData.PACK_SIZE = item.PACK_SIZE;
+
+
+
+
+
+                salesItemModelList.Add(salesItemData);
+            }
+
+        }
+    }
+    private async Task SearchCondition(ChangeEventArgs changeEvent)
+    {
+        string value = changeEvent.Value.ToString();
+        if (value != "")
+        { termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditionsBySearch/" + value); }
+        else { await GetAllTermsCondition(); }
+
+
+    }
+    public async void DeleteTermsConditions(int Id)
+    {
+        var itemToRemove = selectedtermsConditionList.Single(r => r.SALES_TERMS_CONDITION_ID == Id);
+        selectedtermsConditionList.Remove(itemToRemove);
+
+        string termsId = Convert.ToString(Id);
+        //terms_And_Conditions_No = terms_And_Conditions_No.Replace(termsId, string.Empty);
+        var l = terms_And_Conditions_No.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        l.Remove(termsId);
+        terms_And_Conditions_No = string.Join(",", l);
+
+
+    }
+    private async Task GetSelectedTerms()
+    {
+        int[] nums = Array.ConvertAll(terms_And_Conditions_No.Split(','), int.Parse);
+        PurchaseTermsConditionsModel tcon = new PurchaseTermsConditionsModel();
+        foreach (var item in nums)
+        {
+            tcon = new PurchaseTermsConditionsModel();
+            tcon.PURCHASE_TERMS_CONDITION_ID = 0;
+            tcon.SALES_TERMS_CONDITION_ID = AlltermsConditionList.Find(x => x.SALES_TERMS_CONDITION_ID == item).SALES_TERMS_CONDITION_ID;
+            tcon.SL = 0;
+            tcon.TERMS_AND_CONDITIONS = AlltermsConditionList.Find(x => x.SALES_TERMS_CONDITION_ID == item).TERMS_AND_CONDITIONS;
+
+
+            if (!selectedtermsConditionList.Exists(x => x.SALES_TERMS_CONDITION_ID == item))
+            {
+
+                selectedtermsConditionList.Add(tcon);
+
+            }
+            else
+            {
+                selectedtermsConditionList.Where(w => w.SALES_TERMS_CONDITION_ID == item).ToList().ForEach(s => s.SALES_TERMS_CONDITION_ID = tcon.SALES_TERMS_CONDITION_ID);
+                selectedtermsConditionList.Where(w => w.SALES_TERMS_CONDITION_ID == item).ToList().ForEach(s => s.TERMS_AND_CONDITIONS = tcon.TERMS_AND_CONDITIONS);
+            }
+
+        }
+
+    }
+    private async Task GetItemList()
+    {
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+    }
+    private async Task GetCustomer()
+    {
+        customerList = await Http.GetJsonAsync<List<CustomerModel>>(Utility.BaseUrl + "api/Customer");
+    }
+    private async Task GetCustomerType()
+    {
+        customerType = await Http.GetJsonAsync<List<CustomerTypeModel>>(Utility.BaseUrl + "api/Customer/GetCustomerType");
+    }
+    private async Task GetEmployee()
+    {
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee");
+    }
+    public async Task GetReqNo()
+    {
+        //var reqNo = await Http.GetJsonAsync<RequisitionNo>(Utility.BaseUrl + "api/Purchase/GetReqNo");
+        reqNo = await Http.GetStringAsync(Utility.BaseUrl + "api/Purchase/GetReqNo");
+        purchaseRequisition.REQUISITION_NO = Convert.ToString(reqNo);
+
+        REQ_IS_DISABLE = true;
+        StateHasChanged();
+    }
+
+    private async Task<IEnumerable<ItemEntity>> SearchArticles(string searchText)
+    {
+        searchitem = searchText;
+        return await Task.FromResult(productList.Where(x => x.ITEM_NAME.ToLower().Contains(searchText.ToLower())));
+    }
+    private async Task DepartmentList()
+    {
+        departmentList = await Http.GetJsonAsync<List<DepartmentEntity>>(Utility.BaseUrl + "api/Department");
+
+    }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await JSRuntime.InvokeVoidAsync("JsInteropDatepicker");
+    //}
+    private void Add()
+    {
+        tablerow = tablerow + 1;
+        itemname = itemname + "_" + tablerow;
+        StateHasChanged();
+    }
+    protected async Task AddItem()
+    {
+        if (IsValidation_Table_Item() != true)
+        {
+            int pId = 0;
+            if (productList != null)
+            {
+                pId = productList.Find(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).ITEM_ID;
+            }
+            bool rowexists = salesItemList.Exists(x => x.ITEM_ID == pId);
+            if (rowexists != true)
+            {
+                bool alreadyExists = productList.Any(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim());
+                order_itm = new OrderItemEntity();
+                salesItem = new SalesItemDetailsModel();
+                salesItem.ITEM_ID = productList.Find(x => x.ITEM_NAME == itemname).ITEM_ID;
+                salesItem.ITEM_NAME = itemname;
+                salesItem.PACK_SIZE = packSize;
+                salesItem.UOM = unitName;
+                salesItem.NUMBER_OF_PACK = noOfPack;
+                salesItem.ORDER_QUANTITY = Convert.ToDouble(q);
+                salesItem.UNIT_PRICE = Convert.ToDecimal(r);
+                salesItem.UOM = productList.Find(x => x.ITEM_NAME == itemname).UOM;
+                salesItem.PACK_SIZE = productList.Find(x => x.ITEM_NAME == itemname).PACK_SIZE;
+                if (ait != null && ait != "")
+                { salesItem.AIT = Convert.ToDecimal(ait); }
+                if (vat != null && vat != "")
+                { salesItem.VAT = Convert.ToDecimal(vat); }
+                salesItem.ITEM_DESCRIPTION = await this.itemDescription.GetHTML();
+
+                //if (alreadyExists == true)
+                //{
+                //    order_itm.ITEM_ID = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).ITEM_ID;
+                //    order_itm.PACK_SIZE = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).PACK_SIZE;
+                //    order_itm.UOM = productList.FirstOrDefault(x => x.ITEM_NAME.ToString().Trim() == itemname.ToString().Trim()).UOM;
+                //}
+                //else
+                //{
+                //    order_itm.ITEM_ID = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Purchase/GetItemId/" + itemname);
+                //}
+
+                salesItem.TOTAL_PRICE = Convert.ToDecimal(salesItem.ORDER_QUANTITY) * Convert.ToDecimal(salesItem.UNIT_PRICE);
+                salesSubTotal += salesItem.TOTAL_PRICE;
+                salesItemModelList.Add(salesItem);
+            }
+            else
+            {
+
+                string des = await this.itemDescription.GetHTML();
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.ITEM_ID = pId);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.ITEM_NAME = itemname);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.ITEM_DESCRIPTION = des);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.UOM = unitName);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.PACK_SIZE = packSize);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.NUMBER_OF_PACK = noOfPack);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.UNIT_PRICE = Convert.ToDecimal(r));
+                //salesItemList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.UOM = item.UNIT_ID);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.ORDER_QUANTITY = Convert.ToDouble(q));
+                //salesItemList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.TOTAL_PRICE = totalUnitPrice);
+                //salesItemList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.AIT = ait_in_Parcent);
+                //salesItemList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.VAT = VAT_with_Price_and_AIT);
+                decimal total = Convert.ToDecimal(r) * Convert.ToDecimal(q);
+                decimal _ait = (total * Convert.ToDecimal(ait)) / 100;
+                decimal _aitAndTotal = total + _ait;
+                decimal _vat = (_aitAndTotal * Convert.ToDecimal(vat)) / 100;
+                decimal _totalPrice = total + _ait + _vat;
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.AIT = _ait);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.VAT = _vat);
+                salesItemModelList.Where(w => w.ITEM_ID == pId).ToList().ForEach(s => s.TOTAL_PRICE = _totalPrice);
+
+
+
+
+
+                //voucherItemList = voucherItemList.Where(w => w.symbol == MyProperty).Select(s => { s.symbol=MyProperty; return s; }).ToList();
+                //voucherItemList = voucherItemList.Where(w => w.particular == SelectedArticle.LEDGER_NAME).Select(s => { s.particular= SelectedArticle.LEDGER_NAME; return s; }).ToList();
+            }
+
+
+            //q = "";
+            //r = "";
+            //itemname = "";
+            TotalCalculation();
+            salesItem = new SalesItemDetailsModel();
+            itemname = "";
+            q = "";
+            r = "";
+            ait = "5.00";
+            vat = "7.5";
+            unitName = "";
+            packSize = "";
+            noOfPack = "";
+
+        }
+
+
+    }
+    public List<string> checkedOtherTermsIds { get; set; } = new List<string>();
+    void OtherTermsClicked(string termsConditionids, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!checkedOtherTermsIds.Contains(termsConditionids))
+            {
+                checkedOtherTermsIds.Add(termsConditionids);
+                termsconditionId = Convert.ToInt32(termsConditionids);
+            }
+        }
+        else
+        {
+            if (checkedOtherTermsIds.Contains(termsConditionids))
+            {
+                checkedOtherTermsIds.Remove(termsConditionids);
+            }
+        }
+        terms_And_Conditions_No = String.Join(",", checkedOtherTermsIds);
+    }
+    public async Task SaveTermsConditions()
+    {
+
+        if (IsValidation_TermsConditions() != true)
+        {
+            try
+            {
+                termsconditions.POSITION = 2;
+                var data = await Http.PostJsonAsync<PurchaseTermsConditionsModel>(Utility.BaseUrl + "api/Setup/AddSalesTermsConditions", termsconditions);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditionsForSalesOrder");
+        AlltermsConditionList = termsConditionList;
+        termsconditions.TERMS_AND_CONDITIONS = "";
+    }
+    public async Task EditTermsCondition()
+    {
+
+        if (IsValidation_TermsConditions() != true)
+        {
+            try
+            {
+                termsconditions.SALES_TERMS_CONDITION_ID = termsconditionId;
+                var data = await Http.PutJsonAsync<PurchaseTermsConditionsModel>(Utility.BaseUrl + "api/Setup/UpdateSalesTermsConditions", termsconditions);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        await GetAllTermsCondition();
+        termsconditions.TERMS_AND_CONDITIONS = "";
+        editfieldsetareastatus = 0;
+    }
+    public async void EditTermsConditionItem()
+    {
+        if (termsconditionId != 0)
+        {
+            editfieldsetareastatus = 1;
+            termsconditions.TERMS_AND_CONDITIONS = termsConditionList.Find(x => x.SALES_TERMS_CONDITION_ID == termsconditionId).TERMS_AND_CONDITIONS;
+        }
+    }
+    private async Task DeleteTermsCondition()
+    {
+        if (termsconditionId != 0)
+        {
+            if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+                return;
+
+            await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteTermsConditions/" + termsconditionId);
+            await GetAllTermsCondition();
+        }
+
+
+    }
+    private async Task GetAllTermsCondition()
+    {
+        termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditionsForSalesOrder");
+    }
+    private bool IsValidation_TermsConditions()
+    {
+        bool flag = false;
+        if (termsconditions.TERMS_AND_CONDITIONS == "" || termsconditions.TERMS_AND_CONDITIONS == string.Empty || termsconditions.TERMS_AND_CONDITIONS == null)
+        {
+            toastService.ShowWarning("Terms & Condition Field Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    protected async Task AddOthersItem()
+    {
+        othersItem = new OthersRequisitionItemsModel();
+        othersItem.OTHERS_ITEM = othersItemName;
+        if (othersitemQuantity != null && othersitemQuantity != "")
+        { othersItem.QUANTITY = Convert.ToDouble(othersitemQuantity); }
+        else { othersItem.QUANTITY = 0; }
+
+        othersItem.RATE = Convert.ToDouble(OthersitemRate);
+        if (othersitemQuantity != null && othersitemQuantity != "" && othersitemQuantity != "0") { othersItem.TOTAL = Convert.ToDouble(othersitemQuantity) * Convert.ToDouble(OthersitemRate); }
+        else { othersItem.TOTAL = Convert.ToDouble(OthersitemRate); }
+
+        othersSubTotal += othersItem.TOTAL;
+        othersItemList.Add(othersItem);
+        othersItemName = "";
+        othersitemQuantity = "";
+        OthersitemRate = "";
+        TotalCalculation();
+    }
+    public async void DeleteOthersItem(string item)
+    {
+        var itemToRemove = othersItemList.Single(r => r.OTHERS_ITEM == item);
+        othersItemList.Remove(itemToRemove);
+        if (othersItemList.Count > 0)
+        {
+            othersSubTotal = 0;
+            foreach (var _oitem in othersItemList)
+            {
+                othersSubTotal += _oitem.TOTAL;
+            }
+        }
+        else { othersSubTotal = 0; }
+
+        TotalCalculation();
+        StateHasChanged();
+    }
+    //--------------
+    public async void DeleteItem(string item)
+    {
+        var itemToRemove = salesItemModelList.Single(r => r.ITEM_NAME == item);
+        salesItemModelList.Remove(itemToRemove);
+        if (salesItemList.Count > 0)
+        {
+            salesSubTotal = 0;
+            foreach (var _oitem in salesItemList)
+            {
+                salesSubTotal += _oitem.TOTAL_PRICE;
+            }
+        }
+        else { salesSubTotal = 0; }
+
+        TotalCalculation();
+        StateHasChanged();
+    }
+    private async void UnitClicked(ChangeEventArgs args)
+    {
+        salesItemDetails.UOM = args.Value.ToString();
+
+    }
+    public async void EditItem(string item)
+    {
+        itemname = salesItemModelList.Single(r => r.ITEM_NAME == item).ITEM_NAME;
+        q = Convert.ToString(salesItemModelList.Single(r => r.ITEM_NAME == item).ORDER_QUANTITY);
+        r = Convert.ToString(salesItemModelList.Single(r => r.ITEM_NAME == item).UNIT_PRICE);
+        unitName = Convert.ToString(salesItemModelList.Single(r => r.ITEM_NAME == item).UOM);
+        packSize = Convert.ToString(salesItemModelList.Single(r => r.ITEM_NAME == item).PACK_SIZE);
+        noOfPack = Convert.ToString(salesItemModelList.Single(r => r.ITEM_NAME == item).NUMBER_OF_PACK);
+        //ait = Convert.ToString(salesItemList.Single(r => r.ITEM_NAME == item).AIT);
+        //vat = Convert.ToString(salesItemList.Single(r => r.ITEM_NAME == item).VAT);
+        itemDescription.LoadHTMLContent(salesItemModelList.Single(r => r.ITEM_NAME == item).ITEM_DESCRIPTION);
+        //var itemToRemove = salesItemList.Single(r => r.ITEM_NAME == item);
+        //salesItemList.Remove(itemToRemove);
+        if (requestItemList.Count > 0)
+        {
+            salesSubTotal = 0;
+            foreach (var _oitem in requestItemList)
+            {
+                salesSubTotal += Convert.ToDecimal(_oitem.Total);
+            }
+        }
+        else { salesSubTotal = 0; }
+        TotalCalculation();
+        StateHasChanged();
+    }
+    //
+    public async void EditOthersItem(string item)
+    {
+        othersItemName = othersItemList.Single(r => r.OTHERS_ITEM == item).OTHERS_ITEM;
+        othersitemQuantity = Convert.ToString(othersItemList.Single(r => r.OTHERS_ITEM == item).QUANTITY);
+        OthersitemRate = Convert.ToString(othersItemList.Single(r => r.OTHERS_ITEM == item).RATE);
+        var itemToRemove = othersItemList.Single(r => r.OTHERS_ITEM == item);
+        othersItemList.Remove(itemToRemove);
+        if (othersItemList.Count > 0)
+        {
+            othersSubTotal = 0;
+            foreach (var _oitem in othersItemList)
+            {
+                othersSubTotal += _oitem.TOTAL;
+            }
+        }
+        else { othersSubTotal = 0; }
+        TotalCalculation();
+        StateHasChanged();
+    }
+
+    public async Task GetSalesOrderNo()
+    {
+        string prefix = "";
+        prefix = companyShortForm;
+        //string C = salesQuotation.CUSTOMER_NAME;
+        //var firstChars = C.Split(' ').Select(s => s[0]);
+        //foreach(var p in firstChars)
+        //{
+        //    prefix += p;
+        //}
+        salesOrderNo = await Http.GetStringAsync(Utility.BaseUrl + "api/Sales/GetSalesOrderNo");
+        salesOrder.SALES_ORDER_NO = salesOrderNo;
+    }
+
+    //---------Sales Save function---
+
+    public async Task SaveSalesOrder()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                //---Sales Order
+
+                salesOrder.DELIVERY_DATE = deliveryDate;
+                salesOrder.PO_WO_DATE = workOrderDate;
+                salesOrder.SALES_ORDER_RECEIVED_DATE = orderReceiveDate;
+                //salesOrder.DELIVERY_DATE = _deliveryDate; //Convert.ToDateTime(Convert.ToDateTime(deliveryDate).Year+"-"+ Convert.ToDateTime(deliveryDate).Month+"-"+ Convert.ToDateTime(deliveryDate).Day);
+                salesOrder.GRAND_TOTAL = Convert.ToDouble(GrandTotal);
+                salesOrder.TERMS_AND_CONDITION = terms_And_Conditions_No;
+                salesOrder.REG_BY = await sessionStorage.GetItemAsync<string>("session_employeeLoginId");
+                salesOrder.QUOTATION_NO = quotationNo;
+                salesOrder.CUSTOMER_ID = salesQuotation.CUSTOMER_ID;
+                salesOrder.DELIVERY_NOTE_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Sales/GetDeliveryNo");
+                await GetSalesOrderNo();
+
+                //----------Account Master Data
+                //string d = deliveryDate.Substring(0, 2);
+                //string m = deliveryDate.Substring(3, 2);
+                //string y = deliveryDate.Substring(6, 4);
+                //DateTime dd = Convert.ToDateTime(y + "-" + m + "-" + d);
+                //+ "-" + Convert.ToDateTime(d).Month + "-" + Convert.ToDateTime(d).Day); ;
+                //DateTime dtt = Convert.ToDateTime(dd);
+                accCompanyVoucherModel.COMP_REF_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Transection/GetVoucherNo/" + 3);
+                //accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(dd);
+                //accCompanyVoucherModel.BRANCH_ID = branchList.Find(x => x.BRANCH_NAME == BranchName).BRANCH_ID;
+                accCompanyVoucherModel.LEDGER_NAME = customerList.Find(x => x.CUSTOMER_ID == salesOrder.CUSTOMER_ID).CUSTOMER_NAME;
+                accCompanyVoucherModel.COMP_VOUCHER_AMOUNT = Convert.ToDecimal(GrandTotal);
+                accCompanyVoucherModel.COMP_VOUCHER_ADD_AMOUNT = 0;
+                accCompanyVoucherModel.COMP_VOUCHER_LESS_AMOUNT = 0;
+                accCompanyVoucherModel.COMP_VOUCHER_NET_AMOUNT = Convert.ToDecimal(GrandTotal);
+                accCompanyVoucherModel.COMP_VOUCHER_PROCESS_AMOUNT = 0;
+                accCompanyVoucherModel.COMP_VOUCHER_NARRATION = "";
+                accCompanyVoucherModel.COMP_VOUCHER_TYPE = 3;
+                accCompanyVoucherModel.ENTRYBY = await sessionStorage.GetItemAsync<string>("session_employeeName");
+                accCompanyVoucherModel.UPDATEBY = await sessionStorage.GetItemAsync<string>("session_employeeName");
+                //-------------------------------
+
+                //-----Acc Voucher Details
+
+                // Create a List of objects
+                List<ACC_VOUCHER_MODEL> voucherItem = new List<ACC_VOUCHER_MODEL>
+            {
+                        new ACC_VOUCHER_MODEL {
+                            COMP_REF_NO = accCompanyVoucherModel.COMP_REF_NO
+                              ,VOUCHER_REF_KEY=""
+                              ,BRANCH_ID=accCompanyVoucherModel.BRANCH_ID
+                              ,COMP_VOUCHER_DATE=accCompanyVoucherModel.COMP_VOUCHER_DATE
+                              ,COMP_VOUCHER_TYPE=3
+                              ,LEDGER_NAME=customerList.Find(x => x.CUSTOMER_ID == salesOrder.CUSTOMER_ID).CUSTOMER_NAME
+                              ,VOUCHER_DEBIT_AMOUNT=Convert.ToDecimal(GrandTotal)
+                              ,VOUCHER_CREDIT_AMOUNT=0
+                              ,VOUCHER_ADD_AMOUNT=0
+                              ,VOUCHER_LESS_AMOUNT=0
+                              ,VOUCHER_TOBY="Dr"
+                              ,VOUCHER_FC_DEBIT_AMOUNT=0
+                              ,VOUCHER_FC_CREDIT_AMOUNT = 0
+                        },
+                        new ACC_VOUCHER_MODEL {
+                              COMP_REF_NO = accCompanyVoucherModel.COMP_REF_NO
+                              ,VOUCHER_REF_KEY=""
+                              ,BRANCH_ID=accCompanyVoucherModel.BRANCH_ID
+                              ,COMP_VOUCHER_DATE=accCompanyVoucherModel.COMP_VOUCHER_DATE
+                              ,COMP_VOUCHER_TYPE=3
+                              ,LEDGER_NAME=SelectedString
+                              ,VOUCHER_DEBIT_AMOUNT=0
+                              ,VOUCHER_CREDIT_AMOUNT=Convert.ToDecimal(GrandTotal)
+                              ,VOUCHER_ADD_AMOUNT=0
+                              ,VOUCHER_LESS_AMOUNT=0
+                              ,VOUCHER_TOBY="Cr"
+                              ,VOUCHER_FC_DEBIT_AMOUNT=0
+                              ,VOUCHER_FC_CREDIT_AMOUNT = 0
+
+                        }
+                    };
+                accCompanyVoucherModel.accVoucherList = voucherItem;
+                salesOrder.acc_com_VoucherModel = accCompanyVoucherModel;
+                salesOrder.acc_Voucher_Model = voucherItem;
+
+                //----Sales Details
+
+                foreach (var item in salesItemModelList)
+                {
+                    accVoucherItem = new ACC_VOUCHER_ITEM_MODEL();
+                    accVoucherItem.BRANCH_ID = accCompanyVoucherModel.BRANCH_ID;
+                    accVoucherItem.COMP_REF_NO = accCompanyVoucherModel.COMP_REF_NO;
+                    accVoucherItem.COMP_VOUCHER_TYPE = accCompanyVoucherModel.COMP_VOUCHER_TYPE;
+                    accVoucherItem.COMP_VOUCHER_DATE = accCompanyVoucherModel.COMP_VOUCHER_DATE;
+                    //accVoucherItem.STOCKITEM_NAME = productList.Find(x => x.ITEM_ID == item.ITEM_ID).ITEM_NAME;
+                    accVoucherItem.BILL_QUANTITY = Convert.ToDecimal(item.SALES_QUANTITY);
+                    accVoucherItem.BILL_RATE = Convert.ToDecimal(item.UNIT_PRICE);
+                    //accVoucherItem.GODOWNS_NAME = salesOrder.;
+                    accVoucherItem.BILL_UOM = item.UOM;
+                    accVoucherItemList.Add(accVoucherItem);
+                }
+                salesOrder.acc_VoucherItemList = accVoucherItemList;
+                foreach (var item in salesItemModelList)
+                {
+                    salesItem = new SalesItemDetailsModel();
+                    //salesItem.SALES_ID = id;
+                    salesItem.PO_WO_NUMBER = salesOrder.PO_WO_NUMBER;
+                    salesItem.SALES_ORDER_NO = salesOrder.SALES_ORDER_NO;
+                    salesItem.ITEM_ID = item.ITEM_ID;
+                    salesItem.ITEM_DESCRIPTION = item.ITEM_DESCRIPTION;
+                    salesItem.ORDER_QUANTITY = item.ORDER_QUANTITY;
+                    salesItem.SERVICE_NAME = item.SERVICE_NAME;
+                    salesItem.UOM = item.UOM;
+                    salesItem.PACK_SIZE = item.PACK_SIZE;
+                    salesItem.UNIT_PRICE = item.UNIT_PRICE;
+                    salesItem.AIT = item.AIT;
+                    salesItem.VAT = item.VAT;
+                    salesItem.TOTAL_PRICE = Convert.ToDecimal(item.ORDER_QUANTITY) * item.UNIT_PRICE;
+
+                    itemList.Add(salesItem);
+                }
+                salesOrder.sOrderDetailsList = itemList;
+                //var data = await Http.PostJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/AddSalesOrder/", salesOrder);
+
+                toastService.ShowSuccess("Order Place Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowError("Not Save ! " + ex.Message);
+            }
+
+        }
+    }
+    //------------
+
+    public async Task SaveSalesOrder_bkp()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                //string d = workOrderDate.Replace("/", "-");
+                //salesOrder.PO_WO_DATE = Convert.ToDateTime(d);
+                //string dd = deliveryDate.Replace("/", "-");
+                //DateTime? _woDate = null;
+                //DateFunc(dt);
+                //dt = DateTime.Now;
+                //DateTime _woDate = new DateTime();
+                //if (workOrderDate != "") { workOrderDate = DateTime.ParseExact(workOrderDate, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); }
+
+                //DateTime _deliveryDate = DateTime.ParseExact(deliveryDate, @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                //DateTime deli = Convert.ToDateTime(Convert.ToDateTime(deliveryDate).Year + "-" + Convert.ToDateTime(deliveryDate).Month + "-" + Convert.ToDateTime(deliveryDate).Day);
+                salesOrder.DELIVERY_DATE = deliveryDate;
+                salesOrder.PO_WO_DATE = workOrderDate;
+                salesOrder.SALES_ORDER_RECEIVED_DATE = orderReceiveDate;
+                //salesOrder.DELIVERY_DATE = _deliveryDate; //Convert.ToDateTime(Convert.ToDateTime(deliveryDate).Year+"-"+ Convert.ToDateTime(deliveryDate).Month+"-"+ Convert.ToDateTime(deliveryDate).Day);
+                salesOrder.GRAND_TOTAL = Convert.ToDouble(GrandTotal);
+                salesOrder.TERMS_AND_CONDITION = terms_And_Conditions_No;
+                salesOrder.REG_BY = await sessionStorage.GetItemAsync<string>("session_employeeLoginId");
+                salesOrder.QUOTATION_NO = quotationNo;
+                salesOrder.CUSTOMER_ID = salesQuotation.CUSTOMER_ID;
+                salesOrder.DELIVERY_NOTE_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Sales/GetDeliveryNo");
+                await GetSalesOrderNo();
+
+
+                var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Sales/GetSalesOrderId");
+                foreach (var item in salesItemModelList)
+                {
+                    salesItem = new SalesItemDetailsModel();
+                    salesItem.SALES_ID = id;
+                    salesItem.PO_WO_NUMBER = salesOrder.PO_WO_NUMBER;
+                    salesItem.SALES_ORDER_NO = salesOrder.SALES_ORDER_NO;
+                    salesItem.ITEM_ID = item.ITEM_ID;
+                    salesItem.ITEM_DESCRIPTION = item.ITEM_DESCRIPTION;
+                    salesItem.ORDER_QUANTITY = item.ORDER_QUANTITY;
+                    salesItem.UOM = item.UOM;
+                    salesItem.PACK_SIZE = item.PACK_SIZE;
+                    salesItem.UNIT_PRICE = item.UNIT_PRICE;
+                    salesItem.AIT = item.AIT;
+                    salesItem.VAT = item.VAT;
+                    salesItem.TOTAL_PRICE = Convert.ToDecimal(item.ORDER_QUANTITY) * item.UNIT_PRICE;
+
+                    itemList.Add(salesItem);
+                }
+                //var salesitem_details = await Http.PostJsonAsync<List<SalesItemDetailsModel>>(Utility.BaseUrl + "api/Sales/AddSalesOrderDetails", itemList);
+                var data = await Http.PostJsonAsync<SalesOrderModel>(Utility.BaseUrl + "api/Sales/AddSalesOrder/", salesOrder);
+
+                toastService.ShowSuccess("Insert Successfully!!!");
+                salesItem = new SalesItemDetailsModel();
+
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowWarning("Not Save" + ex.Message);
+            }
+
+        }
+    }
+    private bool IsValidation_Table_Item()
+    {
+        bool flag = false;
+        if (itemname == "" || itemname == string.Empty || itemname == null)
+        {
+            toastService.ShowWarning("Please Select Item!");
+            flag = true;
+        }
+        else if (q == "" || q == string.Empty || q == null)
+        {
+            toastService.ShowWarning("Quantity Field is Empty!");
+            flag = true;
+        }
+        else if (r == "" || r == string.Empty || r == null)
+        {
+            toastService.ShowWarning("Rate Field is Empty!");
+            flag = true;
+        }
+        return flag;
+    }
+    //private async void ItemSelected(ChangeEventArgs changeEvent)
+    //{
+    //    item = await Http.GetJsonAsync<ItemEntity>(Utility.BaseUrl + "api/Product/GetItemByItemName/" + itemname);
+    //    selectedunit = item.UNIT_NAME;
+    //}
+
+    private async void ItemSelected(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        value = (string)args.Value;
+        itemname = value;
+        item = await Http.GetJsonAsync<ItemEntity>(Utility.BaseUrl + "api/Product/GetItemByItemName/" + value);
+        unitName = item.UNIT_NAME;
+        StateHasChanged();
+    }
+
+    private bool IsValidation()
+    {
+        bool flag = false;
+        //if (salesOrder.PO_WO_NUMBER == "" || salesOrder.PO_WO_NUMBER == string.Empty || salesOrder.PO_WO_NUMBER == null)
+        //{
+        //    toastService.ShowWarning("PO/WO No. cannot be empty!");
+        //    flag = true;
+        //}
+
+
+        return flag;
+    }
+    //private void ClearData()
+    //{
+    //    purchaseRequisition.REQUISITION_NO = "";
+    //    purchaseRequisition.REQUESTED_BY = "";
+    //    purchaseRequisition.REQUEST_DATE = System.DateTime.Now;
+    //    purchaseRequisition.REQUIRED_DATE = System.DateTime.Now;
+    //    purchaseRequisition.REQUEST_FOR = "";
+    //    purchaseRequisition.REQUISITION_PURPOSE = "";
+    //    requestItemList = null;
+
+    //}
+    private async Task Requesst_Receive_Dept_Click(ChangeEventArgs changeEventArgs)
+    {
+
+        selected_department_Id = Convert.ToInt32(changeEventArgs.Value);
+        selected_department = departmentList.Find(x => x.DEPARTMENT_ID == selected_department_Id).DEPARTMENT_NAME;
+        StateHasChanged();
+    }
+    private async Task LC_Amount_Clicked(ChangeEventArgs lcAmount)
+    {
+        if (lcAmount.Value.ToString() != "0" && lcAmount.Value.ToString() != null && lcAmount.Value.ToString() != "")
+        {
+            LC_AMOUNT = Convert.ToDecimal(lcAmount.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            LC_AMOUNT = 0;
+            TotalCalculation();
+        }
+
+
+    }
+    private async Task LC_Commission_Clicked(ChangeEventArgs lcCommission)
+    {
+        if (lcCommission.Value.ToString() != "0" && lcCommission.Value.ToString() != null && lcCommission.Value.ToString() != "")
+        {
+            LC_COMMISSION = Convert.ToDecimal(lcCommission.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            LC_COMMISSION = 0;
+            TotalCalculation();
+        }
+
+    }
+    private async Task Insurance_Clicked(ChangeEventArgs Insurance)
+    {
+        if (Insurance.Value.ToString() != "0" && Insurance != null && Insurance.Value.ToString() != "")
+        {
+            INSURANCE = Convert.ToDecimal(Insurance.Value.ToString());
+            TotalCalculation();
+        }
+        else
+        {
+            INSURANCE = 0;
+            TotalCalculation();
+        }
+
+    }
+
+    async void PaymentMode_ChequeClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            checked_cheque = true;
+            purchaseRequisition.PAYMENT_MODE = "Cheque";
+        }
+        else
+        {
+            checked_cheque = false;
+            cheque_Date = "";
+            purchaseRequisition.PAYMENT_MODE = "";
+        }
+        StateHasChanged();
+    }
+    //PaymentMode_PayorderClicked(
+    //PaymentMode_TTClicked( event
+    //PaymentMode_InAdvanceClicked
+    //PaymentMode_OthersClicked(e
+    async void PaymentMode_CashClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Cash"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+
+    }
+    async void PaymentMode_PayorderClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Payorder"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_TTClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "TT"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_InAdvanceClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "InAdvance"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void PaymentMode_OthersClicked(object checkedValue)
+    {
+        if ((bool)checkedValue)
+        { purchaseRequisition.PAYMENT_MODE = "Others"; }
+        else { purchaseRequisition.PAYMENT_MODE = ""; }
+    }
+    async void Customer_Clicked(ChangeEventArgs eventArgs)
+    {
+        salesOrder.CUSTOMER_ID = Convert.ToInt32(eventArgs.Value.ToString());
+        await GetCustomerData(salesQuotation.CUSTOMER_ID);
+    }
+    private async Task GetCustomerData(int customerId)
+    {
+        customer = await Http.GetJsonAsync<CustomerModel>(Utility.BaseUrl + "api/Customer/GetCustomerData/" + customerId);
+        StateHasChanged();
+    }
+    private async Task discount_amount_In_Parcent_Clicked(ChangeEventArgs change)
+    {
+        if (Total != 0 && change.Value != "")
+        { discount_amount_In_Parcent = (Total * Convert.ToDecimal(change.Value)) / 100; }
+        else { discount_amount_In_Parcent = 0; }
+        TotalCalculation();
+    }
+    private async Task discount_amount_In_TK_Clicked(ChangeEventArgs change)
+    {
+        if (Total != 0 && change.Value != "") { discount_amount_In_Taka = Convert.ToDecimal(change.Value); }
+        else { discount_amount_In_Taka = 0; }
+        TotalCalculation();
+    }
+    private async Task advance_amount_In_Parcent_Clicked(ChangeEventArgs change)
+    {
+        if (Total != 0 && change.Value != "") { advance_amount_In_Parcent = (Total * Convert.ToDecimal(change.Value)) / 100; }
+        else { advance_amount_In_Parcent = 0; }
+        TotalCalculation();
+    }
+    private async Task advance_amount_In_TK_Clicked(ChangeEventArgs change)
+    {
+        if (Total != 0 && change.Value != "") { advance_amount_In_Taka = Convert.ToDecimal(change.Value); }
+        else { advance_amount_In_Taka = 0; }
+        TotalCalculation();
+    }
+    private async Task delivery_And_Others_Clicked(ChangeEventArgs change)
+    {
+        if (change.Value != "") { deliveryAndOthers = Convert.ToDecimal(change.Value); }
+        else { deliveryAndOthers = 0; }
+        TotalCalculation();
+    }
+
+    private void TotalCalculation()
+    {
+        //if (requisitionTotal != 0 || requisitionTotal != null)
+        //{ GrandTotal = Convert.ToDecimal(requisitionTotal); }
+        //if(LC_AMOUNT!=0||LC_AMOUNT!=null)
+        //{ GrandTotal= }
+        salesSubTotal = salesItemModelList.Sum(x => Convert.ToDecimal(x.TOTAL_PRICE));
+        Total = Convert.ToDecimal(salesSubTotal) + LC_AMOUNT + LC_COMMISSION + INSURANCE + Convert.ToDecimal(othersSubTotal);
+        netAmount = Total;
+        totalNetAmount = Total;
+        GrandTotal = Total;
+        if (discount_amount_In_Parcent != 0)
+        {
+            netAmount = Total - discount_amount_In_Parcent;
+            totalNetAmount = netAmount;
+            GrandTotal = netAmount;
+        }
+        if (discount_amount_In_Taka != 0)
+        {
+            netAmount = Total - discount_amount_In_Taka;
+            totalNetAmount = netAmount;
+            GrandTotal = netAmount;
+        }
+        if (advance_amount_In_Parcent != 0)
+        {
+            //decimal sum = advance_amount_In_Parcent + discount_amount_In_Parcent + discount_amount_In_Taka;
+            totalNetAmount = Total - (advance_amount_In_Parcent + discount_amount_In_Parcent + discount_amount_In_Taka);
+            GrandTotal = totalNetAmount;
+        }
+        if (advance_amount_In_Taka != 0)
+        {
+            totalNetAmount = Total - (advance_amount_In_Taka + discount_amount_In_Parcent + discount_amount_In_Taka);
+            GrandTotal = totalNetAmount;
+        }
+        if (deliveryAndOthers != 0)
+        {
+            GrandTotal = totalNetAmount + deliveryAndOthers;
+        }
+
+
+        //GrandTotal = (Convert.ToDecimal(salesSubTotal) + LC_AMOUNT + LC_COMMISSION + INSURANCE + Convert.ToDecimal(othersSubTotal))- discount_amount_In_Parcent;
+        //GrandTotal = (Convert.ToDecimal(salesSubTotal) + LC_AMOUNT + LC_COMMISSION + INSURANCE + Convert.ToDecimal(othersSubTotal)) - discount_amount_In_Taka;
+        double inwordValue = Convert.ToDouble(GrandTotal);
+        Inwords = NumberToWords.ConvertAmount(inwordValue);
+    }
+    private Task OnValueChanged(int value)
+    {
+        // Assign the selected value to the Model
+        purchaseRequisition.REQUEST_RECEIVE_DEPARTMENT_ID = Convert.ToInt32(value);
+        return Task.CompletedTask;
+    }
+    private async Task ReceiveDepartmentClicked(ChangeEventArgs changeEvent)
+    {
+        int changeId = Convert.ToInt32(changeEvent.Value.ToString());
+        purchaseRequisition.REQUEST_RECEIVE_DEPARTMENT_ID = changeId;
+        string dName = departmentList.Find(x => x.DEPARTMENT_ID == changeId).DEPARTMENT_NAME;
+        if (dName == "Accounts & Finance")
+        {
+            reqNo = reqNo + "AF";
+            purchaseRequisition.REQUISITION_NO = reqNo;
+        }
+    }
+    public async Task AddCustomer()
+    {
+
+        if (IsCustomerValidation() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<CustomerModel>(Utility.BaseUrl + "api/Customer", customer);
+
+                toastService.ShowSuccess("Requisition Generate Successfully!!!");
+                await GetCustomer();
+                customer = new CustomerModel();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+    }
+    private bool IsCustomerValidation()
+    {
+        bool flag = false;
+        if (customer.CUSTOMER_NAME == "" || customer.CUSTOMER_NAME == string.Empty || customer.CUSTOMER_NAME == null)
+        {
+            toastService.ShowWarning("Customer Name cannot be empty!");
+            flag = true;
+            flag = true;
+        }
+
+
+        return flag;
+    }
+
+}

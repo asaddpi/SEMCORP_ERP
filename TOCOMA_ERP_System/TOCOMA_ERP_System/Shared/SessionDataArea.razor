@@ -1,0 +1,15 @@
+﻿@inject ProtectedLocalStorage ProtectedLocalStore
+
+
+@code
+{
+    public List<PlanandOperationViewModel> planAndOpp { get; set; } = new List<PlanandOperationViewModel>();
+
+
+    public async Task SaveChangesAsync()
+    {
+        // Set the time stamp to current time and save to local storage (in the browser).
+
+        await ProtectedLocalStore.SetAsync("MyPlanAndWorkSessionCart", planAndOpp);
+    }
+}

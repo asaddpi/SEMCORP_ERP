@@ -1,0 +1,202 @@
+﻿@page "/LadgerForm"
+@layout CustomLayout
+@inject IToastService toastService
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager UriHelper
+
+<div class="container">
+    <EditForm Model="@ledger" OnValidSubmit="@SaveLadger">
+        <div class="card">
+            <div class="card-header"><a href="Ledgers">Ledger List</a>/ New 
+            </div>
+            <div class="testbox">
+                <div class="form">
+                    <div class="item">
+                        <label for="fname">Name</label>
+                        @*<input id="fname" type="text" name="fname" required />*@
+                        <InputText @bind-Value="@ledger.LEDGER_NAME" type="text" />
+                    </div>
+                    <div class="item">
+                        <label for="fname">Under</label>
+                        <InputSelect @bind-Value="@ledger.LEDGER_PARENT_GROUP" class="form-control">
+                            <option></option>
+                            @foreach (var item in ledgerGroupList)
+                            {
+                                <option value="@item.GR_NAME">@item.GR_NAME</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="colums">
+                        <div class="item">
+                            <label for="fname">Currency</label>
+                            <InputSelect @bind-Value="@ledger.LEDGER_CURRENCY_NAME" @onchange="CurrencyClicked" class="form-control">
+                                <option value="BDT">BDT</option>
+                                @foreach (var item in currencyList)
+                                {
+                                    <option value="@item.CURRENCY_NAME">@item.CURRENCY_NAME</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="colums">
+                        <div class="item">
+                            <label for="fname">Cost Center</label>                            
+                            <InputSelect @bind-Value="@ledger.LEDGER_VECTOR" class="form-control">
+                                <option></option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+
+                    <div class="colums">
+                        <div class="item">
+                            <label for="fname">Opening Balance</label>
+                            <InputNumber @bind-Value="@ledger.LEDGER_OPENING_BALANCE" type="text" class="form-control" />
+
+                        </div>
+                        <div class="item">
+                            <label for="lname"></label>                            
+                            <input type="text" class="form-control" style="width:50px" @onkeypress="@Keypress"  value="@MyProperty" />
+                        </div>
+                        <div class="item">
+                            <label for="address1">Address 1</label>
+                            <InputText @bind-Value="@ledger.LEDGER_ADDRESS1" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="address2">Address 2</label>
+                            <InputText @bind-Value="@ledger.LEDGER_ADDRESS2" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="city">Country</label>
+                            <InputSelect @bind-Value="@ledger.LEDGER_COUNTRY" class="form-control">
+                                <option value="BANGLADESH">BANGLADESH</option>
+                                @foreach (var item in countryList)
+                                {
+                                    <option value="@item.COUNTRY_NAME">@item.COUNTRY_NAME</option>
+                                }
+
+                            </InputSelect>
+                        </div>
+                        <div class="item">
+                            <label for="city">City</label>
+                            <InputText @bind-Value="@ledger.LEDGER_CITY" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="zip">Zip/Postal Code</label>
+                            <InputText @bind-Value="@ledger.LEDGER_POSTAL" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="phone">Phone</label>
+                            <InputText @bind-Value="@ledger.LEDGER_PHONE" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="fax">Fax</label>
+                            <InputText @bind-Value="@ledger.LEDGER_FAX" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="eaddress">Email Address</label>
+                            <InputText @bind-Value="@ledger.LEDGER_EMAIL" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="eaddress">Comments</label>
+                            <InputText @bind-Value="@ledger.LEDGER_COMMENTS" type="text" class="form-control" />
+                        </div>
+                        <div class="item">
+                            <label for="state">Status</label>
+                            <InputSelect @bind-Value="@ledger.LEDGER_STATUS" class="form-control">
+                                <option></option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-block">
+                <button type="submit" style="width:120px;margin-right:10px">Save</button>
+                <button type="button" style="width:90px" class="btn btn-danger" @onclick="CloseClicked">Close</button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    LedgerModel ledger = new LedgerModel();
+    List<LedgerGroupModel> ledgerGroupList = new List<LedgerGroupModel>();
+    List<CountryModel> countryList = new List<CountryModel>();
+    List<CurrencyModel> currencyList = new List<CurrencyModel>();
+    string data;
+    string MyProperty="Dr";
+    string itemname = "";
+    string KeyPressed = "";
+    protected override async Task OnInitializedAsync()
+    {
+        ledgerGroupList = await Http.GetJsonAsync<List<LedgerGroupModel>>(Utility.BaseUrl + "api/Setup/GetLedgerGroup");
+        countryList = await Http.GetJsonAsync<List<CountryModel>>(Utility.BaseUrl + "api/Setup/GetCountry");
+        //countryList = await Http.GetJsonAsync<List<CountryModel>>("https://localhost:44382/api/Setup/GetCountry");
+        currencyList = await Http.GetJsonAsync<List<CurrencyModel>>(Utility.BaseUrl + "api/Setup/GetCurrency");
+    }
+    public async Task SaveLadger()
+    {
+        //if (IsValidation() != true)
+        //{
+        try
+        {
+            ledger.ENTRYBY = "Asaduzzaman";
+            if (ledger.LEDGER_CURRENCY_NAME == null || ledger.LEDGER_CURRENCY_NAME == "")
+            { ledger.LEDGER_CURRENCY_NAME = "BDT"; }
+            if (ledger.LEDGER_COUNTRY == null || ledger.LEDGER_COUNTRY == "")
+            { ledger.LEDGER_COUNTRY = "BANGLADESH"; }
+            ledger.LEDGER_CURRENCY_SYMBOL = currencyList.Find(x => x.CURRENCY_NAME == ledger.LEDGER_CURRENCY_NAME).CURRENCY_SYMBOL;
+            ledger.LEDGER_GROUP = 0;
+            ledger.LEDGER_PRIMARY_TYPE = 0;
+            ledger.LEDGER_DEFAULT = 0;
+            ledger.LEDGER_NAME_DEFAULT = ledger.LEDGER_NAME;
+            ledger.LEDGER_CASH_FLOW_TYPE = 0;
+            //ledger.LEDGER_PARENT_GROUP = "";
+            ledger.LEDGER_PRIMARY_GROUP = "";
+            ledger.LEDGER_ONE_DOWN = "";
+            ledger.LEDGER_FC_OPENING_BALANCE = 0;
+            //if(ledger.LEDGER_VECTOR==null)
+            //{ ledger.LEDGER_VECTOR ="1"; }
+            ledger.DR_CR = MyProperty;
+            var data = await Http.PostJsonAsync<LedgerModel>(Utility.BaseUrl + "api/Setup/AddLedger", ledger);
+            toastService.ShowSuccess("Save Successfully!!!");
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+    private async Task AutoCompleteClicked(ChangeEventArgs change)
+    {
+        string value;
+        value = change.Value.ToString();
+        if (value == "c" || value == "C")
+        { MyProperty = "Cr"; }
+        else if (value == "d" || value == "D")
+        { MyProperty = "Dr"; }
+        StateHasChanged();
+    }
+
+
+
+    public async Task CurrencyClicked(ChangeEventArgs change)
+    {
+        ledger.LEDGER_CURRENCY_NAME = change.Value.ToString();
+    }
+    private void Keypress(KeyboardEventArgs args)
+    {
+        //KeyPressed = "Key Pressed is " + args.Key;
+        string value;
+        value = args.Key;
+        if (value == "c" || value == "C")
+        { MyProperty = "Cr"; }
+        else if (value == "d" || value == "D")
+        { MyProperty = "Dr"; }
+        StateHasChanged();
+    }
+    void CloseClicked() { UriHelper.NavigateTo("Ledgers"); }
+}

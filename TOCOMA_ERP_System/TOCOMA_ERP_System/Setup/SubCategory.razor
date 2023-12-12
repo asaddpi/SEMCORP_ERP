@@ -1,0 +1,257 @@
+﻿@page "/SubCategory"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+
+
+<div class="card">
+    <div class="card-header">
+        Item Category
+
+    </div>
+
+    <br />
+    <EditForm Model="@subCategory" style="height:20%;margin-left:10px">
+        <div class="form-group row">
+            <label for="colFormLabel" class="col-sm-2 col-form-label">Item Category:</label>
+            <div class="col-sm-10">
+                <InputSelect @bind-Value="@subCategory.CATEGORY_ID" class="form-control">
+                    <option>--Select Item Category--</option>
+                    @foreach (var item in categoryList)
+                    {
+                        <option value="@item.CATEGORY_ID">@item.CATEGORY_NAME</option>
+                    }
+
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="colFormLabel" class="col-sm-2 col-form-label">Item Sub-Category:</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="@subCategory.SUBCATEGORY_NAME" class="form-control"></InputText>
+            </div>
+        </div>
+        
+        <br />
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <button type="submit" @onclick="SaveCategory" class="btn btn-info" style="width:120px;margin-right:10px">@submit</button>
+                <button type="button" @onclick="Cancel" class="btn btn-danger" style="width:90px">Cancel</button>
+
+
+            </div>
+        </div>
+
+    </EditForm>
+
+    <br />
+
+    <div class="testbox">
+        <div class="tablearea">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:40px"></th>
+                        <th style="width:40px"></th>
+                        <td>Item Sub-Category</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @if (subcategoryList != null)
+                    {
+                        foreach (var item in subcategoryList)
+                        {
+                            <tr>
+                                <td style="text-align:center"><a style="color:red" @onclick=@(() => DeleteCategory(item.SUBCATEGORY_ID))><span class="oi oi-trash"></span></a></td>
+                                <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => editCategory(item.SUBCATEGORY_ID))><span class="oi oi-pencil"></span></a></td>
+                                <td>@item.CATEGORY_NAME</td>
+                                <td>@item.SUBCATEGORY_NAME</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div class="card">
+        <div class="card-header">
+            Item Category
+        </div>
+
+
+        <br />
+        <EditForm Model="@itemCategory" style="height:20%;margin-left:10px">
+            <div class="row">
+                <div class="col-md-3"><label>Item Category:</label></div>
+                <div class="col-md-7">
+                    <InputText @bind-Value="@itemCategory.CATEGORY_NAME" style="width:500px"></InputText>
+                </div>
+            </div>
+
+        </EditForm>
+
+        <button type="submit" @onclick="SaveCategory" class="btn btn-info" style="width:120px;float:right">@submit</button>
+
+        <div class="testbox">
+            <div class="tablearea">
+                <table id="example" class="display" style="width:100%">
+                    <tr>
+                        <th style="width:60px"></th>
+                        <th style="width:60px"></th>
+                        <td>Item Category</td>
+                    </tr>
+                    <tbody>
+                        @if (categoryList != null)
+                        {
+                            foreach (var item in categoryList)
+                            {
+                                <tr>
+                                    <td style="text-align:center"><a style="color:red" @onclick=@(() => DeleteCategory(item.CATEGORY_ID))><span class="oi oi-trash"></span></a></td>
+                                    <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => editCategory(item.CATEGORY_ID))><span class="oi oi-pencil"></span></a></td>
+                                    <td>@item.CATEGORY_NAME</td>
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+
+
+
+
+
+
+
+@*<div class="container">
+        <div class="card" style="height:100%">
+            <div class="card-header">
+                Add Category
+                <button type="submit" @onclick="SaveCategory" class="btn btn-info" style="width:150px;float:right">@submit</button>
+            </div>
+            <EditForm Model="@itemCategory" style="height:20%;margin-left:10px">
+                <div class="row">
+                    <div class="col-md-3"><label>Item Category:</label></div>
+                    <div class="col-md-7">
+                        <InputText @bind-Value="@itemCategory.CATEGORY_NAME" style="width:500px"></InputText>
+                    </div>
+                </div>
+
+            </EditForm>
+        </div>
+        <br />
+        <table class="table">
+            <tr>
+                <th style="width:60px"></th>
+                <th style="width:60px"></th>
+                <td>Item Category</td>
+            </tr>
+            <tbody>
+                @if (categoryList != null)
+                {
+                    foreach (var item in categoryList)
+                    {
+                        <tr>
+                            <td style="text-align:center"><a style="color:red" @onclick=@(() => DeleteCategory(item.CATEGORY_ID))><span class="oi oi-trash"></span></a></td>
+                            <td style="text-align:center"><a data-toggle="modal" data-target=".bd-example-modal-lg" href="#" @onclick=@(() => editCategory(item.CATEGORY_ID))><span class="oi oi-pencil"></span></a></td>
+                            <td>@item.CATEGORY_NAME</td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+    </div>*@
+@code {
+    ItemCategory itemCategory = new ItemCategory();
+    ItemSubCategory subCategory = new ItemSubCategory();
+    List<ItemCategory> categoryList = new List<ItemCategory>();
+    List<ItemSubCategory> subcategoryList = new List<ItemSubCategory>();
+    string submit = "Save";
+    protected override async Task OnInitializedAsync()
+    {
+        await GetItemCategory();
+        subcategoryList = await Http.GetJsonAsync<List<ItemSubCategory>>(Utility.BaseUrl+ "api/Setup/GetItemSubCategoryList");
+        StateHasChanged();
+
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetItemCategory()
+    {
+        categoryList = await Http.GetJsonAsync<List<ItemCategory>>(Utility.BaseUrl + "api/Setup/GetItemCategory");
+    }
+
+    public async Task SaveCategory()
+    {
+        if (IsValidation_Category() != true)
+        {
+            try
+            {
+                if (submit == "Save")
+                {
+                    subCategory.Operation_Type = 1;
+                    var data = await Http.PostJsonAsync<ItemSubCategory>(Utility.BaseUrl + "api/Setup/AddItemSubCategory", subCategory);
+                    toastService.ShowSuccess("Insert Successfully!!!");
+                }
+                else if (submit == "Update")
+                {
+                    var data = await Http.PutJsonAsync<ItemSubCategory>(Utility.BaseUrl + "api/Setup/UpdateItemSubCategory", subCategory);
+                    toastService.ShowSuccess("Update Successfully!!!");
+                }
+
+                subCategory = new ItemSubCategory();
+                submit = "Save";
+            }
+            catch (Exception ex)
+            { }
+        }
+        subcategoryList= await Http.GetJsonAsync<List<ItemSubCategory>>(Utility.BaseUrl + "api/Setup/GetItemSubCategoryList");
+    }
+    private async Task Cancel()
+    {
+        subCategory = new ItemSubCategory();
+        submit = "Save";
+    }
+    private async Task editCategory(int subcategoryId)
+    {
+        submit = "Update";
+        subCategory = new ItemSubCategory();
+        subCategory.CATEGORY_NAME = subcategoryList.Find(x => x.SUBCATEGORY_ID == subcategoryId).CATEGORY_NAME;
+        subCategory.CATEGORY_ID = subcategoryList.Find(x => x.SUBCATEGORY_ID == subcategoryId).CATEGORY_ID;
+        subCategory.SUBCATEGORY_NAME= subcategoryList.Find(x => x.SUBCATEGORY_ID == subcategoryId).SUBCATEGORY_NAME;
+        itemCategory.Operation_Type = 2;
+    }
+    private async Task DeleteCategory(int categoryId)
+    {
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete ?"))
+            return;
+
+        await Http.DeleteAsync(Utility.BaseUrl + "api/Setup/DeleteCategory/" + categoryId);
+        subcategoryList = await Http.GetJsonAsync<List<ItemSubCategory>>(Utility.BaseUrl + "api/Setup/GetItemSubCategoryList");
+    }
+    private bool IsValidation_Category()
+    {
+        bool flag = false;
+        if (subCategory.SUBCATEGORY_NAME == "" || subCategory.SUBCATEGORY_NAME == string.Empty || subCategory.SUBCATEGORY_NAME == null)
+        {
+            toastService.ShowWarning("Sub-Category cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+}

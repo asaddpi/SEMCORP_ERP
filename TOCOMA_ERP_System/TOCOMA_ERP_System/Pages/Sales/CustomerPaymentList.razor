@@ -1,0 +1,74 @@
+﻿@page "/CustomerPaymentList"
+@layout CustomLayout
+@inject HttpClient Http
+@inject NavigationManager UriHelper
+@inject IJSRuntime js
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">CUSTOMER LIST</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <form action="">
+            <div class="container-fluid">
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped" id="example">
+                        <thead style="background-color:steelblue;color:white">
+                            <tr>
+                                @*<td scope="col"></td>*@
+                                <td scope="col">Customer Code</td>
+                                <td scope="col">Name</td>
+                                <td scope="col">Contact Person</td>
+                                <td scope="col">Contact No</td>
+                                <td scope="col">Email</td>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (vendorList != null)
+                            {
+                                foreach (var item in vendorList)
+                                {
+                                    <tr>
+                                        @*<td scope="col"><input type="checkbox" @onchange="eventArgs => { CheckboxClicked(Convert.ToString(item.CUSTOMER_ID), eventArgs.Value); }" /></td>*@
+
+                                        <td scope="col"> <a href="/PaymentReceive/@item.CUSTOMER_ID">@item.CUSTOMER_CODE</a></td>
+                                        <td scope="col">@item.CUSTOMER_NAME</td>
+                                        <td scope="col">@item.CONTACT_PERSON_NAME</td>
+                                        <td scope="col">@item.CONTACT_PERSON_PHONE</td>
+                                        <td scope="col">@item.CONTACT_PERSON_EMAIL</td>
+
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@code {
+
+    List<CustomerViewModel> vendorList = new List<CustomerViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVendorList();
+        StateHasChanged();
+        await js.InvokeAsync<object>("TestDataTablesAdd", "#example");
+    }
+    private async Task GetVendorList()
+    {
+        vendorList = await Http.GetJsonAsync<List<CustomerViewModel>>(Utility.BaseUrl + "api/Customer/GetAllCustomer");
+    }
+    async void CheckboxClicked(string customerId, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            UriHelper.NavigateTo("PaymentReceive/" + customerId);
+        }
+
+    }
+}

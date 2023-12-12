@@ -1,0 +1,86 @@
+﻿@page "/RequisitionApproval"
+@*@attribute [Authorize(Roles = "Super Admin")]*@
+@layout CustomLayout
+@inject HttpClient Http
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">Pending Request For Approval</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <form action="">
+            <div class="container-fluid">
+
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped">
+                        <thead style="background-color:steelblue;color:white">
+                            <tr>
+                                <td scope="col"></td>
+                                <td scope="col">Requisition No.</td>
+                                <td scope="col">Requester</td>
+                                <td scope="col">Request Department</td>
+                                <td scope="col">Request For</td>
+                                <td scope="col">Request Date</td>
+                                <td scope="col">Require Date</td>
+                                <td scope="col">Requisition Total</td>
+                                <td scope="col">Status</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (requisitionList != null)
+                            {
+                                foreach (var item in requisitionList)
+                                {
+                                    <tr>
+                                        <td scope="col"><a href="ViewPurchaseRequisitionDetails/@item.REQUISITION_NO">VIEW DETAILS</a></td>
+                                        <td scope="col">@item.REQUISITION_NO</td>
+                                        <td scope="col">@item.REQUESTED_BY</td>
+                                        <td scope="col">@item.DEPARTMENT_NAME</td>
+                                        <td scope="col">@item.REQUEST_FOR</td>
+                                        <td scope="col">@item.REQUEST_DATE</td>
+                                        <td scope="col">@item.REQUIRED_DATE</td>
+                                        <td scope="col">@item.REQUISITION_TOTAL</td>
+                                        <td>
+                                            
+                                            <select name="" id="" @bind="@item.STATUS">
+                                                <option value=""></option>
+                                                <option value="Open">Open</option>
+                                                <option value="Approved">Approved</option>
+                                                <option value="Not Approved">Cancel</option>
+                                            </select>
+                                        </td>
+                                        <td><button @onclick=@(() => ChangeStatus(item.REQUISITION_NO,item.STATUS)) class="btn btn-info">Done</button></td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@code {
+    List<PurchaseRequisitionViewEntity> requisitionList = new List<PurchaseRequisitionViewEntity>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPurchaseRequisition();
+    }
+    private async Task GetPurchaseRequisition()
+    {
+        requisitionList = await Http.GetJsonAsync<List<PurchaseRequisitionViewEntity>>(Utility.BaseUrl + "api/Purchase/GetPurchaseRequisitionList_ForApproval");
+    }
+    private async void ChangeStatus(string ReqNo, string Status)
+    {
+        PurchaseRequisitionEntity p = new PurchaseRequisitionEntity();
+        p.REQUISITION_NO = ReqNo;
+        p.STATUS = Status;
+
+        await Http.PutJsonAsync<PurchaseRequisitionEntity>(Utility.BaseUrl + "api/Purchase/UpdateRequisitionStatus", p);
+        await GetPurchaseRequisition();
+    }
+}
+

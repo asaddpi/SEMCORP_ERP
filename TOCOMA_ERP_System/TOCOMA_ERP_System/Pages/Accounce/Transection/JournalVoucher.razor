@@ -1,0 +1,548 @@
+﻿@page "/JournalVoucher"
+@layout CustomLayout
+@*@using Blazored.Typeahead*@
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime jsruntime
+@inject NavigationManager UriHelper
+<style>
+    tbody tr td {
+        /*border: none;*/
+    }
+
+    text {
+        border: none;
+        background-color: transparent;
+        resize: none;
+        outline: none;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: auto;
+        /*background-color: #A4A4A4;*/
+        /*border: 2px solid black;*/
+        padding: 0;
+    }
+
+        table td {
+            position: relative;
+            text-align: center;
+            /*border: 2px solid green;*/
+            padding: 0;
+            margin: 0;
+        }
+</style>
+<div class="container">
+    @*<EditForm Model="@ledger">*@
+    <div class="card">
+        <div class="card-header">Journal Voucher</div>
+        <div class="testbox">
+            <div class="form">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Voucher No:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" @bind-value="@accCompanyVoucherModel.COMP_REF_NO">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>Date:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" format-value="dd-MM-yyyy" value="@currentDate" style="width:200px" @onchange="GetDate">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fname">Branch Name:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" @bind-value="@BranchName" />
+                    </div>
+                </div>
+
+                <br />
+                <br />
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <td colspan="3">Particular</td>
+                            <td style="width:10%">Dabit</td>
+                            <td style="width:10%">Credit</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in voucherItemList)
+                        {
+                            <tr>
+                                <td style="width: 10%;height: 20px">@item.symbol</td>
+                                <td colspan="2" style="width:70%;height:20px">@item.particular</td>
+                                <td style="width:10% ;height:20px">@item.debitAmount</td>
+                                <td style="width:10%;height:20px">@item.creditAmount</td>
+                                @*<td>@item.ChequeNo</td>
+                                    <td>@item.ChequeDate</td>
+                                    <td>@item.DrawnOn</td>*@
+                            </tr>
+                        }
+                        @if (visibletext != 1)
+                        {
+                            <tr>
+                                <td style="width:10%;margin-top:10px"><input type="text" @onkeypress="@Keypress" value="@MyProperty" @ref="myref" /></td>
+                                <td colspan="2">
+                                    @*<BlazoredTypeahead SearchMethod="SearchLedger" style="height:20px" @onchange="DoStuff"
+                                                           @bind-Value="SelectedArticle">
+                                            <SelectedTemplate>
+                                                @context.LEDGER_NAME
+                                            </SelectedTemplate>
+                                            <ResultTemplate>
+                                                @context.LEDGER_NAME
+                                            </ResultTemplate>
+                                        </BlazoredTypeahead>*@
+                                    <select @onchange="selectedledger" class="form-control">
+                                        <option></option>
+                                        @foreach (var item in ledgerList)
+                                        {
+                                            <option value="@item.LEDGER_NAME">@item.LEDGER_NAME</option>
+                                        }
+                                    </select>
+
+                                    @*<input type="text" placeholder="chaque no." />
+                                        <input type="text" placeholder="chaque date" />*@
+                                    @if (bankStatus == 1)
+                                    {
+                                        <table width="100%">
+                                            <tr>
+                                                <td><input type="text" @bind-value="@chequeNo" placeholder="chaque no." /></td>
+                                                <td><input type="date" @onchange="GetChequeDate"></td>
+                                                <td><input type="text" placeholder="drawn on" @bind-value="@drawnon" /></td>
+                                            </tr>
+                                        </table>
+                                    }
+
+                                </td>
+                                <td><input @bind-value="MyDrValue" @bind-value:event="oninput" @onkeyup="DoTheThing" style="margin-top:10px" disabled="@isDrDisable" /></td>
+                                <td><input @bind-value="MyCrValue" @bind-value:event="oninput" @onkeyup="DoTheThing" style="margin-top:10px" disabled="@isCrDisable" /></td>
+                            </tr>
+                            @*<tr>
+                                    <td><input type="text" placeholder="chaque no." /></td>
+                                    <td><input type="text" placeholder="chaque date" /></td>
+                                    <td><input type="text" placeholder="drawn on"/></td>
+                                </tr>*@
+                        }
+                    </tbody>
+
+                    <tr style="height:60px">
+                        <td>Narration:</td>
+                        <td colspan="2"><input type="text" @ref="narrationref" @bind-value="@narration" /></td>
+                        <td>@totalDebit</td>
+                        <td>@totalCredit</td>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
+        <div class="btn-block">
+            <button type="submit" style="width:120px;margin-right:10px" @onclick="@SavePaymentVoucher">Save</button>
+            <button type="button" style="width:90px" class="btn btn-danger" @onclick="CloseClicked">Close</button>
+        </div>
+    </div>
+    @*</EditForm>*@
+</div>
+
+
+@*--------Midal-----------*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table>
+                    <tbody>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        <tr><td>Asaduzzaman</td></tr>
+                        @*@foreach (var item in itemList)
+                            {
+                                <tr>
+                                    <td>@item</td>
+                                </tr>
+                            }*@
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+@code {
+    LedgerModel ledger = new LedgerModel();
+    List<LedgerModel> ledgerList = new List<LedgerModel>();
+    List<BranchModel> branchList = new List<BranchModel>();
+    string MyProperty;
+    List<string> itemList = new List<string>();
+    List<CountryModel> countryList = new List<CountryModel>();
+    private LedgerModel SelectedArticle;
+    private string newTodo;
+    List<VoucherItem> voucherItemList = new List<VoucherItem>();
+    VoucherItem paymentvoucher = new VoucherItem();
+    ACC_COMPANY_VOUCHER_MODEL accCompanyVoucherModel = new ACC_COMPANY_VOUCHER_MODEL();
+    List<ACC_VOUCHER_MODEL> paymentVoucherDetails = new List<ACC_VOUCHER_MODEL>();
+    ACC_VOUCHER_MODEL voucherDetails = new ACC_VOUCHER_MODEL();
+    decimal amount;
+    string KeyPressed = "";
+    public string Value { get; set; }
+    public string MyDrValue { get; set; }
+    public string MyCrValue { get; set; }
+    private ElementReference myref;
+    private ElementReference narrationref;
+    private bool isDrDisable { get; set; }
+    private bool isCrDisable { get; set; }
+    decimal totalDebit;
+    decimal totalCredit;
+    int visibletext;
+    string BranchName;
+    string voucherDate;
+    string narration;
+    int bankStatus = 0;
+    List<string> templates = new List<string>() { "Maui", "Hawaii", "Niihau", "Kauai", "Kahoolawe" };
+    string SelectedString = "Maui";
+    string parent;
+    string chequeNo;
+    string drawnon;
+    string voucherChequedate = "";
+    string currentDate;
+    string selected_date;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        MyProperty = "Dr";
+        onDisable(MyProperty);
+        accCompanyVoucherModel.COMP_REF_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Transection/GetVoucherNo/" + 3);
+        currentDate = System.DateTime.Now.Year + "-" + (System.DateTime.Now.Month).ToString().PadLeft(2, '0') + "-" + System.DateTime.Now.Day.ToString().PadLeft(2, '0');
+        //await GetCountry();
+        await GetLedger();
+        await GetBranch();
+        StateHasChanged();
+
+    }
+    void selectedledger(ChangeEventArgs e)
+    {
+        SelectedString = e.Value.ToString();
+        if (SelectedString == "Bank Accounts") { bankStatus = 1; }
+        else { bankStatus = 0; }
+    }
+    public async Task GetBranch()
+    {
+        branchList = await Http.GetJsonAsync<List<BranchModel>>(Utility.BaseUrl + "api/Setup/GetBranchList");
+        if (branchList.Count > 0)
+        { BranchName = branchList.FirstOrDefault().BRANCH_NAME; }
+
+
+    }
+    private async Task GetLedger()
+    {
+        ledgerList = await Http.GetJsonAsync<List<LedgerModel>>(Utility.BaseUrl + "api/Setup/GetLedger");
+    }
+    //private async Task GetCountry()
+    //{
+    //    countryList = await Http.GetJsonAsync<List<CountryModel>>(Utility.BaseUrl + "api/Setup/GetCountry");
+    //}
+
+
+    private async Task<IEnumerable<LedgerModel>> SearchLedger(string searchText)
+    {
+
+
+        return await Task.FromResult(ledgerList.Where(x => x.LEDGER_NAME.ToLower().Contains(searchText.ToLower())).ToList());
+
+        //return await Task.FromResult(ledgerList);
+    }
+    private async Task<IEnumerable<LedgerModel>> KeyPressLedger(string searchText)
+    {
+        return await Task.FromResult(ledgerList.Where(x => x.LEDGER_NAME.ToLower().Contains(searchText.ToLower())).ToList());
+
+
+    }
+
+    public async Task SavePaymentVoucher()
+    {
+        //if (IsValidation() != true)
+        //{
+        bool exists = voucherItemList.Exists(x => x.symbol == "Cr");
+        if (exists != true)
+        {
+            toastService.ShowWarning("Please Add Credit Info In List");
+            return;
+        }
+        else if (accCompanyVoucherModel.COMP_REF_NO == "")
+        {
+            toastService.ShowWarning("Please Add Voucher No.");
+            return;
+        }
+        else
+        {
+            if (!await jsruntime.InvokeAsync<bool>("confirm", $"Do you want to save ?"))
+                return;
+
+
+            try
+            {
+                if (selected_date == "" || selected_date == null)
+                { accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(currentDate); }
+                accCompanyVoucherModel.BRANCH_ID = branchList.Find(x => x.BRANCH_NAME == BranchName).BRANCH_ID;
+                accCompanyVoucherModel.LEDGER_NAME = voucherItemList.FirstOrDefault().particular;
+                accCompanyVoucherModel.COMP_VOUCHER_AMOUNT = totalDebit;
+                accCompanyVoucherModel.COMP_VOUCHER_ADD_AMOUNT = totalDebit;
+                accCompanyVoucherModel.COMP_VOUCHER_LESS_AMOUNT = totalDebit;
+                accCompanyVoucherModel.COMP_VOUCHER_NET_AMOUNT = totalDebit;
+                accCompanyVoucherModel.COMP_VOUCHER_PROCESS_AMOUNT = totalDebit;
+                accCompanyVoucherModel.COMP_VOUCHER_NARRATION = narration;
+                accCompanyVoucherModel.COMP_VOUCHER_TYPE =3;
+                accCompanyVoucherModel.ENTRYBY = "Asaduzzaman";
+                accCompanyVoucherModel.UPDATEBY = "Asaduzzaman";
+
+
+
+
+                //var data = await Http.PostJsonAsync<ACC_COMPANY_VOUCHER_MODEL>(Utility.BaseUrl + "api/Transection/AddPaymentVoucher", accCompanyVoucherModel);
+                foreach (var item in voucherItemList)
+                {
+                    voucherDetails = new ACC_VOUCHER_MODEL();
+                    voucherDetails.COMP_REF_NO = accCompanyVoucherModel.COMP_REF_NO;
+                    voucherDetails.VOUCHER_REF_KEY = "";
+                    voucherDetails.BRANCH_ID = accCompanyVoucherModel.BRANCH_ID;
+                    voucherDetails.COMP_VOUCHER_DATE = accCompanyVoucherModel.COMP_VOUCHER_DATE;
+                    voucherDetails.COMP_VOUCHER_TYPE =3;
+                    voucherDetails.LEDGER_NAME = item.particular;
+                    voucherDetails.VOUCHER_DEBIT_AMOUNT = item.debitAmount;
+                    voucherDetails.VOUCHER_CREDIT_AMOUNT = item.creditAmount;
+                    voucherDetails.VOUCHER_ADD_AMOUNT = item.creditAmount;
+                    voucherDetails.VOUCHER_LESS_AMOUNT = item.creditAmount;
+                    voucherDetails.VOUCHER_TOBY = item.symbol;
+                    voucherDetails.VOUCHER_FC_DEBIT_AMOUNT = 0;
+                    voucherDetails.VOUCHER_FC_CREDIT_AMOUNT = 0;
+                    if (item.ChequeNo != "" && item.ChequeNo != null && item.ChequeNo != "NULL")
+                    {
+                        voucherDetails.VOUCHER_CHEQUE_NUMBER = item.ChequeNo;
+                        voucherDetails.VOUCHER_CHEQUE_DATE = item.ChequeDate;
+                        voucherDetails.VOUCHER_CHEQUE_DRAWN_ON = item.DrawnOn;
+                    }
+                    paymentVoucherDetails.Add(voucherDetails);
+                    accCompanyVoucherModel.accVoucherList.Add(voucherDetails);
+                }
+                //var voucher = await Http.PostJsonAsync<List<ACC_VOUCHER_MODEL>>(Utility.BaseUrl + "api/Transection/AddPaymentVoucherDetails", paymentVoucherDetails);
+                var data = await Http.PostJsonAsync<ACC_COMPANY_VOUCHER_MODEL>(Utility.BaseUrl + "api/Transection/AddPaymentVoucher", accCompanyVoucherModel);
+                if (data.status == true)
+                {
+                    toastService.ShowSuccess("Save Successfully!!!");
+                    await LoadPage();
+                }
+                else { toastService.ShowError("Not Save :" + data.ErrorMessage); }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+    }
+    private async Task GetVoucherNo()
+    {
+        accCompanyVoucherModel.COMP_REF_NO = await Http.GetStringAsync(Utility.BaseUrl + "api/Transection/GetVoucherNo/" + 3);
+    }
+    private async Task LoadPage()
+    {
+        await GetVoucherNo();
+        voucherItemList = new List<VoucherItem>();
+        visibletext = 0;
+        MyProperty = "Dr";
+        totalDebit = 0;
+        totalCredit = 0;
+        onDisable(MyProperty);
+        StateHasChanged();
+    }
+    private void Keypress(KeyboardEventArgs args)
+    {
+        string value;
+        value = args.Key;
+        if (value == "c" || value == "C")
+        { MyProperty = "Cr"; }
+        else if (value == "d" || value == "D")
+        { MyProperty = "Dr"; }
+        StateHasChanged();
+        onDisable(MyProperty);
+    }
+    private void onDisable(string property)
+    {
+        if (property == "Dr")
+        {
+            this.isDrDisable = false;
+            this.isCrDisable = true;
+            MyCrValue = "";
+        }
+        else if (property == "Cr")
+        {
+            this.isCrDisable = false;
+            this.isDrDisable = true;
+        }
+
+    }
+
+    private async Task GetSelectedValue(ChangeEventArgs change)
+    {
+        if (change.Value.ToString() == "Bank Accounts") { bankStatus = 1; }
+    }
+    //private void Enter(KeyboardEventArgs e)
+    //private void Enter()
+    //{
+    //    //if (e.Key == "Enter")
+    //    {
+    //        if (!string.IsNullOrWhiteSpace(newTodo))
+    //        {
+    //            //todos.Add(new TodoItem { Title = newTodo });
+    //            //newTodo = string.Empty;
+    //        }
+    //    }
+    //}
+    private async void DoTheThing(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key == "Enter")
+        {
+
+            paymentvoucher = new VoucherItem();
+            paymentvoucher.symbol = MyProperty;
+            paymentvoucher.particular = SelectedString; //SelectedArticle.LEDGER_NAME;
+            if (paymentvoucher.particular == "" || paymentvoucher.particular == null)
+            {
+                toastService.ShowWarning("Please Add Particular");
+            }
+            else
+            {
+                if (MyProperty == "Dr")
+                {
+                    paymentvoucher.debitAmount = Convert.ToDecimal(MyDrValue);
+                }
+                if (MyProperty == "Cr")
+                {
+                    paymentvoucher.creditAmount = Convert.ToDecimal(MyCrValue);
+                }
+                if (chequeNo != "" && chequeNo != null)
+                {
+                    paymentvoucher.ChequeNo = chequeNo;
+                    paymentvoucher.ChequeDate = Convert.ToDateTime(voucherChequedate);
+                    paymentvoucher.DrawnOn = drawnon;
+
+                }
+                else
+                {
+                    paymentvoucher.ChequeNo = "NULL";
+                    paymentvoucher.ChequeDate = Convert.ToDateTime("1900-01-01");
+                    paymentvoucher.DrawnOn = "NULL";
+                }
+
+
+                voucherItemList.Add(paymentvoucher);
+
+                totalDebit = voucherItemList.Sum(item => item.debitAmount);
+                totalCredit = voucherItemList.Sum(item => item.debitAmount); //voucherItemList.Sum(item => item.creditAmount);
+
+
+                bool exists = voucherItemList.Exists(x => x.symbol == "Cr");
+
+                if (exists != true)
+                {
+                    MyProperty = "Cr";
+                    //double total = myList.Sum(item => item.Amount);
+                    MyCrValue = Convert.ToString(voucherItemList.Sum(item => item.debitAmount));
+                    //SelectedArticle.LEDGER_NAME = "";
+                    SelectedString = "";
+                    MyDrValue = "";
+                    bankStatus = 0;
+                    chequeNo = "";
+                    drawnon = "";
+
+                    onDisable(MyProperty);
+                    await myref.FocusAsync();
+
+                }
+                else
+                {
+                    //visibletext = 1;
+                    StateHasChanged();
+                    MyProperty = "";
+                    //SelectedArticle.LEDGER_NAME = "";
+                    SelectedString = "";
+                    MyDrValue = "";
+                    MyCrValue = "";
+                    bankStatus = 0;
+                    chequeNo = "";
+                    drawnon = "";
+
+                    await narrationref.FocusAsync();
+                }
+            }
+        }
+    }
+    //public void Enter(KeyboardEventArgs e)
+    //{
+    //    if (e.Code == "Enter" || e.Code == "NumpadEnter")
+    //    {
+    //        // ...
+    //        KeyPressed = "Key Pressed is " + this.Value;
+
+    //        //amount = e.Key;
+    //        paymentvoucher = new VoucherItem();
+    //        paymentvoucher.symbol = MyProperty;
+    //        paymentvoucher.particular = SelectedArticle.LEDGER_NAME;
+    //        if (MyProperty == "Dr")
+    //        {
+    //            paymentvoucher.debitAmount = amount;
+    //        }
+    //        if (MyProperty == "Cr")
+    //        {
+    //            paymentvoucher.creditAmount = amount;
+    //        }
+
+    //        voucherItemList.Add(paymentvoucher);
+
+
+
+    //    }
+    //}
+    //public class VoucherItem
+    //{
+    //    public string symbol { get; set; }
+    //    public string particular { get; set; }
+    //    public decimal debitAmount { get; set; }
+    //    public decimal creditAmount { get; set; }
+    //    public string ChequeNo { get; set; }
+    //    //public DateTime ChequeDate { get; set; }
+    //    public Nullable<DateTime> ChequeDate { get; set; }
+
+    //    public string DrawnOn { get; set; }
+    //}
+    private async void GetDate(ChangeEventArgs change)
+    {
+        selected_date = change.Value.ToString();
+        accCompanyVoucherModel.COMP_VOUCHER_DATE = Convert.ToDateTime(selected_date);
+    }
+    private async void GetChequeDate(ChangeEventArgs change)
+    {
+        voucherChequedate = change.Value.ToString();
+
+    }
+    void CloseClicked() { UriHelper.NavigateTo("JournalVoucherList"); }
+
+}

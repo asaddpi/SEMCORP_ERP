@@ -1,0 +1,159 @@
+﻿@page "/TermsConditionPage"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager UriHelper
+
+
+<style>
+    table tr td {
+        border: none;
+    }
+</style>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4>Quotation</h4>
+
+        </div>
+        <br />
+
+        <div class="card-body">
+            <div class="testbox">
+                <div class="tablearea">
+
+                    <h5><span style="color:red;font-size:18px">*</span> Terms Condition Type </h5>
+                    <EditForm Model="@type">
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label for="inputCity">Type</label>
+                                <input type="text" @bind="@type.TERMS_CONDITION_TYPE" autocomplete="off" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-1">
+                                <button class="btn btn-primary btn-sm" style="width:50px;margin-top:33px" @onclick="SaveType">Save</button>
+                            </div>
+                        </div>
+                    </EditForm>
+
+
+                </div>
+            </div>
+
+            <div class="testbox">
+                <div class="tablearea">
+
+                    <h5><span style="color:red;font-size:18px">*</span> Terms Condition </h5>
+                    <EditForm Model="@termsCondition">
+                        <div class="form-group">
+                            <div class="form-group col-md-8">
+                                <label for="inputCity">Type</label>
+                                <select @onchange="Type_Clicked" class="form-control">
+                                    <option value="">--Select Type--</option>
+                                    @foreach (var tctype in termsConditionTypeList)
+                                    {
+                                        <option value="@tctype.TERMS_CONDITION_TYPE_ID">@tctype.TERMS_CONDITION_TYPE</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group col-md-8">
+                                <label for="inputCity">Terms Condition</label>
+                                <input type="text" autocomplete="off" @bind="termsCondition.TERMS_AND_CONDITIONS" class="form-control" />
+                            </div>
+                        </div>
+                    </EditForm>
+
+                    <br />
+                    <div class="form-group">
+                        <div class="form-group col-md-8">
+                            <button class="btn btn-danger btn-sm" style="width:70px">Cancel</button>
+                            <button class="btn btn-primary btn-sm" style="width:100px;margin-left:10px" @onclick="SaveTermsCondition">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <table class="table">
+                <tr>
+                    <td>Type</td>
+                    <td>Terms & Condition</td>
+
+                    <td></td>
+                </tr>
+
+
+
+
+                <tbody>
+                    @foreach (var salesItem in termsConditionList)
+                    {
+                        <tr>
+                            <td>
+                                @salesItem.TERMS_CONDITION_TYPE
+                            </td>
+                            <td>@salesItem.TERMS_AND_CONDITIONS</td>
+                            
+                            @*<td><a @onclick=@(() => EditItem(salesItem.ITEM_NAME))><span class="oi oi-pencil"></span></a>&nbsp; &nbsp;<a @onclick=@(() => DeleteItem(salesItem.ITEM_NAME))><span class="oi oi-delete"></span></a></td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<TermsConditionTypeEntity> termsConditionTypeList = new List<TermsConditionTypeEntity>();
+    List<PurchaseTermsConditionsModel> termsConditionList = new List<PurchaseTermsConditionsModel>();
+    TermsConditionTypeEntity type = new TermsConditionTypeEntity();
+    PurchaseTermsConditionsModel termsCondition = new PurchaseTermsConditionsModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetType();
+        await GetTermsCondition();
+    }
+    async void Type_Clicked(ChangeEventArgs eventArgs)
+    {
+        termsCondition.TERMS_CONDITION_TYPE_ID = Convert.ToInt32(eventArgs.Value);
+    }
+    private async Task GetType()
+    {
+        termsConditionTypeList = await Http.GetJsonAsync<List<TermsConditionTypeEntity>>(Utility.BaseUrl + "api/Setup/GetTermsConditionType");
+    }
+    public async Task SaveType()
+    {
+        type.OPERATION_TYPE = 1;
+
+        var data = await Http.PostJsonAsync<TermsConditionTypeEntity>(Utility.BaseUrl + "api/Setup/AddTermsConditionType", type);
+        await GetType();
+    }
+    public async Task SaveTermsCondition()
+    {
+        type.OPERATION_TYPE = 1;
+        termsCondition.POSITION = 1;
+        var data = await Http.PostJsonAsync<PurchaseTermsConditionsModel>(Utility.BaseUrl + "api/Setup/AddSalesTermsConditions", termsCondition);
+        if(data.STATUS==true)
+        {
+            await GetTermsCondition();
+            termsCondition.TERMS_AND_CONDITIONS = string.Empty;
+            toastService.ShowSuccess("Insert Successfully");
+        }
+        else
+        {
+            toastService.ShowError("Not Save");
+        }
+
+    }
+    private async Task GetTermsCondition()
+    {
+        termsConditionList = await Http.GetJsonAsync<List<PurchaseTermsConditionsModel>>(Utility.BaseUrl + "api/Setup/GetSalesTermsConditions");
+    }
+}

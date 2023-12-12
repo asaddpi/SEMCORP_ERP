@@ -1,0 +1,489 @@
+﻿@page "/AddProduct"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+@using Blazored.Typeahead
+@inject NavigationManager UriHelper
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW ITEM</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-7">
+                    <EditForm Model="@item" OnValidSubmit="@SaveProduct">
+                        <div class="row">
+                            <div class="col-md-5"><label>Item Code:</label></div>
+                            <div class="col-md-7">
+                                <InputText @bind-Value="@item.ITEM_CODE" style="width:100px"></InputText>
+
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Item Name:</label></div>
+                            <div class="col-md-7"><InputText @bind-Value="@item.ITEM_NAME" style="width:400px"></InputText></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Item Description :</label></div>
+                            <div class="col-md-7">
+                                <InputTextArea @bind-Value="@item.SHORT_DESCRIPTION" cols="30" rows="5" style="width:400px"></InputTextArea>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Purchase Rate:</label></div>
+                            <div class="col-md-7"><InputNumber @bind-Value="@item.ITEM_PURCHASE_PRICE" style="width:100px"></InputNumber></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Sale Rate:</label></div>
+                            <div class="col-md-7"><InputNumber @bind-Value="@item.ITEM_SALE_PRICE" style="width:100px"></InputNumber></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Pack Size:</label></div>
+                            <div class="col-md-7"><InputText @bind-Value="@item.PACK_SIZE" style="width:100px"></InputText></div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Supplier:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect @bind-Value="@item.VENDOR_ID" style="width:400px">
+                                    <option value="">--Select Supplier--</option>
+                                    @foreach (var vendor in vendorList)
+                                    {
+                                        <option value="@vendor.VENDOR_ID">@vendor.VENDOR_NAME</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Brand:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect @bind-Value="@item.BRAND_ID" style="width:400px">
+                                    <option value="">--Select Brand--</option>
+                                    @foreach (var brand in brandList)
+                                    {
+                                        <option value="@brand.BRAND_ID">@brand.BRAND_NAME</option>
+                                    }
+                                </InputSelect>
+                                <img src="images/fileicon.png" alt="" style="width:27px;height:24px" data-toggle="modal" data-target=".bd-example-modal-lg" />
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Unit:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect @bind-Value="@item.UNIT_ID" style="width:400px">
+                                    <option value="">--Select UOM--</option>
+                                    @foreach (var unit in unitList)
+                                    {
+                                        <option value="@unit.UNIT_ID">@unit.UNIT_NAME</option>
+                                    }
+                                </InputSelect>
+                                <img src="images/fileicon.png" alt="" style="width:27px;height:24px" data-toggle="modal" data-target=".bd-example-modal-lg-unit" />
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-5"><label>Color:</label></div>
+                            <div class="col-md-7">
+                                <InputSelect @bind-Value="@item.COLOR_ID" style="width:400px">
+                                    <option value="">--Select Color--</option>
+                                    @foreach (var color in colorList)
+                                    {
+                                        <option value="@color.COLOR_ID">@color.COLOR_NAME</option>
+                                    }
+                                </InputSelect>
+                                <img src="images/fileicon.png" alt="" style="width:27px;height:24px" data-toggle="modal" data-target=".bd-example-modal-lg-color" />
+                            </div>
+                        </div>
+
+
+
+                        <br />
+                        <div class="row mt-4 border-top" style="padding:20px 0 20px">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-5"></div>
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-info" style="width:100px">@btnTEXT</button>
+                                        <button type="button" class="btn btn-info" style="width:100px" @onclick="ClearData">Cancel</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-5"></div>
+
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="col-lg-5">
+                    <div class="addRequisitionItems">
+                        <h4 class="p-2">Product List</h4>
+                        <div class="addRequisitionItemsForm">
+                            <table class="table table-striped">
+                                <thead style="background-color:steelblue;color:white">
+                                    <tr>
+                                        <td></td>
+                                        <td scope="col" width="10%">Code</td>
+                                        <td scope="col" width="60%">Item</td>
+                                        <td scope="col" width="15%">Pack Size</td>
+                                        <td scope="col" width="10%">UOM</td>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in productList)
+                                    {
+                                        <tr>
+                                            <td><a @onclick=@(() => EditItem(product.ITEM_ID))><span class="oi oi-pencil"></span></a></td>
+                                            <td scope="col">@product.ITEM_CODE</td>
+                                            <td scope="col">@product.ITEM_NAME</td>
+                                            <td scope="col">@product.PACK_SIZE</td>
+                                            <td scope="col">@product.UOM</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*-------------Brand Modal-----------*@
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@brand" OnValidSubmit="@SaveBrand">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW BRAND</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Brand Name:</label></div>
+                                            <div class="col-md-7"><InputText @bind-Value="@brand.BRAND_NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Remarks :</label></div>
+                                            <div class="col-md-7">
+                                                <InputTextArea @bind-Value="@brand.REMARKS" cols="30" rows="5" style="width:400px"></InputTextArea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveBrand())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*-------------Unit Modal-----------*@
+<div class="modal fade bd-example-modal-lg-unit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@unit" OnValidSubmit="@SaveUnit">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW UNIT</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Unit Name:</label></div>
+                                            <div class="col-md-7"><InputText @bind-Value="@unit.UNIT_NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Remarks :</label></div>
+                                            <div class="col-md-7">
+                                                <InputTextArea @bind-Value="@unit.REMARKS" cols="30" rows="5" style="width:400px"></InputTextArea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveUnit())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@*-------------Color Modal-----------*@
+<div class="modal fade bd-example-modal-lg-color" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@color" OnValidSubmit="@SaveColor">
+                <div class="modal-header">
+                    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">NEW COLOR</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Color Name:</label></div>
+                                            <div class="col-md-7"><InputText @bind-Value="@color.COLOR_NAME" style="width:400px"></InputText></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-5"><label>Remarks :</label></div>
+                                            <div class="col-md-7">
+                                                <InputTextArea @bind-Value="@color.REMARKS" cols="30" rows="5" style="width:400px"></InputTextArea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveColor())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    List<ItemEntity> productList = new List<ItemEntity>();
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+    List<BrandModel> brandList = new List<BrandModel>();
+    List<UnitModel> unitList = new List<UnitModel>();
+    List<ColorModel> colorList = new List<ColorModel>();
+    List<UnitModel> UnitList = new List<UnitModel>();
+    ItemEntity item = new ItemEntity();
+    BrandModel brand = new BrandModel();
+    UnitModel unit = new UnitModel();
+    ColorModel color = new ColorModel();
+    string btnTEXT;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnTEXT = "Save";
+        await GetItemList();
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+        brandList = await Http.GetJsonAsync<List<BrandModel>>(Utility.BaseUrl + "api/Brand");
+        unitList = await Http.GetJsonAsync<List<UnitModel>>(Utility.BaseUrl + "api/Setup/GetUnitList");
+        colorList = await Http.GetJsonAsync<List<ColorModel>>(Utility.BaseUrl + "api/Setup/GetColorList");
+
+    }
+
+    private async Task GetItemList()
+    {
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+    }
+
+    public async Task SaveProduct()
+    {
+        if (IsValidation() != true)
+        {
+            if (btnTEXT == "Save")
+            {
+                bool IsExistProduct = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/Product/GetIsItemExist/" + item.ITEM_CODE);
+                if (IsExistProduct != true)
+                {
+                    try
+                    {
+                        var data = await Http.PostJsonAsync<ItemEntity>(Utility.BaseUrl + "api/Product", item);
+                        toastService.ShowSuccess("Item Added Successfully!!!");
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    var data = await Http.PutJsonAsync<ItemEntity>(Utility.BaseUrl + "api/Product", item);
+                    ClearData();
+                    toastService.ShowSuccess("Item Added Successfully!!!");
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            await GetItemList();
+
+
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (item.ITEM_NAME == "" || item.ITEM_NAME == string.Empty || item.ITEM_NAME == null)
+        {
+            toastService.ShowWarning("Item Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    public async Task SaveBrand()
+    {
+        if (IsValidation_Brand() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<BrandModel>(Utility.BaseUrl + "api/Brand", brand);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        brandList = await Http.GetJsonAsync<List<BrandModel>>(Utility.BaseUrl + "api/Brand");
+    }
+    private bool IsValidation_Brand()
+    {
+        bool flag = false;
+        if (brand.BRAND_NAME == "" || brand.BRAND_NAME == string.Empty || brand.BRAND_NAME == null)
+        {
+            toastService.ShowWarning("Brand Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    public async Task SaveUnit()
+    {
+
+        if (IsValidation_Unit() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<BrandModel>(Utility.BaseUrl + "api/Setup/AddUnit", unit);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        unitList = await Http.GetJsonAsync<List<UnitModel>>(Utility.BaseUrl + "api/Setup/GetUnitList");
+    }
+    private bool IsValidation_Unit()
+    {
+        bool flag = false;
+        if (unit.UNIT_NAME == "" || unit.UNIT_NAME == string.Empty || unit.UNIT_NAME == null)
+        {
+            toastService.ShowWarning("Unit Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    public async Task SaveColor()
+    {
+
+        if (IsValidation_Color() != true)
+        {
+            try
+            {
+                var data = await Http.PostJsonAsync<ColorModel>(Utility.BaseUrl + "api/Setup/AddColor", color);
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        colorList = await Http.GetJsonAsync<List<ColorModel>>(Utility.BaseUrl + "api/Setup/GetColorList");
+    }
+    private bool IsValidation_Color()
+    {
+        bool flag = false;
+        if (color.COLOR_NAME == "" || color.COLOR_NAME == string.Empty || color.COLOR_NAME == null)
+        {
+            toastService.ShowWarning("Color Name cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async void EditItem(int itemId)
+    {
+        btnTEXT = "Edit";
+        item.ITEM_ID= productList.FirstOrDefault(x => x.ITEM_ID == itemId).ITEM_ID;
+        item.ITEM_CODE = productList.FirstOrDefault(x => x.ITEM_ID == itemId).ITEM_CODE;
+        item.ITEM_NAME = productList.FirstOrDefault(x => x.ITEM_ID == itemId).ITEM_NAME;
+        item.SHORT_DESCRIPTION = productList.FirstOrDefault(x => x.ITEM_ID == itemId).SHORT_DESCRIPTION;
+        item.ITEM_PURCHASE_PRICE = productList.FirstOrDefault(x => x.ITEM_ID == itemId).ITEM_PURCHASE_PRICE;
+        item.ITEM_SALE_PRICE = productList.FirstOrDefault(x => x.ITEM_ID == itemId).ITEM_SALE_PRICE;
+        item.PACK_SIZE = productList.FirstOrDefault(x => x.ITEM_ID == itemId).PACK_SIZE;
+        item.VENDOR_ID = productList.FirstOrDefault(x => x.ITEM_ID == itemId).VENDOR_ID;
+        item.BRAND_ID = productList.FirstOrDefault(x => x.ITEM_ID == itemId).BRAND_ID;
+        item.UNIT_ID = productList.FirstOrDefault(x => x.ITEM_ID == itemId).UNIT_ID;
+        item.COLOR_ID = productList.FirstOrDefault(x => x.ITEM_ID == itemId).COLOR_ID;
+    }
+    private  void ClearData()
+    {
+        btnTEXT = "Save";
+
+        item.ITEM_CODE = "";
+        item.ITEM_NAME = "";
+        item.SHORT_DESCRIPTION = "";
+        item.PACK_SIZE = "";
+        item.ITEM_PURCHASE_PRICE = 0;
+        item.ITEM_SALE_PRICE = 0;
+        item.VENDOR_ID = 0;
+        item.UNIT_ID = 0;
+        item.COLOR_ID = 0;
+        item.BRAND_ID = 0;
+
+
+    }
+
+
+}

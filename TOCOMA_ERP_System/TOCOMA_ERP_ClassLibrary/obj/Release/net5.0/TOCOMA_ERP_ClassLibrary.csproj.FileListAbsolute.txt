@@ -1,0 +1,11 @@
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.deps.json
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\bin\Release\net5.0\ref\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\bin\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.AssemblyInfoInputs.cache
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.AssemblyInfo.cs
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.csproj.CoreCompileInputs.cache
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\ref\TOCOMA_ERP_ClassLibrary.dll
+D:\Project\Company All Project\TocomaERP\Project\TOCOMA\TOCOMA_ERP_System\TOCOMA_ERP_ClassLibrary\obj\Release\net5.0\TOCOMA_ERP_ClassLibrary.pdb

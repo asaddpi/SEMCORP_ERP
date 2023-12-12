@@ -1,0 +1,338 @@
+﻿@page "/ProductReceive"
+@layout CustomLayout
+@using System.Data
+@using System.IO
+@inject HttpClient Http
+@using System.Collections.Generic;
+@using System.Data;
+@using System.Reflection;
+@*@inject IHostingEnvironment _host*@
+@inject IToastService toastService
+@inject IJSRuntime JSRuntime
+
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    /* Style the tab */
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #ccc;
+            }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #888;
+        padding: 0.25em 0.5em;
+    }
+</style>
+
+<div class="dashboard-details">
+    <h4 class="p-2"><img src="images/fountain-pen.png" alt="" width="50" height="50" class="mr-3"><span class="text-uppercase">PRODUCT RECEIVE IN WAREHOUSE</span>  </h4>
+    <div class="newRequsitionForm-content">
+        <div class="container-fluid">
+            <EditForm Model="@stock" OnValidSubmit="@SavePurchaseOrder">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <label>PO NO :</label>
+                                <input type="search" @bind-value="@purchaseOrderModel.PO_NUMBER_LONG_CODE" placeholder="po no..." />
+                                <button type="button" @onclick="GetProductDetailsBYPO" style="height:35px" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <h5>PURCHASE ITEMS</h5>
+                <div class="analytic_details_contain_two">
+                    <table class="table table-striped">
+                        <thead style="background-color:steelblue;color:white;height:20px">
+                            <tr>
+                                <td scope="col">Item Description</td>
+                                <td scope="col">Pack Size</td>
+                                <td scope="col">Quantity</td>
+                                @*<td scope="col">Rate</td>
+                                <td scope="col">Amount</td>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tableitem in purchaseDetailsList)
+                            {
+                                double total = Convert.ToDouble(tableitem.UNIT_PRICE) * Convert.ToDouble(tableitem.QUANTITY);
+                                <tr>
+                                    <td scope="col">@tableitem.ITEM_NAME</td>
+                                    <td scope="col">@tableitem.PACK_SIZE</td>
+                                    <td scope="col">@tableitem.QUANTITY</td>
+                                    @*<td scope="col">@tableitem.UNIT_PRICE</td>
+                                    <td scope="col">@total</td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br />
+
+                <fieldset class="border p-4">
+                    <legend class="w-auto">Receiving Info</legend>
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-md-5"><label>Receiving Documents No:</label></div>
+                                <div class="col-md-7"><InputText @bind-Value="@stock.INVOICE_NO" maxlength="100"></InputText></div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Receiving Documents Date:</label></div>
+                                <div class="col-md-7"><input type="date" @bind-value="@invoice_Date" style="width:203px" /></div>
+                            </div>
+                            @*<div class="row mt-1">
+                                <div class="col-md-5"><label>Document No:</label></div>
+                                <div class="col-md-7"><InputText @bind-Value="@stock.DOCUMENTS_NO" maxlength="100"></InputText></div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Document Date:</label></div>
+                                <div class="col-md-7"><input type="date" @bind-value="@document_Date" style="width:203px" /></div>
+                            </div>*@
+                            @*<div class="row mt-1">
+                                <div class="col-md-5"><label>Receive By:</label></div>
+                                <div class="col-md-7">
+                                    <InputSelect @bind-Value="@stock.RECEIVE_BY" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var employee in employeeList)
+                                        {
+                                            <option value="@employee.EMPLOYEE_NAME">@employee.EMPLOYEE_NAME</option>
+                                        }
+                                    </InputSelect>
+
+                                </div>
+                            </div>*@
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Good Receive Note:</label></div>
+                                <div class="col-md-7">
+                                    <InputTextArea @bind-Value="@stock.GOOD_RECEIVE_NOTE" style="width:400px">
+
+                                    </InputTextArea>
+                                    @*<InputSelect @bind-Value="@stock.WAREHOUSE_ID" style="width:203px;height:28px">
+                    <option value="">--Select--</option>
+                    @foreach (var warehouse in warehouseList)
+                    {
+                        <option value="@warehouse.WAREHOUSE_ID">@warehouse.WAREHOUSE_NAME</option>
+                    }
+                </InputSelect>*@
+
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Batch NO.:</label></div>
+                                <div class="col-md-7">
+                                    <InputText @bind-Value="@stock.BATCH_NO" style="width:400px"></InputText>
+                                    @*<InputSelect @bind-Value="@stock.WAREHOUSE_ID" style="width:203px;height:28px">
+                    <option value="">--Select--</option>
+                    @foreach (var warehouse in warehouseList)
+                    {
+                        <option value="@warehouse.WAREHOUSE_ID">@warehouse.WAREHOUSE_NAME</option>
+                    }
+                </InputSelect>*@
+
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Expiry Date:</label></div>
+                                <div class="col-md-7"><input style="width:203px" type="text" id="date_1" @bind-value="@stock.EXPIRY_DATE" autocomplete="off" /></div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-5"><label>Warehouse:</label></div>
+                                <div class="col-md-7">
+                                    <InputSelect @bind-Value="@stock.WAREHOUSE_ID" style="width:203px;height:28px">
+                                        <option value="">--Select--</option>
+                                        @foreach (var warehouse in warehouseList)
+                                        {
+                                            <option value="@warehouse.WAREHOUSE_ID">@warehouse.WAREHOUSE_NAME</option>
+                                        }
+                                    </InputSelect>
+
+                                </div>
+                            </div>
+                            @*<div class="row mt-1">
+                                <div class="col-md-5"><label>Remarks:</label></div>
+                                <div class="col-md-7"><InputTextArea @bind-Value="@stock.REMARKS" maxlength="100"></InputTextArea></div>
+                            </div>*@
+
+                        </div>
+                    </div>
+                </fieldset>
+                <br />
+                <div class="col-4 d-flex" style="margin:20px 0 20px">
+                    <button class="btn btn-info" style="border:none;border-radius:10px">Receive</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </EditForm>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string requisition_no { get; set; }
+    //private ReportService _ReportService = new ReportService();
+    DataSet DS_OUTPUT_DATA = new DataSet();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    PurchaseOrderEntity purchaseOrder = new PurchaseOrderEntity();
+    DateTime invoice_Date = System.DateTime.Now;
+    DateTime document_Date = System.DateTime.Now;
+    PurchaseOrderModel purchaseOrderModel = new PurchaseOrderModel();
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+    PRE pp = new PRE();
+    List<OrderItemEntity> requestItemList = new List<OrderItemEntity>();
+    public string searchparam { get; set; }
+    PurchaseOrderModel porderModel = new PurchaseOrderModel();
+
+    Stock_Details_Model details = new Stock_Details_Model();
+    List<PurchaseOrderViewModel> purchaseDetailsList = new List<PurchaseOrderViewModel>();
+    List<Stock_Details_Model> stockDetailsList = new List<Stock_Details_Model>();
+
+    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+    StockModel stock = new StockModel();
+    List<WarehouseModel> warehouseList = new List<WarehouseModel>();
+
+    //protected bool IsDisabled { get; set; }
+
+
+
+
+    //[Parameter]
+    //public string Format { get; set; } = "dd/mm/yyyy";
+
+
+    public async Task GetProductDetailsBYPO()
+    {
+        string pono = purchaseOrderModel.PO_NUMBER_LONG_CODE;
+        purchaseDetailsList = await Http.GetJsonAsync<List<PurchaseOrderViewModel>>(Utility.BaseUrl + "api/Purchase/GetPurchaseOrderDetailsByPO/" + pono);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        ////IsDisabled = true;
+        //requestItemList = await Http.GetJsonAsync<List<OrderItemEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+        employeeList = await Http.GetJsonAsync<List<EmployeeModel>>(Utility.BaseUrl + "api/Employee");
+        warehouseList = await Http.GetJsonAsync<List<WarehouseModel>>(Utility.BaseUrl + "api/Purchase/GetAllWarehouse");
+        //purchaseDetailsList= await Http.GetJsonAsync<List<PurchaseOrderDetailsEntity>>(Utility.BaseUrl + "api/Purchase/GetRequisitionItemDetailsByReqNo/" + requisition_no);
+
+    }
+    public async Task SavePurchaseOrder()
+    {
+
+        if (IsValidation() != true)
+        {
+            try
+            {
+                stock.INVOICE_DATE = invoice_Date;
+                stock.DOCUMENT_DATE = document_Date;
+                stock.DESCRIPTION = "StockIn";
+                stock.CUSTOMER_SUPPLIER_ID = purchaseDetailsList.First().VENDOR_ID;
+                stock.PO_NO = purchaseDetailsList.First().PO_NUMBER_LONG_CODE;
+
+                porderModel.RECEIVED_DATE = System.DateTime.Now;
+                porderModel.PO_NUMBER_LONG_CODE= purchaseDetailsList.First().PO_NUMBER_LONG_CODE;
+                porderModel.SHIPMENT_STATUS = "Success";
+                var podata = await Http.PutJsonAsync<PurchaseOrderModel>(Utility.BaseUrl + "api/Purchase/UpdateGoodsReceiveInfo", porderModel);
+                var data = await Http.PostJsonAsync<StockModel>(Utility.BaseUrl + "api/Stock", stock);
+                var id = await Http.GetJsonAsync<int>(Utility.BaseUrl + "api/Stock/GetStockId/" + purchaseOrderModel.PO_NUMBER_LONG_CODE);
+                foreach (var item in purchaseDetailsList)
+                {
+                    details = new Stock_Details_Model();
+                    details.STOCK_ID = id;
+                    details.ITEM_ID = item.ITEM_ID;
+                    details.PACK_SIZE = item.PACK_SIZE;
+                    details.UOM = item.UOM;
+                    details.STOCK_IN_QUANTITY = Convert.ToDouble(item.QUANTITY);
+                    details.UNIT_PRICE = item.UNIT_PRICE;
+                    details.WAREHOUSE_ID = stock.WAREHOUSE_ID;
+
+                    stockDetailsList.Add(details);
+                }
+                var stock_details = await Http.PostJsonAsync<List<Stock_Details_Model>>(Utility.BaseUrl + "api/Stock/AddStockDetails", stockDetailsList);
+                var stock_summery = await Http.PostJsonAsync<List<Stock_Details_Model>>(Utility.BaseUrl + "api/Stock/AddStockSummery", stockDetailsList);
+
+                toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        //if (purchaseOrderModel.PO_NUMBER_LONG_CODE == "" || purchaseOrderModel.PO_NUMBER_LONG_CODE == string.Empty || purchaseOrderModel.PO_NUMBER_LONG_CODE == null)
+        //{
+        //    toastService.ShowWarning("Requisition No cannot be empty!");
+        //    flag = true;
+        //}
+
+        return flag;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("JsInteropDatepicker");
+
+    }
+
+    //private void CreateOutputReport(DataSet reprotOutputData)
+    //{
+    //    PrintInformationOutputItem outputItem = new PrintInformationOutputItem();
+    //    try
+    //    {
+    //        outputItem.dataSet = DS_OUTPUT_DATA;
+    //        if (DS_OUTPUT_DATA != null && DS_OUTPUT_DATA.Tables[0].Rows.Count > 0)
+    //        { _ReportService.output(OutputReportSupport.GetReportConfig(outputItem), outputItem.dataSet); }
+    //        else { MessageBox.Show("", "Info"); }
+    //    }
+    //    catch (Exception ex)
+    //    {  }
+
+    //}
+}

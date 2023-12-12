@@ -1,0 +1,1931 @@
+﻿@page "/NewProduct"
+@layout CustomLayout
+@inject HttpClient Http
+@inject IToastService toastService
+@inject IWebHostEnvironment env
+@using Blazored.Typeahead
+@using System.IO
+@using System.Net.Http.Headers;
+@*@using Tewr.Blazor.FileReader
+    @inject IFileReaderService fileReader*@
+@*<style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #888;
+        }
+
+        tr td {
+            text-align: center;
+        }
+
+        tr th {
+            text-align: left;
+            background-color: LightGray;
+            font-size: 15px;
+            width:15%;
+        }
+
+        tr td input {
+            width: 100%;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        tr td select {
+            width: 100%;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        /*fieldset {
+            border: 1px solid #888;
+        }*/
+
+    </style>*@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            New Item
+        </div>
+
+        <div class="card-body">
+            <EditForm Model="@item" style="margin-left:10px;margin-right:10px">
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Supplier</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.VENDOR_ID" class="form-control">
+                            <option>--Select Supplier--</option>
+                            @foreach (var item in vendorList)
+                            {
+                                <option value="@item.VENDOR_ID">@item.VENDOR_NAME</option>
+                            }
+
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-shipvia">New</a>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Name</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.ITEM_NAME" type="text" class="form-control" placeholder="Item name" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Model</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.MODEL" type="text" class="form-control" placeholder="Model" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Color</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.COLOR_ID" class="form-control">
+                            <option>--Select Item Color--</option>
+                            @foreach (var item in colorList)
+                            {
+                                <option value="@item.COLOR_ID">@item.COLOR_NAME</option>
+                            }
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-color">New</a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Brand/Manufacturer</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.BRAND_NAME" class="form-control">
+                            <option>--Select Brand--</option>
+                            @foreach (var item in brandList)
+                            {
+                                <option value="@item.BRAND_NAME">@item.BRAND_NAME</option>
+                            }
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-brand">New</a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Type</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.ITEM_TYPE" class="form-control">
+                            <option>--Select Brand--</option>
+                            @foreach (var item in itemTypeList)
+                            {
+                                <option value="@item.ITEM_TYPE">@item.ITEM_TYPE</option>
+                            }
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-type">New</a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <BlazoredTextEditor @ref="@longDescription">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+
+
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Documents</label>
+                    <div class="col-sm-10">
+                        <InputFile OnChange="@SelectItemTDS" multiple />
+                        <table class="table" style="width:100%">
+                            <tbody>
+
+                                @foreach (var item in itemTDS)
+                                {
+
+                                    <tr style="width:30px">
+                                        <td style="width: 90%"><p>@item</p></td>
+                                        <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => CancelTds(item))></i></td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Made In</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.MAID_IN_COUNTRY" class="form-control">
+                            <option>--Select Made In</option>
+                            @foreach (var item in CountryList)
+                            {
+                                <option value="@item.COUNTRY_NAME">@item.COUNTRY_NAME</option>
+                            }
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-madein">New</a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Area Of Application</label>
+                    <div class="col-sm-10">
+                        <BlazoredTextEditor @ref="@applicationArea">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+
+
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                    </div>
+                </div>
+                <br />
+                <br />
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Keyward</label>
+                    <div class="col-sm-10">
+                        <InputText type="text" @bind-Value="@item.ITEM_KEYWORD" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Power/<br />Voltage/<br />Specification</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.COVERAGE_CONSUMPTION" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Related Items</label>
+                    <div class="col-sm-10">
+                        <select @onchange="Related_Item_Clicked" class="form-control">
+                            <option>--Select Related Item--</option>
+                            @foreach (var item in productList)
+                            {
+                                <option value="@item.ITEM_NAME">@item.ITEM_NAME</option>
+                            }
+                        </select>
+
+                        <table class="table" style="width:100%">
+                            <tbody>
+
+                                @foreach (var item in relatedItemList)
+                                {
+
+                                    <tr style="width:30px">
+                                        <td style="width: 90%"><p>@item.ITEM_NAME</p></td>
+                                        <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => DeleteRelatedItem(item.ITEM_NAME))></i></td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Category</label>
+                    <div class="col-sm-10">
+                        <select value="@item.CATEGORY_ID" @onchange="CategoryClicked" class="form-control">
+                            <option>--Select Item Category--</option>
+                            @foreach (var item in categoryList)
+                            {
+                                <option value="@item.CATEGORY_ID">@item.CATEGORY_NAME</option>
+                            }
+
+                        </select>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-category">New</a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Sub-Category</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.SUBCATEGORY_ID" class="form-control">
+                            <option>--Select Item Sub-Category--</option>
+                            @foreach (var item in subCategoryList)
+                            {
+                                <option value="@item.SUBCATEGORY_ID">@item.SUBCATEGORY_NAME</option>
+                            }
+
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-subcategory">New</a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Unit Of Mesurment</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.UNIT_ID" class="form-control">
+                            <option>--Select Unit--</option>
+                            @foreach (var item in unitList)
+                            {
+                                <option value="@item.UNIT_ID">@item.UNIT_NAME</option>
+                            }
+
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Pack Size/Dimension</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.PACK_SIZE" type="text" class="form-control" placeholder="pack size" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Image</label>
+                    <div class="col-sm-10">
+                        <InputFile OnChange="@SelectItemImage" multiple />
+                        @foreach (var itmImage in itemimageUrls)
+                        {
+                            <img src="@itmImage" style="width:120px;height:120px" />
+                        }
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Mfg/Certification</label>
+                    <div class="col-sm-10">
+                        <InputFile OnChange="@SelectItemCertification" multiple />
+                        <table class="table" style="width:100%">
+                            <tbody>
+
+                                @foreach (var item in itemCertificate)
+                                {
+
+                                    <tr style="width:30px">
+                                        <td style="width: 90%"><p>@item</p></td>
+                                        <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Shelf Life</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.SHELF_LIFE" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Batch/Manufacturing No.</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.ITEM_BATCH_NO" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Type Of Inventory</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.TYPE_OF_INVENTORY" class="form-control">
+                            <option>--Select Inventory Type--</option>
+                            @foreach (var item in inventoryTypeList)
+                            {
+                                <option value="@item.INVENTORY_TYPE">@item.INVENTORY_TYPE</option>
+                            }
+                        </InputSelect>
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg-inventoryType">New</a>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Sewistiveness/<br />Precaution</label>
+                    <div class="col-sm-10">
+                        <BlazoredTextEditor @ref="@sewistiveness">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+
+
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Product Form/<br />Appearance</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.ITEM_FORM_APPEARANCE" class="form-control">
+                            <option>--Select Item Form/Appearance--</option>
+                            @foreach (var item in itemForm_Appearances)
+                            {
+                                <option value="@item.ITEM_FORM_APPEARANCE">@item.ITEM_FORM_APPEARANCE</option>
+                            }
+                        </InputSelect>
+
+                    </div>
+                </div>
+                <!---------------->
+                <!--<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Short Description</label>
+                    <div class="col-sm-10">
+                        <BlazoredTextEditor @ref="@shortDescription">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                            <EditorContent>
+                            </EditorContent>
+                        </BlazoredTextEditor>
+                    </div>
+                </div>
+                <br />
+                <br />-->
+                <!-------------->
+
+                <br />
+                <br />
+                <!------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Features & Benefits</label>
+                        <div class="col-sm-10">
+                            <InputSelect @bind-Value="@item.FEATURES_AND_BENEFITS" class="form-control">
+                                <option>--Select Features & Benefit</option>
+                                <option value="Option1">Option1</option>
+                                <option value="Option2">Option2</option>
+                                <option value="Option3">Option3</option>
+                                <option value="Option4">Option4</option>
+                            </InputSelect>
+                        </div>
+                    </div>*@
+                <!--------------->
+                <!------------>
+                <!------------->
+                <!------------>
+                <!------------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Item TDS</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectItemTDS" multiple />
+                            <table class="table" style="width:100%">
+                                <tbody>
+
+                                    @foreach (var item in itemTDS)
+                                    {
+
+                                        <tr style="width:30px">
+                                            <td style="width: 90%"><p>@item</p></td>
+                                            <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => CancelTds(item))></i></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>*@
+                <!---------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Item SDS</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectItemSDS" multiple />
+                            <table class="table" style="width:100%">
+                                <tbody>
+
+                                    @foreach (var item in itemSDS)
+                                    {
+
+                                        <tr style="width:30px">
+                                            <td style="width: 90%"><p>@item</p></td>
+                                            <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => CancelSds(item))></i></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>*@
+                <!------------------>
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Item Flyer/Brochure</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectItemFlyer" multiple />
+                            <table class="table" style="width:100%">
+                                <tbody>
+
+                                    @foreach (var item in itemFlyer)
+                                    {
+
+                                        <tr style="width:30px">
+                                            <td style="width: 90%"><p>@item</p></td>
+                                            <td style="width: 10%"><i class="fa fa-trash" aria-hidden="true" @onclick=@(() => CancelFlayer(item))></i></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>*@
+
+                <!----------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Dosage</label>
+                        <div class="col-sm-10">
+                            <InputText @bind-Value="@item.DOSAGE" type="text" class="form-control" />
+                        </div>
+                    </div>*@
+
+                <!---------------->
+                <!--------->
+                <!------------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Import From</label>
+                        <div class="col-sm-10">
+                            <InputSelect @bind-Value="@item.IMPORT_FROM" class="form-control">
+                                <option>--Select Import From--</option>
+                                @foreach (var item in CountryList)
+                                {
+                                    <option value="@item.COUNTRY_NAME">@item.COUNTRY_NAME</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>*@
+                <!----------->
+                <!--------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Brand Origin Country</label>
+                        <div class="col-sm-10">
+                            <InputSelect @bind-Value="@item.BRAND_ORIGIN_COUNTRY" class="form-control">
+                                <option>--Select Brand Origin Country--</option>
+                                @foreach (var item in CountryList)
+                                {
+                                    <option value="@item.COUNTRY_NAME">@item.COUNTRY_NAME</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>*@
+                <!-------------->
+                <!-------------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Application Image</label>
+                        <div class="col-sm-10">
+                            <InputFile OnChange="@SelectApplicationImage" multiple />
+                            @foreach (var itmImage in ApplicationimageUrls)
+                            {
+                                <img src="@itmImage" />
+                            }
+                        </div>
+                    </div>*@
+                <!------------>
+                <!--<div class="form-group row">
+                <label for="colFormLabel" class="col-sm-2 col-form-label">Application Video</label>
+                <div class="col-sm-10">
+                    <InputFile multiple />-->
+                @*@foreach (var appVideo in imageUrls)
+                    {
+                        <img src="@appVideo" />
+                    }*@
+                <!--</div>
+                </div>-->
+                <!-------------------------->
+                <!------------->
+                <!--------Related Item--------->
+                <!----------------->
+                <!--<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Item Price</label>
+                    <div class="col-sm-10">
+                        <InputNumber @bind-Value="@item.ITEM_PRICE" type="text" class="form-control" />
+                    </div>
+                </div>-->
+                <!------------------->
+                <!------------------->
+                <!--<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Pack Type</label>
+                    <div class="col-sm-10">
+                        <InputSelect @bind-Value="@item.PACK_TYPE" class="form-control">
+                            <option>--Select Pack Type--</option>
+                            <option value="Option1">Option1</option>
+                            <option value="Option2">Option2</option>
+                            <option value="Option3">Option3</option>
+                            <option value="Option4">Option4</option>
+                        </InputSelect>
+                    </div>
+                </div>-->
+                <!------>
+                <!--<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Speciality</label>
+                    <div class="col-sm-10">
+                        <InputText @bind-Value="@item.ITEM_SPECIALTY" type="text" class="form-control" />
+                    </div>
+                </div>-->
+                <!------------>
+                <!-------------------->
+                @*<div class="form-group row">
+                        <label for="colFormLabel" class="col-sm-2 col-form-label">Related Application</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" @onchange="RelatedApplicationClicked">
+                                <option>--Select Related Application--</option>
+                                @foreach (var item in itemApplicationList)
+                                {
+                                    <option value="@item.APPLICATION_AREA">@item.APPLICATION_AREA</option>
+                                }
+                            </select>
+                            @foreach (var item in SelectedRelatedApplicationList)
+                            {
+                                <p>@item.APPLICATION_AREA</p>
+                            }
+                        </div>
+                    </div>*@
+
+
+                <!-------------------->
+                <!-------------------->
+                <!--------------->
+                <!--<div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Opening Balance</label>
+                    <div class="col-sm-4">
+                        <InputNumber @bind-Value="@item.STOCKITEM_OPENING_BALANCE" class="form-control"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Opening Rate</label>
+                    <div class="col-sm-4">-->
+                @*<InputNumber @bind-Value="@item.STOCKITEM_OPENING_RATE" @onkeyup="Balance_Rate_Calculate" class="form-control"></InputNumber>*@
+                @*<InputText class="form-control" @bind-Value="@opRate" @oninput="Balance_Rate_Calculate" />*@
+                <!--<input class="form-control" type="number" @oninput="Balance_Rate_Calculate" />-->
+                @*<InputNumber id="name" Value="@item.STOCKITEM_OPENING_RATE" ValueChanged="NameChanged" ValueExpression="() => item.STOCKITEM_OPENING_RATE"></InputNumber>*@
+                <!--</div>
+                </div>
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Opening Value</label>
+                    <div class="col-sm-4">
+                        <InputNumber @bind-Value="@item.STOCKITEM_OPENING_VALUE" class="form-control" readonly></InputNumber>
+                    </div>
+                </div>-->
+
+            </EditForm>
+        </div>
+        <div class="card-footer text-muted" style="background-color: lightgray;text-align:center">
+            <button class="btn btn-danger" style="margin-right:20px;width:100px">Cancel</button>
+            <button class="btn btn-success" style="width:100px" @onclick="SaveProduct">Save</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*-------------Supplier-----------*@
+<div class="modal fade bd-example-modal-lg-shipvia" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@vendor">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Supplier</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Supplier:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@vendor.VENDOR_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveSupplier())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+
+@*-------------Color-----------*@
+<div class="modal fade bd-example-modal-lg-color" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@color">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Color</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Color:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@color.COLOR_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveColor())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+
+@*-------------Brand-----------*@
+<div class="modal fade bd-example-modal-lg-brand" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@brand">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Brand</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Brand:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@brand.BRAND_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveBrand())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+@*-------------Item Type-----------*@
+<div class="modal fade bd-example-modal-lg-type" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@iteyType">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Item Type</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Item Type:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@iteyType.ITEM_TYPE" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveItemType())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+@*-------------Made In-----------*@
+<div class="modal fade bd-example-modal-lg-madein" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@country">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Country</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Item Country:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@country.COUNTRY_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveCountry())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+@*-------------Category-----------*@
+<div class="modal fade bd-example-modal-lg-category" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@category">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Category</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Item Category:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@category.CATEGORY_NAME" style="width:400px"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveCategory())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+@*-------------Sub-Category-----------*@
+<div class="modal fade bd-example-modal-lg-subcategory" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@subCategory">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Sub-Category</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6"><label>Item Category:</label></div>
+                                    <div class="col-md-6">
+                                        <InputSelect @bind-Value="@subCategory.CATEGORY_ID" class="form-control">
+                                            <option>--Select Item Category--</option>
+                                            @foreach (var item in categoryList)
+                                            {
+                                                <option value="@item.CATEGORY_ID">@item.CATEGORY_NAME</option>
+                                            }
+
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Item Sub-Category:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@subCategory.SUBCATEGORY_NAME" class="form-control"></InputText></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveSubCategory())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+
+@*-------------Inventory Type-----------*@
+<div class="modal fade bd-example-modal-lg-inventoryType" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@inventoryType">
+                <div class="modal-header">
+                    <h4 class="p-2"><span class="text-uppercase">New Inventory</span>  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-details">
+
+                        <div class="newRequsitionForm-content">
+                            <div class="container-fluid">                                
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="row mt-1">
+                                            <div class="col-md-6"><label>Inventory Type:</label></div>
+                                            <div class="col-md-6"><InputText @bind-Value="@inventoryType.INVENTORY_TYPE" class="form-control"></InputText></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" style="width:100px;margin-right:40px" class="btn btn-info" data-dismiss="modal" @onclick=@(() => SaveInventoryType())>Save</button>
+                    </div>
+                </div>
+            </EditForm>
+
+
+
+        </div>
+    </div>
+</div>
+
+@code {
+    BlazoredTextEditor shortDescription;
+    BlazoredTextEditor longDescription;
+    BlazoredTextEditor applicationArea;
+    BlazoredTextEditor sewistiveness;
+    string itemname = "";
+    List<string> itemimageUrls = new List<string>();
+    List<string> itemtdsUrls = new List<string>();
+    List<string> itemimage = new List<string>();
+    List<string> itemTDS = new List<string>();
+    List<string> itemSDS = new List<string>();
+    List<string> itemFlyer = new List<string>();
+    List<string> itemCertificate = new List<string>();
+    List<string> ApplicationimageUrls = new List<string>();
+    List<ItemEntity> productList = new List<ItemEntity>();
+    List<ItemCategory> categoryList = new List<ItemCategory>();
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    IReadOnlyList<IBrowserFile> selectedItemImage;
+    IReadOnlyList<IBrowserFile> selectedTDS;
+    IReadOnlyList<IBrowserFile> selectedSDS;
+    IReadOnlyList<IBrowserFile> selectedFlayer;
+    IReadOnlyList<IBrowserFile> selectedCertificate;
+    ItemEntity item = new ItemEntity();
+    ItemEntity relatedItem = new ItemEntity();
+    VendorEntity vendor = new VendorEntity();
+
+    List<ItemEntity> itemList = new List<ItemEntity>();
+    List<CountryModel> CountryList = new List<CountryModel>();
+    List<UnitModel> unitList = new List<UnitModel>();
+    List<BrandModel> brandList = new List<BrandModel>();
+    List<ColorModel> colorList = new List<ColorModel>();
+    List<ItemApplicationAreaModel> itemApplicationList = new List<ItemApplicationAreaModel>();
+    ItemApplicationAreaModel relatedApp = new ItemApplicationAreaModel();
+    List<ItemApplicationAreaModel> SelectedRelatedApplicationList = new List<ItemApplicationAreaModel>();
+    List<ItemEntity> relatedItemList = new List<ItemEntity>();
+    List<ItemSewstivenessModel> itemSewstiveness = new List<ItemSewstivenessModel>();
+    List<ItemForm_Appearance> itemForm_Appearances = new List<ItemForm_Appearance>();
+    List<ImageFile> filesBase64 = new List<ImageFile>();
+    List<VendorEntity> vendorList = new List<VendorEntity>();
+    List<ItemSubCategory> subCategoryList = new List<ItemSubCategory>();
+    List<clsItemType> itemTypeList = new List<clsItemType>();
+    List<InventoryTypeModel> inventoryTypeList = new List<InventoryTypeModel>();
+    ColorModel color = new ColorModel();
+    BrandModel brand = new BrandModel();
+    clsItemType iteyType = new clsItemType();
+    CountryModel country = new CountryModel();
+    ItemCategory category = new ItemCategory();
+    ItemSubCategory subCategory = new ItemSubCategory();
+    InventoryTypeModel inventoryType = new InventoryTypeModel();
+    string categoryName;
+    string code;
+    string path_withfile = "";
+    string saveimageurl = "";
+    string relatedProductIds;
+
+    private List<IBrowserFile> loadedFiles = new();
+    private long maxFileSize = 1024 * 5000;
+    private int maxAllowedFiles = 3;
+    private bool isLoading;
+    string opRate;
+    // ImageFile.cs
+    int businesstype;
+
+    Stream fileStream = null;
+    ElementReference elementReference;
+    string fileName = string.Empty;
+    string size = string.Empty;
+    string type = string.Empty;
+    string vendorCode;
+
+    public class ImageFile
+    {
+        public string base64data { get; set; }
+        public string contentType { get; set; }
+        public string fileName { get; set; }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetItemCategory();
+        await GetItemList();
+        await GetUnit();
+        await GetCountry();
+        await GetBrand();
+        await GetColor();
+        await GetAreaOfApplication();
+        await GetItemSewstiveness();
+        await GetItemForm_Appearance();
+        await GetItemType();
+        await GetInventoryType();
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+
+        businesstype = 1;//
+    }
+
+    private async Task GetItemForm_Appearance()
+    {
+        itemForm_Appearances = await Http.GetJsonAsync<List<ItemForm_Appearance>>(Utility.BaseUrl + "api/Setup/GetItemForm_Appearance");
+    }
+    private async Task GetItemSewstiveness()
+    {
+        itemSewstiveness = await Http.GetJsonAsync<List<ItemSewstivenessModel>>(Utility.BaseUrl + "api/Setup/GetItemSewstiveness");
+    }
+    private async Task GetItemCategory()
+    {
+        categoryList = await Http.GetJsonAsync<List<ItemCategory>>(Utility.BaseUrl + "api/Setup/GetItemCategory");
+    }
+    private async Task GetUnit()
+    {
+        unitList = await Http.GetJsonAsync<List<UnitModel>>(Utility.BaseUrl + "api/Setup/GetUnit");
+    }
+    private async Task GetColor()
+    {
+        colorList = await Http.GetJsonAsync<List<ColorModel>>(Utility.BaseUrl + "api/Setup/GetColorList");
+    }
+    private async Task GetCountry()
+    {
+        CountryList = await Http.GetJsonAsync<List<CountryModel>>(Utility.BaseUrl + "api/Setup/GetCountry");
+    }
+    private async Task GetBrand()
+    {
+        brandList = await Http.GetJsonAsync<List<BrandModel>>(Utility.BaseUrl + "api/Setup/GetBrandList");
+    }
+    private async Task GetItemList()
+    {
+        productList = await Http.GetJsonAsync<List<ItemEntity>>(Utility.BaseUrl + "api/Product");
+    }
+    private async Task GetAreaOfApplication()
+    {
+        itemApplicationList = await Http.GetJsonAsync<List<ItemApplicationAreaModel>>(Utility.BaseUrl + "api/Setup/GetItemApplicationArea");
+    }
+    private async Task GetItemType()
+    {
+        itemTypeList = await Http.GetJsonAsync<List<clsItemType>>(Utility.BaseUrl + "api/Setup/GetItemType");
+    }
+    private async Task GetInventoryType()
+    {
+        inventoryTypeList = await Http.GetJsonAsync<List<InventoryTypeModel>>(Utility.BaseUrl + "api/Setup/GetInventoryType");
+    }
+    public async Task SaveSupplier()
+    {
+        if (IsValidation_Vendor() != true)
+        {
+            try
+            {
+                vendorCode = await Http.GetStringAsync(Utility.BaseUrl + "api/Customer/GetCustomerCode/" + "V");
+                vendor.VENDOR_CODE = vendorCode;
+                var data = await Http.PostJsonAsync<VendorEntity>(Utility.BaseUrl + "api/Vendor", vendor);
+                //var data = await Http.PostJsonAsync<ShipViaModel>(Utility.BaseUrl + "api/Setup/AddShipVia", vendor);
+                //toastService.ShowSuccess("Insert Successfully!!!");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        vendorList = await Http.GetJsonAsync<List<VendorEntity>>(Utility.BaseUrl + "api/Vendor");
+    }
+    private async Task CategoryClicked(ChangeEventArgs change)
+    {
+        string Id = change.Value.ToString();
+        item.CATEGORY_ID = Convert.ToInt32(Id);
+        if(Id!="" && Id!=null)
+        {
+            subCategoryList = await Http.GetJsonAsync<List<ItemSubCategory>>(Utility.BaseUrl + "api/Setup/GetItemSubCategoryByCatId/" + Id);
+        }
+
+
+    }
+    public async Task SaveColor()
+    {
+        if (IsValidation_Color() != true)
+        {
+            try
+            {
+                color.Operation_Type = 1;
+                await Http.PostJsonAsync<ColorModel>(Utility.BaseUrl + "api/Setup/AddColor", color);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        await GetColor();
+    }
+    public async Task SaveBrand()
+    {
+        try
+        {
+            brand.Operation_Type = 1;
+            await Http.PostJsonAsync<BrandModel>(Utility.BaseUrl + "api/Setup/AddBrand", brand);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetBrand();
+    }
+    public async Task SaveItemType()
+    {
+        try
+        {
+            iteyType.Operation_Type = 1;
+            await Http.PostJsonAsync<clsItemType>(Utility.BaseUrl + "api/Setup/AddItemType", iteyType);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetItemType();
+    }
+    public async Task SaveCountry()
+    {
+        try
+        {
+            country.Operation_Type = 1;
+            await Http.PostJsonAsync<CountryModel>(Utility.BaseUrl + "api/Setup/AddCountry", country);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetCountry();
+    }
+    public async Task SaveCategory()
+    {
+        try
+        {
+            category.Operation_Type = 1;
+            await Http.PostJsonAsync<ItemCategory>(Utility.BaseUrl + "api/Setup/AddItemCategory", category);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetItemCategory();
+    }
+    public async Task SaveSubCategory()
+    {
+        try
+        {
+            subCategory.Operation_Type = 1;
+            var data = await Http.PostJsonAsync<ItemSubCategory>(Utility.BaseUrl + "api/Setup/AddItemSubCategory", subCategory);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        subCategoryList = await Http.GetJsonAsync<List<ItemSubCategory>>(Utility.BaseUrl + "api/Setup/GetItemSubCategory");
+    }
+    public async Task SaveInventoryType()
+    {
+        try
+        {
+            inventoryType.Operation_Type = 1;
+            var data = await Http.PostJsonAsync<InventoryTypeModel>(Utility.BaseUrl + "api/Setup/AddInventoryType", inventoryType);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        await GetInventoryType();
+    }
+    private bool IsValidation_Vendor()
+    {
+        bool flag = false;
+        if (vendor.VENDOR_NAME == "" || vendor.VENDOR_NAME == string.Empty || vendor.VENDOR_NAME == null)
+        {
+            toastService.ShowWarning("Supplier Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private bool IsValidation_Color()
+    {
+        bool flag = false;
+        if (color.COLOR_NAME == "" || color.COLOR_NAME == string.Empty || color.COLOR_NAME == null)
+        {
+            toastService.ShowWarning("Color Cannot be empty!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private async Task SelectItemImage1111(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            //Stream stream = file.OpenReadStream();
+            //var path = $"{env.WebRootPath}\\images\\File\\TDS\\{file.Name}";
+            //FileStream fs = File.Create(path);
+            //await stream.CopyToAsync(fs);
+            //stream.Close();
+            //fs.Close();
+            itemimage.Add(file.Name);
+            //itemTDS.Add(path);
+            selectedItemImage = selectedFiles;
+            selectedFiles = null;
+        }
+        this.StateHasChanged();
+
+
+    }
+    private async Task SelectItemImage(InputFileChangeEventArgs e)
+    {
+        selectedItemImage = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedItemImage)
+        {
+            //var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var resizedImage = await imageFile.RequestImageFileAsync(imageFile.ContentType, 100000, 100000);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            //var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            itemimageUrls.Add(imgData);
+
+            //
+
+            //string base64String = "";
+            //await using MemoryStream fs = new MemoryStream();
+            //await imageFile.OpenReadStream(maxAllowedSize: 104857645125).CopyToAsync(fs);
+            //byte[] somBytes = GetBytes(fs);
+            //base64String = Convert.ToBase64String(somBytes, 0, somBytes.Length);
+            //System.Diagnostics.Debug.Print("Imatge 64: " + base64String + Environment.NewLine);
+            //itemimageUrls.Add(base64String);
+        }
+
+        this.StateHasChanged();
+    }
+    async Task SelectItemImage111(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles(); // get the files selected by the users
+        foreach (var file in files)
+        {
+            var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
+            var buf = new byte[resizedFile.Size]; // allocate a buffer to fill with the file's data
+            using (var stream = resizedFile.OpenReadStream())
+            {
+                await stream.ReadAsync(buf); // copy the stream to the buffer
+            }
+            //itemimageUrls.Add(new ImageFile { base64data = Convert.ToBase64String(buf), contentType = file.ContentType, fileName = file.Name });
+            filesBase64.Add(new ImageFile { base64data = Convert.ToBase64String(buf), contentType = file.ContentType, fileName = file.Name }); // convert to a base64 string!!
+                                                                                                                                               //itemimageUrls.Add(filesBase64);
+            itemimageUrls.Add(Convert.ToBase64String(buf));
+            selectedItemImage = files;
+        }
+        //message = "Click UPLOAD to continue";
+    }
+
+
+
+    private async Task SelectApplicationImage(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+
+        foreach (var imageFile in selectedFiles)
+        {
+            var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            ApplicationimageUrls.Add(imgData);
+
+        }
+        this.StateHasChanged();
+    }
+    public static byte[] GetBytes(Stream stream)
+    {
+        var bytes = new byte[stream.Length];
+        stream.Seek(0, SeekOrigin.Begin);
+        stream.ReadAsync(bytes, 0, bytes.Length);
+        stream.Dispose();
+        return bytes;
+    }
+    public async Task SaveProduct()
+    {
+        //string url = "https://localhost:44381/";
+        //EmployeeModel empModel = new EmployeeModel();
+        //empModel.EMPLOYEE_NAME = itemimageUrls.FirstOrDefault();
+        ///var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+        //var response = await Http.PostJsonAsync<EmployeeModel>($"{url}/Partners/SaveImage", empModel);
+        if (IsValidation() != true)
+        {
+
+            bool IsExistProduct = await Http.GetJsonAsync<bool>(Utility.BaseUrl + "api/Product/GetIsItemExist/" + item.ITEM_NAME);
+            if (IsExistProduct != true)
+            {
+                try
+                {
+                    code = await Http.GetStringAsync(Utility.BaseUrl + "api/Product/GetProductCode");
+                    if (itemTDS != null)
+                    {
+                        if (selectedTDS != null)
+                        {
+                            foreach (var tds in selectedTDS)
+                            {
+                                var path = $"{env.WebRootPath}\\images\\File\\ITEM_DOCUMENTS\\{code + "_" + tds.Name}";
+                                await using FileStream fs = new(path, FileMode.Create);
+                                await tds.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                                //Stream stream = tds.OpenReadStream();
+                                //var path = $"{env.WebRootPath}\\images\\File\\TDS\\{tds.Name}";
+                                //FileStream fs = File.Create(path);
+                                //await stream.CopyToAsync(fs);
+                                //stream.Close();
+                                fs.Close();
+                            }
+                        }
+
+                    }
+                    if (itemSDS != null && selectedSDS != null)
+                    {
+                        foreach (var sds in selectedSDS)
+                        {
+                            //Stream stream = sds.OpenReadStream();
+                            //var path = $"{env.WebRootPath}\\images\\File\\SDS\\{sds.Name}";
+                            //FileStream fs = File.Create(path);
+                            //await stream.CopyToAsync(fs);
+                            //stream.Close();
+
+                            var path = $"{env.WebRootPath}\\images\\File\\SDS\\{code + "_" + sds.Name}";
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await sds.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+                        }
+                    }
+                    if (itemFlyer != null && selectedFlayer != null)
+                    {
+                        foreach (var flayer in selectedFlayer)
+                        {
+                            //Stream stream = flayer.OpenReadStream();
+                            //var path = $"{env.WebRootPath}\\images\\File\\FLAYER\\{flayer.Name}";
+                            //FileStream fs = File.Create(path);
+                            //await stream.CopyToAsync(fs);
+                            //stream.Close();
+
+                            var path = $"{env.WebRootPath}\\images\\File\\FLAYER\\{code + "_" + flayer.Name}";
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await flayer.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+                        }
+                    }
+                    if (itemCertificate != null && itemCertificate.Count() > 0)
+                    {
+                        foreach (var flayer in selectedCertificate)
+                        {
+                            //Stream stream = flayer.OpenReadStream();
+                            //var path = $"{env.WebRootPath}\\images\\File\\FLAYER\\{flayer.Name}";
+                            //FileStream fs = File.Create(path);
+                            //await stream.CopyToAsync(fs);
+                            //stream.Close();
+
+                            var path = $"{env.WebRootPath}\\images\\File\\Certificate\\{code + "_" + flayer.Name}";
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await flayer.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+                        }
+                    }
+
+                    if (selectedItemImage != null)
+                    {
+                        foreach (var file in selectedItemImage)
+                        {
+                            //string subCategory_Unic_imageid = "";
+                            //subCategory_Unic_imageid = GetSubCategoryUnicImageId();
+                            //await GetProductUnicImageId();
+                            //productModel.ProductCategoryId = Convert.ToInt32(productcategoryid); //Convert.ToInt32(productModel.ProductCategoryid);
+                            //productModel.SubCategoryId = Convert.ToInt32(subcategoryId);
+                            //string DATE = dateTimeFormatModel.GetDateString();
+
+                            ////PRODUCTINFO_IMAGE_UNIC_ID = DATE + "_" + Convert.ToInt32(productModel.ProductCategoryId) + "_" + ProductInfo_Image_Code;
+                            //code = await Http.GetStringAsync(Utility.BaseUrl + "api/Product/GetProductCode");
+                            ////Stream stream = file.OpenReadStream();
+                            categoryName = categoryList.Find(x => x.CATEGORY_ID == item.CATEGORY_ID).CATEGORY_NAME;
+                            // var path = $"{env.WebRootPath}\\images\\Products\\{categoryName}";
+                            //var path = $"{env.WebRootPath}\\Images\\Products\\{categoryName}\\{code + "_" + file.Name}";
+                            //bool exists = System.IO.Directory.Exists(path);
+                            //if (!exists)
+                            //    System.IO.Directory.CreateDirectory(path);
+                            string p = "";
+                            //path_withfile = $"{env.WebRootPath}\\Images\\Products\\{categoryName}\\{code +"_"+ file.Name}";
+                            path_withfile = $"{env.WebRootPath}\\images\\Products\\{code + "_" + file.Name}";
+                            p = env.WebRootPath;
+                            saveimageurl = path_withfile.Replace(p, "");
+                            ////await using FileStream fs = new(path_withfile, FileMode.Create);
+                            ////await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            //FileStream fs = File.Create(path_withfile);
+                            //await stream.CopyToAsync(fs);
+                            //stream.Close();
+                            //fs.Close();
+
+
+
+                            //var path1 = $"{env.WebRootPath}\\images\\Products\\{categoryName}";
+
+                            //bool exists = System.IO.Directory.Exists(path1);
+                            //if (!exists)
+                            //    System.IO.Directory.CreateDirectory(path1);
+                            //var path2 = $"{env.WebRootPath}\\Images\\Products\\{categoryName}\\{code + "_" + file.Name}";
+                            var path2 = $"{env.WebRootPath}\\images\\Products\\{code + "_" + file.Name}";
+                            await using FileStream fs = new(path2, FileMode.Create);
+                            await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            // await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                            fs.Close();
+
+
+                            //await OpenFileAsync();
+
+                            //await Upload1();
+
+
+                        }
+                    }
+                    item.ITEM_IMAGE = saveimageurl;
+                    if (shortDescription != null)
+                    {
+                        item.SHORT_DESCRIPTION = await this.shortDescription.GetHTML();
+                    }
+                    if (longDescription != null)
+                    { item.LONG_DESCRIPTION = await this.longDescription.GetHTML(); }
+                    if (applicationArea != null)
+                    {
+                        item.APPLICATION_AREA = await this.applicationArea.GetHTML();
+                    }
+                    if (sewistiveness != null)
+                    {
+                        item.SEWSTIVENESS = await this.sewistiveness.GetHTML();
+                    }
+                    item.BUSINESS_ID = businesstype;
+                    relatedProductIds = string.Join(",", relatedItemList);
+                    item.RELATED_ITEMS = relatedProductIds;
+                    item.OperationType = 1;
+                    var data = await Http.PostJsonAsync<ItemEntity>(Utility.BaseUrl + "api/Product", item);
+
+
+                    toastService.ShowSuccess("Item Added Successfully!!!");
+                }
+                catch (Exception ex)
+                {
+                    toastService.ShowError(ex.Message);
+                }
+            }
+
+            await GetItemList();
+
+
+        }
+    }
+
+    //async Task OpenFileAsync()
+    //{
+    //    var file = (await fileReader.CreateReference(elementReference).EnumerateFilesAsync()).FirstOrDefault();
+    //    foreach (var file in selectedItemImage)
+    //    {
+    //        if (file == null) return;
+    //        var fileInfo = await file.ReadFileInfoAsync();
+    //        fileName = fileInfo.Name;
+    //        size = $"{fileInfo.Size}b";
+    //        type = fileInfo.Type;
+
+    //        using (var memoryStream = await file.CreateMemoryStreamAsync((int)fileInfo.Size))
+    //        {
+    //            fileStream = new MemoryStream(memoryStream.ToArray());
+    //        }
+    //    }
+
+
+
+    //}
+
+    async Task Upload1()
+    {
+        //var url = "http://localhost/api/v1/yourendpointhere";
+        var filePath = @"C:\inetpub\wwwroot\tocoma_erp_system\wwwroot\images\Products\0042_WhatsApp Image 2022-07-03 at 10.20.37 AM.jpeg";
+        var url = "http://demo.tocoma.co/webroot/Content/images/aboutus";
+        foreach (var file in selectedItemImage)
+        {
+            //string path = Path.Combine(file.Name);
+            //var filePath = Path.Combine(file.Name);
+            //var filePath = Path.GetFullPath("wwwroot\\Images\\") + file.FileInfo.Name;
+            //var filePath = $"{env.WebRootPath}\\{file.Name}";
+            HttpClient httpClient = new HttpClient();
+            MultipartFormDataContent form = new MultipartFormDataContent();
+
+            FileStream fs = File.OpenRead(filePath);
+            var streamContent = new StreamContent(fs);
+
+            var imageContent = new ByteArrayContent(streamContent.ReadAsByteArrayAsync().Result);
+            imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+
+            form.Add(imageContent, "image", Path.GetFileName(filePath));
+            var response = httpClient.PostAsync(url, form).Result;
+
+
+            var content = new MultipartFormDataContent();
+
+            form.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
+            form.Add(new StreamContent(fileStream, (int)fileStream.Length), "image", file.Name);
+            //var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+            var response1 = await Http.PostAsync($"{url}", form);
+        }
+
+
+    }
+
+
+    async Task UploadFileAsync()
+    {
+
+        string url = "http://demo.tocoma.co";
+        foreach (var file in selectedItemImage)
+        {
+
+            var root = "\\demo.tocoma.co";
+            var folder = @"\webroot\Content\images\aboutus";
+
+            string path = Path.Combine(root, folder, file.Name);
+
+
+            await using FileStream fs = new(path, FileMode.Create); //This line throws the error
+            await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+
+
+            //var path2 = $"{url}\\webroot\\Content\\images\\aboutus\\{code + "_" + file.Name}";
+            var path2 = $"{url}/webroot/Content/images/aboutus/{code + "_" + file.Name}";
+            await using FileStream fs1 = new(path2, FileMode.Create);
+            await file.OpenReadStream(maxFileSize).CopyToAsync(fs1);
+            // await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+            fs1.Close();
+        }
+
+
+
+
+        var content = new MultipartFormDataContent();
+
+        content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
+        content.Add(new StreamContent(fileStream, (int)fileStream.Length), "image", fileName);
+        //var response = await Http.PostAsync($"{url}/Partners/SaveImage", content);
+        var response = await Http.PostAsync($"{url}/webroot/Content/images/aboutus", content);
+    }
+    //private async Task GetProductUnicImageId()
+    //{
+    //    var code = await Http.GetJsonAsync<UnicCodeModel>(Utility.BaseUrl + "api/ProductInfo/GetProductInfoImageUnicId");
+    //    ProductInfo_Image_Code = Convert.ToInt64(code.Product_ImageUnicCode);
+    //}
+    private void CancelTds(string file)
+    {
+        int index = itemTDS.IndexOf(file);
+        itemTDS.RemoveAt(index);
+    }
+    private void CancelSds(string file)
+    {
+        int index = itemSDS.IndexOf(file);
+        itemSDS.RemoveAt(index);
+    }
+    private void CancelFlayer(string file)
+    {
+        int index = itemFlyer.IndexOf(file);
+        itemFlyer.RemoveAt(index);
+    }
+    private void Balance_Rate_Calculate(ChangeEventArgs changeEventArgs)
+    {
+        //if (changeEventArgs.Value.ToString() != "") { AIT = Convert.ToDouble(changeEventArgs.Value.ToString()); }
+        //else { AIT = 0; }
+        item.STOCKITEM_OPENING_VALUE = 0;
+        if (changeEventArgs.Value != "")
+        {
+            item.STOCKITEM_OPENING_RATE = Convert.ToDecimal(changeEventArgs.Value.ToString());
+            decimal total = item.STOCKITEM_OPENING_BALANCE * item.STOCKITEM_OPENING_RATE;
+            item.STOCKITEM_OPENING_VALUE = total;
+        }
+
+        StateHasChanged();
+    }
+    //private void Balance_Rate_Calculate(ChangeEventArgs changeEventArgs)
+    //{
+    //    item.STOCKITEM_OPENING_VALUE = 0;
+    //    item.STOCKITEM_OPENING_RATE = changedEvent.Va
+    //    decimal total = item.STOCKITEM_OPENING_BALANCE * item.STOCKITEM_OPENING_RATE;
+    //    item.STOCKITEM_OPENING_VALUE = total;
+    //    StateHasChanged();
+    //}
+    private void NameChanged(double value)
+    {
+        item.STOCKITEM_OPENING_VALUE = 0;
+        decimal total = item.STOCKITEM_OPENING_BALANCE * item.STOCKITEM_OPENING_RATE;
+        item.STOCKITEM_OPENING_VALUE = total;
+        StateHasChanged();
+    }
+    private bool IsValidation()
+    {
+        bool flag = false;
+        if (item.ITEM_NAME == "" || item.ITEM_NAME == string.Empty || item.ITEM_NAME == null)
+        {
+            toastService.ShowWarning("Item Name cannot be empty!");
+            flag = true;
+        }
+        else if (item.CATEGORY_ID == 0)
+        {
+            toastService.ShowError("Please Select Category!");
+            flag = true;
+        }
+
+        return flag;
+    }
+    private void ClearData()
+    {
+
+
+        item.ITEM_CODE = "";
+        item.ITEM_NAME = "";
+        //item.DESCRIPTION = "";
+        item.PACK_SIZE = "";
+        item.ITEM_PURCHASE_PRICE = 0;
+        item.ITEM_SALE_PRICE = 0;
+        item.VENDOR_ID = 0;
+        item.UNIT_ID = 0;
+        item.COLOR_ID = 0;
+        item.BRAND_ID = 0;
+
+
+    }
+    private async Task RelatedApplicationClicked(ChangeEventArgs change)
+    {
+        relatedApp = new ItemApplicationAreaModel();
+        relatedApp.APPLICATION_AREA = change.Value.ToString().Trim();
+        relatedApp.APPLICATION_AREA_ID = itemApplicationList.Find(x => x.APPLICATION_AREA == change.Value.ToString().Trim()).APPLICATION_AREA_ID;
+
+        SelectedRelatedApplicationList.Add(relatedApp);
+
+    }
+    private async Task Related_Item_Clicked(ChangeEventArgs change)
+    {
+        relatedItem = new ItemEntity();
+        relatedItem.ITEM_NAME = change.Value.ToString();
+        relatedItem.ITEM_ID = productList.Find(x => x.ITEM_NAME.ToString().Trim() == change.Value.ToString().Trim()).ITEM_ID;
+
+
+        relatedItemList.Add(relatedItem);
+
+    }
+    public async void DeleteRelatedItem(string item)
+    {
+        var itemToRemove = relatedItemList.Single(r => r.ITEM_NAME == item);
+        relatedItemList.Remove(itemToRemove);
+
+        StateHasChanged();
+    }
+
+    private async void SelectItemTDS(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            //Stream stream = file.OpenReadStream();
+            var path = $"{env.WebRootPath}\\images\\File\\ITEM_DOCUMENTS\\{file.Name}";
+            //FileStream fs = File.Create(path);
+            //await stream.CopyToAsync(fs);
+            //stream.Close();
+            //fs.Close();
+            itemTDS.Add(file.Name);
+            //itemTDS.Add(path);
+            selectedTDS = selectedFiles;
+            selectedFiles = null;
+        }
+        this.StateHasChanged();
+    }
+    private async void SelectItemSDS(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            //Stream stream = file.OpenReadStream();
+            //var path = $"{env.WebRootPath}\\images\\File\\SDS\\{file.Name}";
+            //FileStream fs = File.Create(path);
+            //await stream.CopyToAsync(fs);
+            //stream.Close();
+            //fs.Close();
+            itemSDS.Add(file.Name);
+            selectedSDS = selectedFiles;
+            selectedFiles = null;
+        }
+        this.StateHasChanged();
+    }
+    private async void SelectItemFlyer(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            //Stream stream = file.OpenReadStream();
+            //var path = $"{env.WebRootPath}\\images\\File\\FLAYER\\{file.Name}";
+
+            //FileStream fs = File.Create(path);
+            //await stream.CopyToAsync(fs);
+            //stream.Close();
+            //fs.Close();
+            itemFlyer.Add(file.Name);
+            selectedFlayer = selectedFiles;
+            selectedFiles = null;
+        }
+        this.StateHasChanged();
+    }
+
+    private async void SelectItemCertification(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        this.StateHasChanged();
+        foreach (var file in selectedFiles)
+        {
+            itemCertificate.Add(file.Name);
+            selectedCertificate = selectedFiles;
+
+        }
+        this.StateHasChanged();
+    }
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        //selectedFiles = e.GetMultipleFiles();
+        isLoading = true;
+        loadedFiles.Clear();
+        foreach (var file in e.GetMultipleFiles())
+        {
+            try
+            {
+                loadedFiles.Add(file);
+                selectedFiles = e.GetMultipleFiles();
+
+                var trustedFileNameForFileStorage = Path.GetRandomFileName();
+
+                //var path = Path.Combine(env.ContentRootPath,env.EnvironmentName);
+
+                var path = Path.Combine(env.ContentRootPath + "\\wwwroot\\images\\File\\TDS", file.Name);
+
+                //var path = $"{env.WebRootPath}\\File\\TDS\\{file.Name}";
+                //var path = @"C:\Users\Administrator\Downloads\"+file.Name;
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                itemTDS.Add(file.Name);
+                selectedTDS = selectedFiles;
+                selectedFiles = null;
+            }
+            catch (Exception ex)
+            {
+                //Logger.LogError("File: {Filename} Error: {Error}",
+                //    file.Name, ex.Message);
+            }
+        }
+
+        isLoading = false;
+    }
+    private async Task TypeClicked(ChangeEventArgs args)
+    {
+
+        businesstype = Convert.ToInt32(args.Value.ToString());
+    }
+    //private async Task rdApplicationClicked()
+    //{
+    //    item.BUSINESS_ID = 2;
+    //}
+
+}
